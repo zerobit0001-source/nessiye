@@ -7,6 +7,7 @@ from .serializers import DebtSerializer
 
 
 class DebtListView(APIView):
+    """This class for debt list view for shop account"""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
