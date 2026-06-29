@@ -20,6 +20,7 @@ class DebtListView(APIView):
 
 
 class DebtDetailView(APIView):
+    """This class for debt detail view for shop account"""
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
