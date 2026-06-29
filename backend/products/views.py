@@ -14,7 +14,7 @@ class IsShop:
     
 
 class ProductListCreateView(APIView):
-    
+    """This class for get and post products from shops"""
     def get_permissions(self):
         if self.request.method == 'GET':
             return [AllowAny()]
