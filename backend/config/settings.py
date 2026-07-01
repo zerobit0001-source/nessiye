@@ -6,7 +6,8 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-9o*=u$w&n-$)w^ga($k#&&g_&23$!h_)6g#hp@3v_em2z0za#i"
+# SECRET_KEY = "django-insecure-9o*=u$w&n-$)w^ga($k#&&g_&23$!h_)6g#hp@3v_em2z0za#i"
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 
 DEBUG = os.getenv('DEBUG') == 'True'
@@ -78,11 +79,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "railway",
-        'USER': "postgres",
-        'PASSWORD': "bCqAEcFXjMRupUISSduByrwKmgXRxlAg",
-        'HOST': os.getenv('DB_HOST', 'postgres.railway.internal'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
