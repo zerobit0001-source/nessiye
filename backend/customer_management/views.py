@@ -45,26 +45,6 @@ class CustomerListCreateView(APIView):
     
         return Response({'ok': True, 'customers': result})
 
-    # def post(self, request):
-    #     if not request.user.is_shop:
-    #         return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
-# 
-    #     phone_number = request.data.get('phone_number')
-    #     if not phone_number:
-    #         return Response({'ok': False, 'error': 'شماره تلفن الزامی است'}, status=status.HTTP_400_BAD_REQUEST)
-# 
-    #     try:
-    #         customer = User.objects.get(phone_number=phone_number, is_shop=False)
-    #     except User.DoesNotExist:
-    #         return Response({'ok': False, 'error': 'کاربر یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
-# 
-    #     if CustomerShop.objects.filter(shop=request.user, customer=customer).exists():
-    #         return Response({'ok': False, 'error': 'این مشتری قبلاً اضافه شده است'}, status=status.HTTP_400_BAD_REQUEST)
-# 
-    #     CustomerShop.objects.create(shop=request.user, customer=customer)
-    #     serializer = CustomerSerializer(customer)
-    #     return Response({'ok': True, 'message': 'مشتری اضافه شد', 'customer': serializer.data}, status=status.HTTP_201_CREATED)
-
     def post(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
