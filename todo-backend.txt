@@ -1,0 +1,9 @@
+so far : 
+
+
+todo : 
+    + fix the responese of GET Customers = return customer : [{ id , full_name , phone_number , total_debts , paid_amount , rmaining_amount  }]
+    + Create the payments endpoint to GET submited payments
+    + Fix the account/my_shops = change the endpoint to account/me 
+    + Fix the responese of account/me = return { total_amount , number_of_debts , shops }
+    + Fix the responese of account/me .shops = return { shop_id , total_amount , number_of_debts , shop_address , shop_name }

@@ -90,12 +90,17 @@ export default function AccountAvatar() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-                <MenuItem onClick={handleClose} >
-                    <AccountCircleRounded fontSize="small" />{" "}
-                    <span>پروفایل</span>
+                <MenuItem onClick={handleClose}>
+                    <Link href={"/account"}>
+                        <AccountCircleRounded fontSize="small" />{" "}
+                        <span>پروفایل</span>
+                    </Link>
                 </MenuItem>
-                <MenuItem onClick={handleClose} >
-                    <Link href={"/auth?mode=shop-register"} className="flex gap-2" >
+                <MenuItem onClick={handleClose}>
+                    <Link
+                        href={"/auth?mode=shop-register"}
+                        className="flex gap-2"
+                    >
                         <VerifiedUserRounded fontSize="small" />{" "}
                         <span>ارتقایه اکانت</span>
                     </Link>

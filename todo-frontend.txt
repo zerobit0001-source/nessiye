@@ -1,0 +1,40 @@
+so far :
+
+- created the dashboard ui
+- implement the redux for modal forms
+- create the login/signup form
+- create the api for login/signup
+- implement the redux for auth
+- fix the responsive bug at dashboard
+- fix the full height issue for dashboard menu
+- fix the mobile menu bug
+- implement the query URLs for filtering like ?q=all , ?category=dry_food
+- create the check auth
+- redirect to login if user is not authenticated
+- create the token placement logic
+- make the authentication form responsive
+- create the profile page
+- create the logout or signout in profile page ( after you create the profile page )
+- connect the authentication to API 
+- create the RTKQUERY structure 
+
+
+todo :
+
+> create the UI for customers to see their debts
+ 	+ create the main page ****
+ 	+ menu or side menu for redirect in pages
+    + make the account page responsive
+
++ make the dashboard more responsive **
++ fix search and filter products bug 
++ implement a component for image responsive and performance
+> implement the loading user interface for loading data that coming from API
+ 	+ products **
+ 	+ customers
+ 	+ debts
+ 	+ payments
+ 	+ reports
+ 	+ customer page
+ 	+ overdues
+ 	+ markets

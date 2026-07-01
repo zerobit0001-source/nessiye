@@ -1,6 +1,7 @@
 import AuthHydrator from "@/utils/auth/AuthHydrateRedux";
 import { getCurrentUser } from "@/utils/auth/GetCurrentUser";
 import { redirect } from "next/navigation";
+import "../globals.css"
 
 export default async function MainLayout({
     children,
