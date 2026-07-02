@@ -17,6 +17,7 @@ so far :
 - create the logout or signout in profile page ( after you create the profile page )
 - connect the authentication to API 
 - create the RTKQUERY structure 
+- Fix the customers list page props 
 
 
 todo :
@@ -24,7 +25,7 @@ todo :
 > create the UI for customers to see their debts
  	+ create the main page ****
  	+ menu or side menu for redirect in pages
-    + make the account page responsive
+    + make the account page responsive **
 
 + make the dashboard more responsive **
 + fix search and filter products bug 

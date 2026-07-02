@@ -54,8 +54,17 @@ export interface CustomerType {
     full_name: string
 }
 
+export interface CustomersListType {
+    id: number | string,
+    phone_number: string,
+    full_name: string,
+    paid_amount: number,
+    remaining_amount: number,
+    total_debts: number
+}
+
 export interface ShopType {
-    shop_id : number,
-    shop_name : string,
-    shop_address : string
+    shop_id: number,
+    shop_name: string,
+    shop_address: string
 }

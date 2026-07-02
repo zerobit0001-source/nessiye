@@ -10,6 +10,8 @@ export type CustomerType = {
     lastPayment?: string
 }
 
+
+
 export interface CustomerPayedType {
     id: string,
     amount: number,

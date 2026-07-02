@@ -1,9 +1,10 @@
 "use client";
 import { CustomerType } from "@/types/customerType";
+import { CustomersListType } from "@/types/types";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 
 interface CustomerRowProps {
-    customer: CustomerType;
+    customer: CustomersListType;
 }
 
 const CustomerRow = ({ customer }: CustomerRowProps) => {
@@ -28,23 +29,25 @@ const CustomerRow = ({ customer }: CustomerRowProps) => {
                                   cursor-pointer
                                "
         >
-            <Box className="flex items-center gap-2">
-                <Avatar alt={customer.full_name}>{customer?.full_name[0]}</Avatar>
+            <Box className="flex items-center justify-start gap-2">
+                <Avatar alt={customer.full_name}>
+                    {customer?.full_name[0]}
+                </Avatar>
                 <Typography variant="body2" className="text-start">
                     {customer.full_name}
                 </Typography>
             </Box>
-            <Typography variant="body2" className="text-start">
+            <Typography variant="body2" className="text-center">
                 {customer.phone_number}
             </Typography>
-            <Typography variant="body2" className="text-start">
-                {customer?.totalCredit} ریال
+            <Typography variant="body2" className="text-center" color="primary">
+                {customer?.total_debts} تومان
             </Typography>
-            <Typography variant="body2" className="text-start">
-                {customer?.paid} ریال
+            <Typography variant="body2" className="text-center" color="success">
+                {customer?.paid_amount} تومان
             </Typography>
-            <Typography variant="body2" className="text-start">
-                {customer?.totalCredit - customer?.paid} ریال
+            <Typography variant="body2" className="text-center" color="error">
+                {customer?.remaining_amount} تومان
             </Typography>
             <Button variant="text">پرداخت</Button>
         </Box>

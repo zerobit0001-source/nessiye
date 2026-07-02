@@ -1,4 +1,4 @@
-import { CustomerType, DebtType, ProductType, SaleType, ShopType } from "./types"
+import { CustomersListType, CustomerType, DebtType, ProductType, SaleType, ShopType } from "./types"
 
 
 
@@ -35,7 +35,7 @@ export interface GetProductResponse {
 // customers
 export interface GetCustomersResponse {
     ok: boolean,
-    customers: CustomerType[]
+    customers: CustomersListType[]
 }
 export interface GetCustomerResponse {
     ok: boolean,
