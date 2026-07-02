@@ -363,3 +363,39 @@ class MyShopHistoryView(APIView):
             'sales': SaleSerializer(sales, many=True).data,
             'debts': DebtSerializer(debts, many=True).data
         })
+    
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if request.user.is_shop:
+            return Response({'ok': False, 'error': 'این endpoint برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+
+        customer_shops = CustomerShop.objects.filter(customer=request.user).select_related('shop')
+        
+        shops = []
+        total_amount = 0
+        total_debts = 0
+
+        for cs in customer_shops:
+            debts = Debt.objects.filter(customer=cs)
+            shop_total = sum(d.remaining for d in debts)
+            shop_debt_count = debts.count()
+
+            total_amount += shop_total
+            total_debts += shop_debt_count
+
+            shops.append({
+                'shop_id': cs.shop.id,
+                'shop_name': cs.shop.shop_name,
+                'shop_address': cs.shop.shop_address,
+                'total_amount': shop_total,
+                'number_of_debts': shop_debt_count
+            })
+
+        return Response({
+            'ok': True,
+            'total_amount': total_amount,
+            'number_of_debts': total_debts,
+            'shops': shops
+        })
