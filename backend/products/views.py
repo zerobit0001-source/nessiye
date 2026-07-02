@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
 from debts.models import Debt
 from customer_management.models import CustomerShop
-
+from django.db.models import Q
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
 
@@ -26,11 +26,19 @@ class ProductListCreateView(APIView):
 
     def get(self, request):
         barcode = request.query_params.get('barcode')
+        search = request.query_params.get('search')
+        category = request.query_params.get('category')
     
         if request.user.is_authenticated and request.user.is_shop:
             products = Product.objects.filter(shop=request.user)
         else:
             products = Product.objects.all()
+
+        if search:
+            products = products.filter(Q(name__icontains=search) | Q(barcode__icontains=search))
+
+        if category:
+            products = products.filter(category__name__icontains=category)
     
         if barcode:
             product = products.filter(barcode=barcode).first()
