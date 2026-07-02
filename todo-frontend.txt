@@ -18,6 +18,7 @@ so far :
 - connect the authentication to API 
 - create the RTKQUERY structure 
 - Fix the customers list page props 
+- Fix the product search and filter
 
 
 todo :
@@ -28,7 +29,6 @@ todo :
     + make the account page responsive **
 
 + make the dashboard more responsive **
-+ Fix the product search and filter
 + implement a component for image responsive and performance
 > implement the loading user interface for loading data that coming from API
  	+ products **
