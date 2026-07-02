@@ -10,6 +10,7 @@ from .views import (
     RefreshTokenView,
     MyShopsView,
     MyShopHistoryView,
+    MeView,
 )
 
 urlpatterns = [
@@ -22,4 +23,5 @@ urlpatterns = [
     path("refresh/", RefreshTokenView.as_view()),
     path('my_shops/', MyShopsView.as_view()),
     path('my_shops/<int:shop_id>/history/', MyShopHistoryView.as_view()),
+    path('me/', MeView.as_view()),
 ]
