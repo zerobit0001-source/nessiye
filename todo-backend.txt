@@ -5,10 +5,9 @@ so far :
     - Fix the responese of account/me = return { total_amount , number_of_debts , shops }
     - Fix the responese of account/me .shops = return { shop_id , total_amount , number_of_debts , shop_address , shop_name }
     - Create a endpoint named modal whit url api/modal?type={ ANYTHING }
-        > api/modal?type=customers and it returns = [{ id , phone_number , full_name }] // مشتی اینارو همونطوری که میفرستادی بفرست فقط بخشی که توش کاستومر رو میفرستی رو اینطوری بفرست
-        > api/modal?type=products and it returns = [{ id , name , barcode , sell_price }] // اینم مثل بالایی
-        > api/modal?type=credits and it returns = { ok , debts : [{ id , remaining , created_at , is_paid }] } // تو اینم دقیفا اینو بفرست
-
+        > api/modal?type=customers and it returns = [{ id , phone_number , full_name }]
+        > api/modal?type=products and it returns = [{ id , name , barcode , sell_price }]
+        > api/modal?type=credits and it returns = { ok , debts : [{ id , remaining , created_at , is_paid }] }
 todo : 
 
 
