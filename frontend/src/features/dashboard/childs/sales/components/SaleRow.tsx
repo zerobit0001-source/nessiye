@@ -38,7 +38,7 @@ const SaleRow = ({ sale }: SaleRowPropType) => {
                 {sale.description}
             </Typography> */}
             <Typography variant="body2" className="text-center">
-                {sale.total} ریال
+                {sale.total.toLocaleString("fa-IR")} تومان
             </Typography>
             {/* <Typography variant="body2" className="text-start">
                 {sale.paid || "-"} 

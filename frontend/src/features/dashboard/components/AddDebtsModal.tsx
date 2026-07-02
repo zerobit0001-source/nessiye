@@ -26,6 +26,8 @@ import { useAddSalesMutation } from "../childs/sales/api/ApiSales";
 import { toast } from "react-toastify";
 import { ProductType } from "@/types/types";
 import AddProductScannerDilog from "../childs/products/components/AddProductScannerDilog";
+import { useGetModalDataQuery } from "../api/ApiModalsData";
+import { GetModalsCustomersResponse } from "@/types/ApiResponesesType";
 
 const AddDebtModal = () => {
     const dispatch = useAppDispatch();
@@ -66,23 +68,26 @@ const AddDebtModal = () => {
     });
 
     // products api RTKQuery
-    const {
-        data: customersData,
-        isLoading: isCustomerLoading,
-        error: isCustomerError,
-    } = useGetCustomersQuery();
-    const {
-        data: ProductsData,
-        isLoading: isProuctLoading,
-        error: isProuctError,
-    } = useGetProductsQuery();
     const [
         addSale,
         { data: addSaleRes, isLoading: addSaleLoading, error: addSaleError },
     ] = useAddSalesMutation();
+    const {
+        data: customersData,
+        isLoading: isCustomerLoading,
+        error: isCustomerError,
+    } = useGetModalDataQuery({ type: "customers" }, { skip: !open });
+    const {
+        data: productsData,
+        isLoading: isProductLoading,
+        error: isProductError,
+    } = useGetModalDataQuery({ type: "products" }, { skip: !open });
+
+    console.log("this is modals customers : ", customersData);
+    console.log("this is modals products : ", productsData);
 
     const customers = customersData?.customers ?? [];
-    const products = ProductsData?.products ?? [];
+    const products = productsData?.products ?? [];
 
     const handleCost = () => {
         if (!selectedProducts || selectedProducts.length === 0) {
@@ -152,7 +157,7 @@ const AddDebtModal = () => {
             toast.success(`${product.name} اضافه شد`);
         }
 
-        setScannerOpen(false)
+        setScannerOpen(false);
     };
 
     async function handleAddSale() {
@@ -242,6 +247,7 @@ const AddDebtModal = () => {
                                             placeholder="انتخاب کنید..."
                                         />
                                     )}
+                                    loading={isCustomerLoading}
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
@@ -280,6 +286,7 @@ const AddDebtModal = () => {
                                     disabled={!selectedCustomer}
                                     size="small"
                                     fullWidth
+                                    loading={isProductLoading}
                                 />
                             </div>
                             <Button

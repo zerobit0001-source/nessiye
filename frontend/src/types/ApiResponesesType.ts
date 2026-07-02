@@ -1,4 +1,4 @@
-import { CustomersListType, CustomerType, DebtType, ProductType, SaleType, ShopType } from "./types"
+import { CustomersListType, CustomerType, DebtType, ModalCustomersType, ModalProductsType, ProductType, SaleType, ShopType } from "./types"
 
 
 
@@ -75,4 +75,22 @@ export interface PostPaymentBody {
     debt_id: number | string,
     amount: number,
     pay_full: boolean
+}
+
+// modal customers
+export interface GetModalsCustomersResponse {
+    ok: boolean,
+    customers: ModalCustomersType[]
+}
+
+// modal products
+export interface GetModalsProductsResponse {
+    ok: boolean,
+    products: ModalProductsType[]
+}
+
+// modal debts
+export interface GetModalsDebtsResponse {
+    ok: boolean,
+    debts: DebtType[]
 }

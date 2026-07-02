@@ -68,3 +68,23 @@ export interface ShopType {
     shop_name: string,
     shop_address: string
 }
+
+export interface ModalCustomersType {
+    id: number ,
+    full_name: string,
+    phone_number: string,
+}
+
+export interface ModalProductsType {
+    id: number,
+    name: string,
+    barcode?: string,
+    sell_price: number,
+}
+
+export interface ModalDebtsType {
+    id: number,
+    remaining: number,
+    created_at: string,
+    is_paid: boolean,
+}

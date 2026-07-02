@@ -1,9 +1,10 @@
 "use client";
-import { AddRounded, CloseRounded } from "@mui/icons-material";
+import { AddRounded, CloseRounded, RemoveRounded } from "@mui/icons-material";
 import {
     Autocomplete,
     Box,
     Button,
+    Card,
     IconButton,
     Modal,
     TextField,
@@ -21,6 +22,7 @@ import { number } from "zod";
 import { toast } from "react-toastify";
 import { PostSalesType } from "@/types/ApiResponesesType";
 import { ProductType } from "@/types/types";
+import { useGetModalDataQuery } from "../api/ApiModalsData";
 
 const AddSaleModal = () => {
     const dispatch = useAppDispatch();
@@ -59,19 +61,22 @@ const AddSaleModal = () => {
         data: customersData,
         isLoading: isCustomerLoading,
         error: isCustomerError,
-    } = useGetCustomersQuery();
+    } = useGetModalDataQuery({ type: "customers" }, { skip: !open });
     const {
-        data: ProductsData,
-        isLoading: isProuctLoading,
-        error: isProuctError,
-    } = useGetProductsQuery();
+        data: productsData,
+        isLoading: isProductLoading,
+        error: isProductError,
+    } = useGetModalDataQuery({ type: "products" }, { skip: !open });
     const [
         addSale,
         { data: addSaleRes, isLoading: addSaleLoading, error: addSaleError },
     ] = useAddSalesMutation();
 
+    console.log("this is modals customers : ", customersData);
+    console.log("this is modals products : ", productsData);
+
     const customers = customersData?.customers ?? [];
-    const products = ProductsData?.products ?? [];
+    const products = productsData?.products ?? [];
 
     const handleCost = () => {
         if (!selectedProducts || selectedProducts.length === 0) {
@@ -88,6 +93,31 @@ const AddSaleModal = () => {
     useEffect(() => {
         handleCost();
     }, [selectedProducts]);
+
+    const increaseQuantity = (productId: number) => {
+        setForm((prev) => ({
+            ...prev,
+            items: prev.items.map((item) =>
+                item.product_id === productId
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item,
+            ),
+        }));
+    };
+
+    const decreaseQuantity = (productId: number) => {
+        setForm((prev) => ({
+            ...prev,
+            items: prev.items.map((item) =>
+                item.product_id === productId
+                    ? {
+                          ...item,
+                          quantity: Math.max(1, item.quantity - 1),
+                      }
+                    : item,
+            ),
+        }));
+    };
 
     async function handleAddSale() {
         try {
@@ -175,6 +205,9 @@ const AddSaleModal = () => {
                                             placeholder="انتخاب کنید..."
                                         />
                                     )}
+                                    size="small"
+                                    fullWidth
+                                    loading={isCustomerLoading}
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
@@ -212,7 +245,53 @@ const AddSaleModal = () => {
                                     )}
                                     size="small"
                                     fullWidth
+                                    loading={isProductLoading}
                                 />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                {selectedProducts.map((product) => {
+                                    const item = form.items.find(
+                                        (item) =>
+                                            item.product_id === product.id,
+                                    );
+
+                                    return (
+                                        <Card
+                                            key={product.id}
+                                            className="flex items-center justify-between p-2"
+                                        >
+                                            {product.name}
+
+                                            <div className="flex items-center gap-2">
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() =>
+                                                        increaseQuantity(
+                                                            product.id,
+                                                        )
+                                                    }
+                                                >
+                                                    <AddRounded />
+                                                </IconButton>
+
+                                                <Typography variant="caption">
+                                                    {item?.quantity ?? 1}
+                                                </Typography>
+
+                                                <IconButton
+                                                    color="error"
+                                                    onClick={() =>
+                                                        decreaseQuantity(
+                                                            product.id,
+                                                        )
+                                                    }
+                                                >
+                                                    <RemoveRounded />
+                                                </IconButton>
+                                            </div>
+                                        </Card>
+                                    );
+                                })}
                             </div>
                             <div className="flex items-center gap-2 w-full">
                                 <div className="w-full">

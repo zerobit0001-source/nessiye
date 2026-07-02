@@ -41,13 +41,13 @@ const CustomerRow = ({ customer }: CustomerRowProps) => {
                 {customer.phone_number}
             </Typography>
             <Typography variant="body2" className="text-center" color="primary">
-                {customer?.total_debts} تومان
+                {customer?.total_debts.toLocaleString("fa-IR")} تومان
             </Typography>
             <Typography variant="body2" className="text-center" color="success">
-                {customer?.paid_amount} تومان
+                {customer?.paid_amount.toLocaleString("fa-IR")} تومان
             </Typography>
             <Typography variant="body2" className="text-center" color="error">
-                {customer?.remaining_amount} تومان
+                {customer?.remaining_amount.toLocaleString("fa-IR")} تومان
             </Typography>
             <Button variant="text">پرداخت</Button>
         </Box>
