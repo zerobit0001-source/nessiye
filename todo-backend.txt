@@ -8,5 +8,5 @@ so far :
         > api/modal?type=customers and it returns = [{ id , phone_number , full_name }]
         > api/modal?type=products and it returns = [{ id , name , barcode , sell_price }]
         > api/modal?type=credits and it returns = { ok , debts : [{ id , remaining , created_at , is_paid }] }
+    - Create the products search by name and barcode and category
 todo : 
-    + Create the products search by name and barcode and category
