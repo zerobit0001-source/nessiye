@@ -29,6 +29,7 @@ import {
 } from "../childs/customers/api/ApiCustomer";
 import { useAddPaymentMutation } from "../childs/payments/api/ApiPayment";
 import { CustomerType, DebtType } from "@/types/types";
+import { useGetModalDataQuery } from "../api/ApiModalsData";
 
 const AddPaymentModal = () => {
     const dispatch = useAppDispatch();
@@ -55,10 +56,10 @@ const AddPaymentModal = () => {
     // RTKQuery
     const {
         data: customersData,
-        isLoading: CustomersLoading,
-        error: CustomersError,
+        isLoading: isCustomerLoading,
+        error: isCustomerError,
         isSuccess: CustomersSuccess,
-    } = useGetCustomersQuery();
+    } = useGetModalDataQuery({ type: "customers" }, { skip: !open });
     const [
         getCustomerCredits,
         {
@@ -68,6 +69,7 @@ const AddPaymentModal = () => {
             isSuccess: CreditsSuccess,
         },
     ] = useLazyGetCustomerCreditsQuery();
+
     const [
         addPayment,
         {
@@ -108,7 +110,7 @@ const AddPaymentModal = () => {
                 setSelectedDebt(null);
                 setDebts([]);
                 setAmount(0);
-                setCheck(false)
+                setCheck(false);
             } else {
                 toast.error(result.data.error);
             }
