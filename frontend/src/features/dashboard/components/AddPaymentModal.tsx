@@ -104,12 +104,17 @@ const AddPaymentModal = () => {
             if (result.ok) {
                 toast.success(result.message || "پرداخت با موفقیت انجام شد");
                 dispatch(ApiCustomer.util.invalidateTags(["Credits"]));
+                setSelectedCustomer(null);
+                setSelectedDebt(null);
+                setDebts([]);
+                setAmount(0);
+                setCheck(false)
             } else {
-                toast.error(result.error);
+                toast.error(result.data.error);
             }
         } catch (error) {
             console.error("Error adding payment:", error);
-            toast.error("خطا در ثبت پرداخت");
+            toast.error(error.data.error);
             return;
         }
     }
@@ -188,7 +193,11 @@ const AddPaymentModal = () => {
                                     value={selectedDebt}
                                     renderOption={(props, option) => {
                                         return (
-                                            <li {...props} key={option.id}>
+                                            <li
+                                                {...props}
+                                                key={option.id}
+                                                className={`${option.is_paid ? "bg-green-200 hover:bg-green-100" : "hover:bg-gray-100"} p-2 my-1 transition-all flex gap-2 `}
+                                            >
                                                 <span>{option.id}</span>-
                                                 <span>{option.remaining}</span>-
                                                 <span>{option.created_at}</span>
