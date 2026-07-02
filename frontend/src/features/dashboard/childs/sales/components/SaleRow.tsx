@@ -13,6 +13,7 @@ const SaleRow = ({ sale }: SaleRowPropType) => {
                 console.log(sale);
             }}
             className="w-300
+            
                                   xl:w-full
                                   sticky top-0
                                   z-50
