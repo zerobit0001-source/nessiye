@@ -83,3 +83,26 @@ class DebtPayView(APIView):
             'message': 'پرداخت ثبت شد',
             'debt': serializer.data
         })
+    
+class PaymentListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        debts = Debt.objects.filter(shop=request.user, paid_amount__gt=0)
+        result = []
+        for debt in debts:
+            result.append({
+                'id': debt.id,
+                'customer_name': debt.customer.customer.full_name,
+                'customer_phone': debt.customer.customer.phone_number,
+                'amount': debt.amount,
+                'paid_amount': debt.paid_amount,
+                'remaining': debt.remaining,
+                'is_paid': debt.is_paid,
+                'created_at': debt.created_at
+            })
+
+        return Response({'ok': True, 'payments': result})
