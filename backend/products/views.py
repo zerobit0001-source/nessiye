@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
+from debts.models import Debt
+from customer_management.models import CustomerShop
 
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
@@ -128,3 +130,54 @@ class CategoryListCreateView(APIView):
         serializer.save()
 
         return Response({'ok': True, 'message': 'دسته‌بندی با موفقیت اضافه شد', 'category': serializer.data}, status=status.HTTP_201_CREATED)
+    
+
+class ModalView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        modal_type = request.query_params.get('type')
+
+        if modal_type == 'customers':
+            customer_shops = CustomerShop.objects.filter(shop=request.user).select_related('customer')
+            result = [
+                {
+                    'id': cs.customer.id,
+                    'phone_number': cs.customer.phone_number,
+                    'full_name': cs.customer.full_name
+                }
+                for cs in customer_shops
+            ]
+            return Response({'ok': True, 'customers': result})
+
+        elif modal_type == 'products':
+            products = Product.objects.filter(shop=request.user)
+            result = [
+                {
+                    'id': p.id,
+                    'name': p.name,
+                    'barcode': p.barcode,
+                    'sell_price': p.sell_price
+                }
+                for p in products
+            ]
+            return Response({'ok': True, 'products': result})
+
+        elif modal_type == 'credits':
+            customer_shops = CustomerShop.objects.filter(shop=request.user)
+            debts = Debt.objects.filter(shop=request.user, customer__in=customer_shops)
+            result = [
+                {
+                    'id': d.id,
+                    'remaining': d.remaining,
+                    'created_at': d.created_at,
+                    'is_paid': d.is_paid
+                }
+                for d in debts
+            ]
+            return Response({'ok': True, 'debts': result})
+
+        return Response({'ok': False, 'error': 'تایپ نامعتبر است'}, status=status.HTTP_400_BAD_REQUEST)
