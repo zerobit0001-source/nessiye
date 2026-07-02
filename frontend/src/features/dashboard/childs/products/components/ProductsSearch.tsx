@@ -1,47 +1,47 @@
 "use client";
-import BranchSelect from "@/components/dash/BranchSelectField";
-import CategorySelect from "@/components/dash/CategorySelectField";
+
 import { TextField } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react"; 
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import CategorySelect from "@/components/dash/CategorySelectField";
 
 const ProductsSearch = () => {
-    const [search, setSearch] = useState<string>(""); 
-    const [debouncedSearch, setDebouncedSearch] = useState<string>("");
-    const [category, setCategory] = useState<string | null>(null);
-
     const router = useRouter();
+    const searchParams = useSearchParams();
 
-    const params = useMemo(() => {
-        const currentParams = new URLSearchParams();
+    const [search, setSearch] = useState(searchParams.get("search") ?? "");
 
-        if (category) {
-            currentParams.append("category", category);
-        }
-        if (debouncedSearch) {
-            currentParams.append("search", debouncedSearch);
-        }
-        return currentParams;
-    }, [category, debouncedSearch]);
+    const [category, setCategory] = useState<string | null>(
+        searchParams.get("category"),
+    );
 
-    // Debounce effect
+    const [debouncedSearch, setDebouncedSearch] = useState(search);
+
     useEffect(() => {
-        const handler = setTimeout(() => {
+        const timer = setTimeout(() => {
             setDebouncedSearch(search);
-        }, 500); // 500ms debounce time
+        }, 500);
 
-        return () => {
-            clearTimeout(handler);
-        };
+        return () => clearTimeout(timer);
     }, [search]);
 
     useEffect(() => {
-        const urlWithParams = `?${params.toString()}`;
+        const params = new URLSearchParams(searchParams);
 
-        if (debouncedSearch || category) {
-            router.push(urlWithParams);
+        if (debouncedSearch) {
+            params.set("search", debouncedSearch);
+        } else {
+            params.delete("search");
         }
-    }, [debouncedSearch, category, params]);
+
+        if (category) {
+            params.set("category", category);
+        } else {
+            params.delete("category");
+        }
+
+        router.replace(`?${params.toString()}`);
+    }, [debouncedSearch, category]);
 
     return (
         <div className="grid grid-cols-2 w-full ">

@@ -88,3 +88,12 @@ export interface ModalDebtsType {
     created_at: string,
     is_paid: boolean,
 }
+
+
+// products search params
+export interface GetProductsParams {
+    search?: string;
+    category?: string;
+    // page?: number;
+    // ordering?: string;
+}

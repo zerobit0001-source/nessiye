@@ -1,4 +1,4 @@
-import { ProductShowType, ProductType } from "@/types/productTypes";
+import { ProductShowType } from "@/types/productTypes";
 import { ImageRounded } from "@mui/icons-material";
 import { Card, Typography } from "@mui/material";
 import Link from "next/link";

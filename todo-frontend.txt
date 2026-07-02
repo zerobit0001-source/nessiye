@@ -28,7 +28,7 @@ todo :
     + make the account page responsive **
 
 + make the dashboard more responsive **
-+ fix search and filter products bug 
++ Fix the product search and filter
 + implement a component for image responsive and performance
 > implement the loading user interface for loading data that coming from API
  	+ products **

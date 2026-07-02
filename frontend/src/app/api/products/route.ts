@@ -6,7 +6,14 @@ export async function GET(req: Request) {
 
     try {
 
-        const result = await authenticatedFetch("products/")
+        const { searchParams } = new URL(req.url);
+
+        const queryString = searchParams.toString();
+
+        const endpoint = queryString
+            ? `products/?${queryString}`
+            : "products/";
+        const result = await authenticatedFetch(endpoint)
 
         if (!result || result.response.status == 401) {
             return NextResponse.json(

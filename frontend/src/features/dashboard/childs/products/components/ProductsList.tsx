@@ -6,8 +6,18 @@ import Product from "@/features/dashboard/components/Product";
 import ProductListLoading from "./ProductSkeletone";
 import { useRouter } from "next/navigation";
 
-const ProductsList = () => {
-    const { data, error, isLoading, isSuccess } = useGetProductsQuery();
+export interface GetProductsParams {
+    search?: string;
+    category?: string;
+    // page?: number;
+    // ordering?: string;
+}
+
+const ProductsList = ({ search, category }: GetProductsParams) => {
+    const { data, error, isLoading, isSuccess } = useGetProductsQuery({
+        search,
+        category,
+    });
 
     const router = useRouter();
 

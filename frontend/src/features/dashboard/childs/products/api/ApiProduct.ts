@@ -1,6 +1,6 @@
 import { GetProductResponse, GetProductsResponse } from "@/types/ApiResponesesType";
 import { ProductModalFormType } from "@/types/modalsTypes";
-import { ProductType } from "@/types/types";
+import { GetProductsParams, ProductType } from "@/types/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const ApiProduct = createApi({
@@ -11,9 +11,15 @@ export const ApiProduct = createApi({
     }),
     tagTypes: ["Products"],
     endpoints: (builder) => ({
-        getProducts: builder.query<GetProductsResponse, void>({
-            query: () => "products/",
-            providesTags: ["Products"],
+        getProducts: builder.query<GetProductsResponse, GetProductsParams>({
+            query: ({ search, category }) => ({
+                url: "/products/",
+                params: {
+                    search,
+                    category,
+                },
+            }),
+            providesTags: ['Products']
         }),
         getProductById: builder.query<GetProductResponse, string>({
             query: (id) => `products/${id}/`,
