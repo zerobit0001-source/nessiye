@@ -167,8 +167,14 @@ class ModalView(APIView):
             return Response({'ok': True, 'products': result})
 
         elif modal_type == 'credits':
+            customer_id = request.query_params.get('customer_id')
+            
             customer_shops = CustomerShop.objects.filter(shop=request.user)
             debts = Debt.objects.filter(shop=request.user, customer__in=customer_shops)
+            
+            if customer_id:
+                debts = debts.filter(customer__customer_id=customer_id)
+            
             result = [
                 {
                     'id': d.id,
