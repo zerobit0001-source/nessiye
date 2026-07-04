@@ -19,6 +19,7 @@ so far :
 - create the RTKQUERY structure 
 - Fix the customers list page props 
 - Fix the product search and filter
+- implement the paste otp code in input 
 
 
 todo :
@@ -39,4 +40,3 @@ todo :
  	+ customer page
  	+ overdues
  	+ markets
-+ implement the paste otp code in input 
