@@ -68,7 +68,7 @@ const AddCustomerModal = () => {
             return;
         }
 
-        console.log("this is from handle sent code")
+        console.log("this is from handle sent code");
 
         try {
             const result = await addCustomer(form).unwrap();
@@ -99,7 +99,7 @@ const AddCustomerModal = () => {
             return;
         }
 
-        console.log('this from handle verify code')
+        console.log("this from handle verify code");
 
         try {
             const result = await verifyCustomer(form).unwrap();
@@ -148,34 +148,36 @@ const AddCustomerModal = () => {
                         </IconButton>
                     </Box>
                     <Box className="p-4">
-                        <form className="flex flex-col gap-4">
-                            {isCode ? (
-                                <div className="w-full">
-                                    <Typography variant="body2">کد</Typography>
-                                    <TextField
-                                        name="code"
-                                        placeholder="******"
-                                        size="small"
-                                        fullWidth
-                                        value={form.code}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            ) : (
-                                <div className="w-full">
-                                    <Typography variant="body2">
-                                        شماره موبایل
-                                    </Typography>
-                                    <TextField
-                                        name="phone_number"
-                                        placeholder="*******0922"
-                                        size="small"
-                                        fullWidth
-                                        value={form.phone_number}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            )}
+                        <form
+                            className="flex flex-col gap-4"
+                            onSubmit={
+                                isCode ? handleVerifyCustomer : handleSentCode
+                            }
+                        >
+                            <div className="w-full">
+                                <Typography variant="body2">
+                                    شماره موبایل
+                                </Typography>
+                                <TextField
+                                    name="phone_number"
+                                    placeholder="*******0922"
+                                    size="small"
+                                    fullWidth
+                                    value={form.phone_number}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="w-full">
+                                <Typography variant="body2">کد</Typography>
+                                <TextField
+                                    name="code"
+                                    placeholder="******"
+                                    size="small"
+                                    fullWidth
+                                    value={form.code}
+                                    onChange={handleChange}
+                                />
+                            </div>
                         </form>
                     </Box>
                     <div className="flex gap-2 border-t border-gray-300 pt-4 ">
