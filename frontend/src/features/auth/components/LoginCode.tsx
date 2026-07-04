@@ -4,9 +4,8 @@ import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { Button, TextField, Typography, Box } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-
 
 const LoginCode = () => {
     const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
@@ -26,8 +25,6 @@ const LoginCode = () => {
             inputRef.current[index + 1]?.focus();
         }
     };
-
-    console.log(otp);
 
     const handleKeyDown = (
         e: React.KeyboardEvent<HTMLInputElement>,
@@ -81,6 +78,8 @@ const LoginCode = () => {
             setLoading(false);
         }
     };
+
+    
 
     return (
         <>
