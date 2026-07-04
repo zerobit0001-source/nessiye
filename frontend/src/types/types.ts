@@ -66,11 +66,13 @@ export interface CustomersListType {
 export interface ShopType {
     shop_id: number,
     shop_name: string,
-    shop_address: string
+    shop_address: string,
+    total_amount: number,
+    number_of_debts: number
 }
 
 export interface ModalCustomersType {
-    id: number ,
+    id: number,
     full_name: string,
     phone_number: string,
 }

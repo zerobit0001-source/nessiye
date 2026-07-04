@@ -1,7 +1,7 @@
 "use client";
 import Container from "@/components/dash/Container";
 import SlideUpAnimation from "@/components/SlideUpAnimation";
-import { useGetShopsQuery } from "@/features/account/api/ApiAccount";
+import { useGetMeQuery } from "@/features/account/api/ApiAccount";
 import ShopsCard from "@/features/account/components/ShopsCard";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { ReceiptRounded, StoreRounded } from "@mui/icons-material";
@@ -15,7 +15,7 @@ import {
 
 const page = () => {
     const user = useAppSelector((s) => s.userInfo);
-    const { data, isLoading, error, isSuccess } = useGetShopsQuery();
+    const { data, isLoading, error, isSuccess } = useGetMeQuery();
 
     if (isLoading) {
         return <CircularProgress />;
@@ -57,7 +57,7 @@ const page = () => {
                                 مجموع بدهی کل
                             </Typography>
                             <p className="font-bold! text-xl! md:text-2xl! lg:3xl!">
-                                31,240,000
+                                {data?.total_amount.toLocaleString("fa-IR")}
                             </p>
                             <Typography variant="body2">تومان</Typography>
                         </div>
@@ -80,7 +80,7 @@ const page = () => {
                             >
                                 <StoreRounded />
                                 <p className="font-bold! text-xl! md:text-2xl! lg:3xl!">
-                                    6
+                                    {data?.shops.length}
                                 </p>
                                 <Typography variant="body2">
                                     فروشگاه بدهکار
@@ -98,7 +98,7 @@ const page = () => {
                             >
                                 <ReceiptRounded />
                                 <p className="font-bold! text-xl! md:text-2xl! lg:3xl!">
-                                    23
+                                    {data?.number_of_debts}
                                 </p>
                                 <Typography variant="body2">
                                     فاکتور باز

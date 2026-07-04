@@ -1,4 +1,4 @@
-import { GetMyShopsResponse, GetShopDetailResponse } from "@/types/ApiResponesesType";
+import { GetMeResponse, GetShopDetailResponse } from "@/types/ApiResponesesType";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const ApiAccount = createApi({
@@ -9,8 +9,8 @@ export const ApiAccount = createApi({
     }),
     tagTypes: ["Shops", "Shop"],
     endpoints: (builder) => ({
-        getShops: builder.query<GetMyShopsResponse, void>({
-            query: () => "account/my_shops",
+        getMe: builder.query<GetMeResponse, void>({
+            query: () => "account/me",
             providesTags: ["Shops"]
         }),
         getShop: builder.query<GetShopDetailResponse, string>({
@@ -21,6 +21,6 @@ export const ApiAccount = createApi({
 });
 
 export const {
-    useGetShopsQuery,
+    useGetMeQuery,
     useGetShopQuery
 } = ApiAccount;

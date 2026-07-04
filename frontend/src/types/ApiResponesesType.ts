@@ -54,8 +54,11 @@ export interface GetCustomerDetailsResponse {
 }
 
 // account
-export interface GetMyShopsResponse {
+export interface GetMeResponse {
     ok: boolean,
+    total_amount : number,
+    number_of_debts: number,
+    
     shops: ShopType[]
 }
 export interface GetShopDetailResponse {

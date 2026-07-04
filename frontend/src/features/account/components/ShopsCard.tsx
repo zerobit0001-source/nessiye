@@ -1,8 +1,13 @@
+import { ShopType } from "@/types/types";
 import { ChevronLeftRounded } from "@mui/icons-material";
 import { Avatar, Button, Card, Typography } from "@mui/material";
 import Link from "next/link";
 
-const ShopsCard = ({ shop }: any) => {
+interface shopcardProps {
+    shop: ShopType;
+}
+
+const ShopsCard = ({ shop }: shopcardProps) => {
     return (
         <Card className="rounded-xl! p-4! flex flex-col gap-8">
             <div className="flex items-center justify-between w-full">
@@ -22,11 +27,13 @@ const ShopsCard = ({ shop }: any) => {
             <div className="bg-blue-500/50! p-4 border border-blue-500 rounded-xl!">
                 <Typography variant="body2">بدهی باقی‌مانده</Typography>
                 <Typography variant="h5" color="primary" className="font-bold!">
-                    3,230,000 تومان
+                    {shop.total_amount.toLocaleString("fa-IR")} تومان
                 </Typography>
             </div>
             <div className="flex w-full items-center justify-between">
-                <Button variant="outlined">3 فاکتور باز</Button>
+                <Button variant="outlined">
+                    {shop.number_of_debts} فاکتور باز
+                </Button>
                 <Typography variant="caption">1405/03/29</Typography>
             </div>
             <Link href={`account/${shop.shop_id}`}>
