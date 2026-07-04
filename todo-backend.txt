@@ -10,3 +10,4 @@ so far :
         > api/modal?type=credits and it returns = { ok , debts : [{ id , remaining , created_at , is_paid }] }
     - Create the products search by name and barcode and category
 todo : 
+    + add the django silk by pip install django-silk
