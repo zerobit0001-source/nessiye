@@ -9,9 +9,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-9o*=u$w&n-$)w^ga($k#&&g_&23$!h_)6g#hp@3v_em2z0za#i"
 
 
-DEBUG = os.getenv('DEBUG') == 'True'
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+if DEBUG:
+    INSTALLED_APPS += ['silk']
+    MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')
+    SILKY_PYTHON_PROFILER = True
+
 
 ALLOWED_HOSTS = ["*"]
+
 
 
 # Application definition
@@ -24,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'silk',
+    #'silk',
     'accounts',
     'rest_framework_simplejwt',
     'products',
@@ -34,7 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'silk.middleware.SilkyMiddleware',
+    #'silk.middleware.SilkyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
