@@ -1,6 +1,14 @@
 from rest_framework import serializers
-from .models import Debt
+from .models import Debt, Payment
 from sales.serializers import SaleItemDetailSerializer
+
+
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['id', 'amount', 'created_at']
 
 
 class DebtSerializer(serializers.ModelSerializer):
@@ -9,13 +17,14 @@ class DebtSerializer(serializers.ModelSerializer):
     is_paid = serializers.SerializerMethodField()
     customer_name = serializers.SerializerMethodField()
     customer_phone = serializers.SerializerMethodField()
+    payments = PaymentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Debt
         fields = [
             'id', 'customer', 'customer_name', 'customer_phone', 'sale', 'items',
             'amount', 'paid_amount', 'remaining', 'is_paid',
-            'description', 'created_at'
+            'payments', 'description', 'created_at'
         ]
         read_only_fields = ['shop', 'created_at']
 
@@ -24,6 +33,9 @@ class DebtSerializer(serializers.ModelSerializer):
 
     def get_is_paid(self, obj):
         return obj.is_paid
+    
+    def get_paid_amount(self, obj):
+        return obj.paid_amount
 
     def get_customer_name(self, obj):
         return obj.customer.customer.full_name if obj.customer else None
