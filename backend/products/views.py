@@ -31,8 +31,8 @@ class ProductListCreateView(APIView):
     
         if request.user.is_authenticated and request.user.is_shop:
             products = Product.objects.filter(shop=request.user)
-        else:
-            products = Product.objects.all()
+        # else:
+        #     products = Product.objects.all()
 
         if search:
             products = products.filter(Q(name__icontains=search) | Q(barcode__icontains=search))
