@@ -9,16 +9,20 @@ export const ApiPayment = createApi({
         credentials: "include",
     }),
 
+    tagTypes: ['Payments'],
+
     endpoints: (builder) => ({
         getPayments: builder.query<GetPaymentsResponse, void>({
-            query: () => "payments/"
+            query: () => "payments/",
+            providesTags: ['Payments']
         }),
         addPayment: builder.mutation<addPaymentResponse, PostPaymentBody>({
             query: (data) => ({
                 url: "payments/",
                 method: "POST",
                 body: JSON.stringify(data)
-            })
+            }),
+            invalidatesTags: ["Payments"]
         })
     })
 })
