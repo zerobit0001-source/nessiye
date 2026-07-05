@@ -99,3 +99,14 @@ export interface GetProductsParams {
     // page?: number;
     // ordering?: string;
 }
+
+export interface PaymentType {
+    id: number,
+    customer_name: string,
+    customer_phone: string,
+    amount: number,
+    paid_amount: number,
+    remaining: number,
+    is_paid: boolean,
+    created_at: string
+}
