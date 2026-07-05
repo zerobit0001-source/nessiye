@@ -91,18 +91,23 @@ class PaymentListView(APIView):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
 
-        debts = Debt.objects.filter(shop=request.user, paid_amount__gt=0)
-        result = []
-        for debt in debts:
-            result.append({
-                'id': debt.id,
-                'customer_name': debt.customer.customer.full_name,
-                'customer_phone': debt.customer.customer.phone_number,
-                'amount': debt.amount,
-                'paid_amount': debt.paid_amount,
-                'remaining': debt.remaining,
-                'is_paid': debt.is_paid,
-                'created_at': debt.created_at
-            })
+        debts = Debt.objects.filter(
+            shop=request.user,
+            paid_amount__gt=0
+        ).select_related('customer__customer')
+
+        result = [
+            {
+                'id': d.id,
+                'customer_name': d.customer.customer.full_name,
+                'customer_phone': d.customer.customer.phone_number,
+                'amount': d.amount,
+                'paid_amount': d.paid_amount,
+                'remaining': d.remaining,
+                'is_paid': d.is_paid,
+                'created_at': d.created_at
+            }
+            for d in debts
+        ]
 
         return Response({'ok': True, 'payments': result})
