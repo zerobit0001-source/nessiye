@@ -17,7 +17,7 @@ const DebtsCreaditsRows = ({ debt }: DebtsRowsProps) => {
                                   sticky top-0
                                   z-50
                                   grid 
-                                  grid-cols-8
+                                  grid-cols-7
                                   items-center
                                   justify-between
                                   p-4
@@ -35,16 +35,13 @@ const DebtsCreaditsRows = ({ debt }: DebtsRowsProps) => {
                 {debt.customer_name}
             </Typography>
             <Typography variant="body2" className="text-center">
-                {debt.description}
+                {debt.amount.toLocaleString("fa-IR")} ریال
             </Typography>
             <Typography variant="body2" className="text-center">
-                {debt.amount} ریال
+                {debt.paid_amount.toLocaleString("fa-IR")} ریال
             </Typography>
             <Typography variant="body2" className="text-center">
-                {debt.paid_amount} ریال
-            </Typography>
-            <Typography variant="body2" className="text-center">
-                {debt.remaining} ریال
+                {debt.remaining.toLocaleString("fa-IR")} ریال
             </Typography>
             <Typography variant="body2" className="text-center">
                 {debt.created_at}
