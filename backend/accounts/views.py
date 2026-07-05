@@ -375,7 +375,7 @@ class MeView(APIView):
             customer=request.user
         ).select_related('shop').annotate(
             total_amount=Sum('debts__amount'),
-            total_paid=Sum('debts__paid_amount'),
+            total_paid=Sum('debts__payments__amount'),
             number_of_debts=Count('debts')
         )
 
