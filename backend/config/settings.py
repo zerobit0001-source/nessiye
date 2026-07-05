@@ -134,8 +134,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PAGINATION_CLASS': 'config.pagination.StandardPagination',
-    'PAGE_SIZE': 30
 }
 
 MEDIA_URL = '/media/'
