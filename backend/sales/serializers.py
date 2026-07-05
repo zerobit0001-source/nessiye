@@ -30,4 +30,6 @@ class SaleSerializer(serializers.ModelSerializer):
         return obj.customer.full_name if obj.customer else None
 
     def get_total(self, obj):
+        if hasattr(obj, 'total_amount'):
+            return obj.total_amount or 0
         return sum(item.price * item.quantity for item in obj.items.all())
