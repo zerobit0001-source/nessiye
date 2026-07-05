@@ -51,11 +51,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if ENABLE_SILK:
-    INSTALLED_APPS += ['silk']
-    MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')
-    SILKY_PYTHON_PROFILER = True
-
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'config.urls'
@@ -159,4 +154,4 @@ CSRF_TRUSTED_ORIGINS = [
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SILKY_PYTHON_PROFILER = True
+# SILKY_PYTHON_PROFILER = True
