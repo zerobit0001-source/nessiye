@@ -12,7 +12,7 @@ from sales.models import Sale
 from sales.serializers import SaleSerializer
 from debts.models import Debt
 from debts.serializers import DebtSerializer
-
+from django.db.models import Sum, Count
 from .models import User, OtpCode
 from .serializers import (
     RegisterSerializer,
@@ -369,29 +369,29 @@ class MeView(APIView):
 
     def get(self, request):
         if request.user.is_shop:
-            return Response({'ok': False, 'error': 'این  برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'ok': False, 'error': 'این endpoint برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
 
-        customer_shops = CustomerShop.objects.filter(customer=request.user).select_related('shop')
-        
-        shops = []
-        total_amount = 0
-        total_debts = 0
+        customer_shops = CustomerShop.objects.filter(
+            customer=request.user
+        ).select_related('shop').annotate(
+            total_amount=Sum('debts__amount'),
+            total_paid=Sum('debts__paid_amount'),
+            number_of_debts=Count('debts')
+        )
 
-        for cs in customer_shops:
-            debts = Debt.objects.filter(customer=cs)
-            shop_total = sum(d.remaining for d in debts)
-            shop_debt_count = debts.count()
-
-            total_amount += shop_total
-            total_debts += shop_debt_count
-
-            shops.append({
+        shops = [
+            {
                 'shop_id': cs.shop.id,
                 'shop_name': cs.shop.shop_name,
                 'shop_address': cs.shop.shop_address,
-                'total_amount': shop_total,
-                'number_of_debts': shop_debt_count
-            })
+                'total_amount': (cs.total_amount or 0) - (cs.total_paid or 0),
+                'number_of_debts': cs.number_of_debts or 0
+            }
+            for cs in customer_shops
+        ]
+
+        total_amount = sum(s['total_amount'] for s in shops)
+        total_debts = sum(s['number_of_debts'] for s in shops)
 
         return Response({
             'ok': True,
