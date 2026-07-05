@@ -36,13 +36,9 @@ class ProductListCreateView(APIView):
 
         if search:
             products = products.filter(Q(name__icontains=search) | Q(barcode__icontains=search))
-            if not products:
-                return Response({'ok': False, 'message': 'محصولی با این مشخصات یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
 
         if category:
             products = products.filter(category__name__icontains=category)
-            if not products:
-                return Response({'ok': False, 'message': 'محصولی در این دسته‌بندی یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
     
         if barcode:
             product = products.filter(barcode=barcode).first()
