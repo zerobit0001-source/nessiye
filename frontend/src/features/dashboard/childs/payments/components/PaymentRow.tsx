@@ -58,7 +58,7 @@ const PaymentRow = ({ payment }: PaymentRowProps) => {
                     {payment.customer_name}
                 </Typography>
                 <Typography variant="body2" className="text-center">
-                    تومان {payment.paid_amount.toLocaleString("fa-IR")}
+                    تومان {payment?.amount?.toLocaleString("fa-IR")}
                 </Typography>
 
                 <Typography
@@ -104,13 +104,13 @@ const PaymentRow = ({ payment }: PaymentRowProps) => {
                     <Typography>
                         شماره مشتری : {payment.customer_phone}
                     </Typography>
-                    <Typography>
+                    {/* <Typography>
                         مبلغ پرداخت شده :{" "}
-                        {payment.paid_amount.toLocaleString("fa-IR")}
-                    </Typography>
-                    <Typography>
+                        {payment?.paid_amount?.toLocaleString("fa-IR")}
+                    </Typography> */}
+                    {/* <Typography>
                         مبلغ مانده : {payment.remaining.toLocaleString("fa-IR")}
-                    </Typography>
+                    </Typography> */}
                     <Chip
                         color={payment.is_paid ? "success" : "error"}
                         label={

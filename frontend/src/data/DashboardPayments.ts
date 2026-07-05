@@ -5,5 +5,5 @@ export const PaymentBranchName: Array<string> = [
     "مبلغ",
     "روش پرداخت",
     "تاریخ",
-    "وضعیت",
+    "مشاهده جزئیات",
 ]
