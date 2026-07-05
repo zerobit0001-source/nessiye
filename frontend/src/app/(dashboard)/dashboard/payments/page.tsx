@@ -1,6 +1,6 @@
 import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
-import { PaymentBranchName, payments } from "@/data/DashboardPayments";
+import { PaymentBranchName } from "@/data/DashboardPayments";
 import PaymentList from "@/features/dashboard/childs/payments/components/PaymentList";
 import AddPaymentModal from "@/features/dashboard/components/AddPaymentModal";
 import BranchHead from "@/features/dashboard/components/BranchHead";

@@ -1,9 +1,10 @@
 "use client";
-import { AddRounded, CloseRounded } from "@mui/icons-material";
+import { AddRounded, CloseRounded, RemoveRounded } from "@mui/icons-material";
 import {
     Autocomplete,
     Box,
     Button,
+    Card,
     IconButton,
     Modal,
     TextField,
@@ -15,11 +16,12 @@ import { useAppDispatch } from "@/lib/redux/hooks";
 import { toast } from "react-toastify";
 import { ProductType } from "@/types/types";
 import { ApiCustomer } from "../customers/api/ApiCustomer";
-import { useGetProductsQuery } from "../products/api/ApiProduct";
 import { useAddSalesMutation } from "../sales/api/ApiSales";
 import { salesSliceActions } from "../debts/slices/debtsFormSlice";
 import ModalContainer from "../../components/ModalContainer";
 import { CustomerType } from "@/types/customerType";
+import { useGetModalDataQuery } from "../../api/ApiModalsData";
+import AddProductScannerDilog from "../products/components/AddProductScannerDilog";
 
 const AddDebtForCustomerModal = ({ customer }: { customer: CustomerType }) => {
     const dispatch = useAppDispatch();
@@ -35,6 +37,7 @@ const AddDebtForCustomerModal = ({ customer }: { customer: CustomerType }) => {
     });
 
     const [open, setOpen] = useState(false);
+    const [scannerOpen, setScannerOpen] = useState(false);
 
     const [selectedProducts, setSelectedProducts] = useState<ProductType[]>([]);
 
@@ -57,7 +60,7 @@ const AddDebtForCustomerModal = ({ customer }: { customer: CustomerType }) => {
         data: ProductsData,
         isLoading: isProuctLoading,
         error: isProuctError,
-    } = useGetProductsQuery();
+    } = useGetModalDataQuery({ type: "products" }, { skip: !open });
     const [
         addSale,
         { data: addSaleRes, isLoading: addSaleLoading, error: addSaleError },
@@ -90,7 +93,7 @@ const AddDebtForCustomerModal = ({ customer }: { customer: CustomerType }) => {
                 return;
             }
 
-            handleClose()
+            handleClose();
             dispatch(ApiCustomer.util.invalidateTags(["Credits", "Customer"]));
             toast.success("نسیه ثبت شد");
             setForm({
@@ -109,6 +112,60 @@ const AddDebtForCustomerModal = ({ customer }: { customer: CustomerType }) => {
     const handleClear = () => {
         dispatch(salesSliceActions.resetForm());
         handleClose();
+    };
+
+    const increaseQuantity = (productId: number) => {
+        setForm((prev) => ({
+            ...prev,
+            items: prev.items.map((item) =>
+                item.product_id === productId
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item,
+            ),
+        }));
+    };
+
+    const decreaseQuantity = (productId: number) => {
+        setForm((prev) => ({
+            ...prev,
+            items: prev.items.map((item) =>
+                item.product_id === productId
+                    ? {
+                          ...item,
+                          quantity: Math.max(1, item.quantity - 1),
+                      }
+                    : item,
+            ),
+        }));
+    };
+    const handleBarcodeScan = (barcode: string) => {
+        const product = products.find((p) => p.barcode === barcode);
+
+        if (!product) {
+            toast.error("محصول پیدا نشد");
+            return;
+        }
+
+        const exists = form.items.find((i) => i.product_id === product.id);
+
+        if (exists) {
+            increaseQuantity(product.id);
+        } else {
+            setSelectedProducts((prev) => [...prev, product]);
+            setForm((prev) => ({
+                ...prev,
+                items: [
+                    ...prev.items,
+                    {
+                        product_id: product.id,
+                        quantity: 1,
+                    },
+                ],
+            }));
+            toast.success(`${product.name} اضافه شد`);
+        }
+
+        setScannerOpen(false);
     };
 
     console.log(form);
@@ -178,6 +235,55 @@ const AddDebtForCustomerModal = ({ customer }: { customer: CustomerType }) => {
                                     fullWidth
                                 />
                             </div>
+                            <Button
+                                variant="outlined"
+                                onClick={() => setScannerOpen(true)}
+                            >
+                                اضافه کردن با اسکنر
+                            </Button>
+                            <AddProductScannerDilog
+                                open={scannerOpen}
+                                onClose={() => setScannerOpen(false)}
+                                onScan={handleBarcodeScan}
+                            />
+                            {selectedProducts.map((product) => {
+                                const item = form.items.find(
+                                    (item) => item.product_id === product.id,
+                                );
+
+                                return (
+                                    <Card
+                                        key={product.id}
+                                        className="flex items-center justify-between p-2"
+                                    >
+                                        {product.name}
+
+                                        <div className="flex items-center gap-2">
+                                            <IconButton
+                                                color="primary"
+                                                onClick={() =>
+                                                    increaseQuantity(product.id)
+                                                }
+                                            >
+                                                <AddRounded />
+                                            </IconButton>
+
+                                            <Typography variant="caption">
+                                                {item?.quantity ?? 1}
+                                            </Typography>
+
+                                            <IconButton
+                                                color="error"
+                                                onClick={() =>
+                                                    decreaseQuantity(product.id)
+                                                }
+                                            >
+                                                <RemoveRounded />
+                                            </IconButton>
+                                        </div>
+                                    </Card>
+                                );
+                            })}
                             <div className="flex items-center gap-2 w-full">
                                 <div className="w-full">
                                     <Typography variant="body2">
