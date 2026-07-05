@@ -54,7 +54,7 @@ class CustomerListCreateView(APIView):
             shop=request.user
         ).select_related('customer').annotate(
             total_debts=Sum('debts__amount'),
-            total_paid=Sum('debts__paid_amount'),
+            total_paid=Sum('debts__payments__amount'),
         )
     
         result = [
