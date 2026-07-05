@@ -146,7 +146,7 @@ class CustomerDeleteView(APIView):
             return Response({'ok': False, 'error': 'مشتری یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
 
         customer = customer_shop.customer
-        debts = Debt.objects.filter(shop=request.user, customer=customer_shop)
+        debts = Debt.objects.filter(shop=request.user, customer=customer_shop).prefetch_related('payments')
 
         total_debt = sum(d.amount for d in debts)
         total_paid = sum(d.paid_amount for d in debts)
@@ -199,7 +199,7 @@ class CustomerDeleteView(APIView):
 #             'debts': DebtSerializer(debts, many=True).data
 #         })
     
-    
+
 class CustomerHistoryView(APIView):
     permission_classes = [IsAuthenticated]
 
