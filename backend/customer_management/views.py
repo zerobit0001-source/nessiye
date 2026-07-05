@@ -9,6 +9,7 @@ from sales.models import Sale
 from sales.serializers import SaleSerializer
 from debts.models import Debt
 from debts.serializers import DebtSerializer
+from django.db.models import Sum
 from accounts.models import User, OtpCode
 import random
 
@@ -17,31 +18,56 @@ class CustomerListCreateView(APIView):
     """This view allows shop users to list their customers and add new customers by phone number with OTP verification."""
     permission_classes = [IsAuthenticated]
 
+    # def get(self, request):
+    #     if not request.user.is_shop:
+    #         return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+# 
+    #     # customer_ids = CustomerShop.objects.filter(shop=request.user).values_list('customer_id', flat=True)
+    #     # customers = User.objects.filter(id__in=customer_ids)
+    #     # serializer = CustomerSerializer(customers, many=True)
+    #     # return Response({'ok': True, 'customers': serializer.data})
+# 
+    #     customer_shops = CustomerShop.objects.filter(shop=request.user).select_related('customer')
+    # 
+    #     result = []
+    #     for cs in customer_shops:
+    #         debts = Debt.objects.filter(shop=request.user, customer=cs)
+    #         total_debt = sum(d.amount for d in debts)
+    #         total_paid = sum(d.paid_amount for d in debts)
+    # 
+    #         result.append({
+    #             'id': cs.customer.id,
+    #             'full_name': cs.customer.full_name,
+    #             'phone_number': cs.customer.phone_number,
+    #             'total_debts': total_debt,
+    #             'paid_amount': total_paid,
+    #             'remaining_amount': total_debt - total_paid
+    #         })
+    # 
+    #     return Response({'ok': True, 'customers': result})
+
     def get(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
-
-        # customer_ids = CustomerShop.objects.filter(shop=request.user).values_list('customer_id', flat=True)
-        # customers = User.objects.filter(id__in=customer_ids)
-        # serializer = CustomerSerializer(customers, many=True)
-        # return Response({'ok': True, 'customers': serializer.data})
-
-        customer_shops = CustomerShop.objects.filter(shop=request.user).select_related('customer')
     
-        result = []
-        for cs in customer_shops:
-            debts = Debt.objects.filter(shop=request.user, customer=cs)
-            total_debt = sum(d.amount for d in debts)
-            total_paid = sum(d.paid_amount for d in debts)
+        customer_shops = CustomerShop.objects.filter(
+            shop=request.user
+        ).select_related('customer').annotate(
+            total_debts=Sum('debts__amount'),
+            total_paid=Sum('debts__paid_amount'),
+        )
     
-            result.append({
+        result = [
+            {
                 'id': cs.customer.id,
                 'full_name': cs.customer.full_name,
                 'phone_number': cs.customer.phone_number,
-                'total_debts': total_debt,
-                'paid_amount': total_paid,
-                'remaining_amount': total_debt - total_paid
-            })
+                'total_debts': cs.total_debts or 0,
+                'paid_amount': cs.total_paid or 0,
+                'remaining_amount': (cs.total_debts or 0) - (cs.total_paid or 0)
+            }
+            for cs in customer_shops
+        ]
     
         return Response({'ok': True, 'customers': result})
 
