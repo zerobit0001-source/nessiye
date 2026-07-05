@@ -5,7 +5,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('silk/', include('silk.urls', namespace='silk')),
+    # path('silk/', include('silk.urls', namespace='silk')),
     path('api/accounts/', include('accounts.urls')),
     path('api/', include('products.urls')),
     path('api/', include('customer_management.urls')),
