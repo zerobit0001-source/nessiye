@@ -40,3 +40,5 @@ todo :
  	+ customer page
  	+ overdues
  	+ markets
++ create the fas pay for payments page 
++ create the main page 
