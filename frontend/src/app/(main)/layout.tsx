@@ -19,7 +19,7 @@ export default async function MainLayout({
 
     return (
         <div className="">
-            <MainNavbar />
+            {/* <MainNavbar /> */}
             {children}
         </div>
     );
