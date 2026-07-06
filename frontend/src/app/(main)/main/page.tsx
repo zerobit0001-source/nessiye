@@ -1,4 +1,5 @@
 "use client";
+import { useAppSelector } from "@/lib/redux/hooks";
 import {
     AccountBalanceWalletRounded,
     AddRounded,
@@ -22,6 +23,8 @@ import {
     TrendingUpRounded,
     Twitter,
 } from "@mui/icons-material";
+import { Button } from "@mui/material";
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 // مدل‌سازی داده‌های بخش سوالات متداول برای تمیزتر شدن کد
@@ -32,6 +35,7 @@ interface FAQItem {
 
 export const NesyehLanding: React.FC = () => {
     const [isScrolled, setIsScrolled] = useState<boolean>(false);
+    const user = useAppSelector((s) => s.userInfo);
 
     const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
@@ -127,18 +131,34 @@ export const NesyehLanding: React.FC = () => {
                         >
                             <i className="fa-regular fa-moon"></i>
                         </button> */}
-                        <a
-                            href="#login"
-                            className="text-sm font-semibold text-[#6B7280] hover:text-[#111827] px-4 py-2 transition-colors"
-                        >
-                            ورود
-                        </a>
-                        <a
-                            href="#register"
-                            className="text-sm font-bold text-white bg-[#1976D2] hover:bg-[#1565C0] px-5 py-2.5 rounded-xl shadow-md shadow-[#1976D2]/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5"
-                        >
-                            ثبت‌نام رایگان
-                        </a>
+                        {user.isAuthenticated ? (
+                            <div className="">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    href={
+                                        user.is_shop ? "/dashboard" : "/account"
+                                    }
+                                >
+                                    داشبورد من
+                                </Button>
+                            </div>
+                        ) : (
+                            <>
+                                <Link
+                                    href="/auth?mode=login"
+                                    className="text-sm font-semibold text-[#6B7280] hover:text-[#111827] px-4 py-2 transition-colors"
+                                >
+                                    ورود
+                                </Link>
+                                <Link
+                                    href="/auth?mode=signup"
+                                    className="text-sm font-bold text-white bg-[#1976D2] hover:bg-[#1565C0] px-5 py-2.5 rounded-xl shadow-md shadow-[#1976D2]/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+                                >
+                                    ثبت‌ نام رایگان
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </header>
