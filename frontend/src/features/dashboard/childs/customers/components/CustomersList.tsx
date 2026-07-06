@@ -4,12 +4,15 @@ import React from "react";
 import { useGetCustomersQuery } from "../api/ApiCustomer";
 import CustomerRow from "../../components/CustomerRow";
 import Link from "next/link";
+import CustomerRowSkeleton from "./CustomerRowSkeleton";
 
 const CustomersList = () => {
     const { data, isLoading, error } = useGetCustomersQuery();
 
     if (isLoading) {
-        return <p>loading...</p>;
+        return Array.from({ length: 8 }).map((_, index) => (
+            <CustomerRowSkeleton key={index} />
+        ));
     }
     if (error) {
         return <p>Something went wrong.</p>;

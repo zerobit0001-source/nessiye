@@ -20,6 +20,9 @@ so far :
 - Fix the customers list page props 
 - Fix the product search and filter
 - implement the paste otp code in input 
+- create the fast pay for payments page 
+- create the payment detail dialog
+
 
 
 todo :
@@ -33,12 +36,11 @@ todo :
 + implement a component for image responsive and performance
 > implement the loading user interface for loading data that coming from API
  	+ products **
- 	+ customers
+ 	+ customers ****
  	+ debts
  	+ payments
  	+ reports
  	+ customer page
  	+ overdues
  	+ markets
-+ create the fast pay for payments page 
 + create the main page 
