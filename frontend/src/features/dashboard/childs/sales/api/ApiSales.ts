@@ -1,5 +1,5 @@
-import { GetDebtsResponeseType, GetSalesResponesType, PostSalesType } from "@/types/ApiResponesesType";
-    import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { GetDebtByIdResponeseType, GetDebtsResponeseType, GetSalesResponesType, PostSalesType } from "@/types/ApiResponesesType";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 
 
@@ -27,6 +27,9 @@ export const ApiSales = createApi({
         getDebts: builder.query<GetDebtsResponeseType, void>({
             query: () => "debts/",
             providesTags: ["Debts"]
+        }),
+        getDebtById: builder.query<GetDebtByIdResponeseType, number>({
+            query: (id) => `debts/${id}`
         })
     })
 })
@@ -34,5 +37,6 @@ export const ApiSales = createApi({
 export const {
     useGetSalesQuery,
     useAddSalesMutation,
-    useGetDebtsQuery
+    useGetDebtsQuery,
+    useGetDebtByIdQuery,
 } = ApiSales

@@ -17,6 +17,7 @@ export interface DebtType {
     }[];
     description: string,
     created_at: string,
+    payments?: PaymentType[]
     status: "active" | "overdue" | "settled"
 }
 
@@ -105,8 +106,6 @@ export interface PaymentType {
     customer_name: string,
     customer_phone: string,
     amount: number,
-    paid_amount: number,
-    remaining: number,
-    is_paid: boolean,
-    created_at: string
+    created_at: string,
+    debt_id: number
 }

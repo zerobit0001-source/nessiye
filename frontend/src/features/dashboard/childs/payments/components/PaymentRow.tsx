@@ -1,27 +1,16 @@
 "use client";
 
-import {
-    Box,
-    Button,
-    Chip,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Typography,
-    useMediaQuery,
-} from "@mui/material";
+import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 import { PaymentType } from "@/types/types";
 import { theme } from "@/theme/theme";
 import { useState } from "react";
+import PaymetsDetails from "./PaymetsDetails";
 
 interface PaymentRowProps {
     payment: PaymentType;
 }
 
 const PaymentRow = ({ payment }: PaymentRowProps) => {
-    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -73,59 +62,14 @@ const PaymentRow = ({ payment }: PaymentRowProps) => {
                     {payment.created_at}
                 </Typography>
                 <div className=" flex justify-center ">
-                    {payment.is_paid ? (
-                        <Typography
-                            className="bg-green-400/10 text-green-500 rounded-full  text-center w-max px-3"
-                            variant="body2"
-                        >
-                            تکمیل
-                        </Typography>
-                    ) : (
-                        <Typography
-                            className="bg-red-400/10 text-red-500 rounded-full  text-center w-max px-3"
-                            variant="body2"
-                        >
-                            ناقص
-                        </Typography>
-                    )}
+                    <Button variant="text">مشاهده</Button>
                 </div>
             </Box>
-            <Dialog
-                fullScreen={fullScreen}
+            <PaymetsDetails
                 open={open}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">
-                    جزئیات پرداخت #{payment.id}
-                </DialogTitle>
-                <DialogContent>
-                    <Typography>نام مشتری : {payment.customer_name}</Typography>
-                    <Typography>
-                        شماره مشتری : {payment.customer_phone}
-                    </Typography>
-                    {/* <Typography>
-                        مبلغ پرداخت شده :{" "}
-                        {payment?.paid_amount?.toLocaleString("fa-IR")}
-                    </Typography> */}
-                    {/* <Typography>
-                        مبلغ مانده : {payment.remaining.toLocaleString("fa-IR")}
-                    </Typography> */}
-                    <Chip
-                        color={payment.is_paid ? "success" : "error"}
-                        label={
-                            payment.is_paid
-                                ? "کامل پرداخت شده"
-                                : "کامل پرداخت نشده"
-                        }
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} autoFocus color="error">
-                        بستن
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                handleClose={handleClose}
+                payment={payment}
+            />
         </>
     );
 };

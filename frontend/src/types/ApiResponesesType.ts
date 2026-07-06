@@ -19,6 +19,10 @@ export interface GetDebtsResponeseType {
     ok: boolean,
     debts: DebtType[]
 }
+export interface GetDebtByIdResponeseType {
+    ok: boolean,
+    debt: DebtType
+}
 
 
 // products
