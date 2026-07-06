@@ -5,6 +5,7 @@ import { PaymentType } from "@/types/types";
 import { theme } from "@/theme/theme";
 import { useState } from "react";
 import PaymetsDetails from "./PaymetsDetails";
+import { formatDate } from "@/utils/formatters";
 
 interface PaymentRowProps {
     payment: PaymentType;
@@ -59,7 +60,7 @@ const PaymentRow = ({ payment }: PaymentRowProps) => {
                 </Typography>
 
                 <Typography variant="body2" className="text-center">
-                    {payment.created_at}
+                    {formatDate(payment.created_at)}
                 </Typography>
                 <div className=" flex justify-center ">
                     <Button variant="text">مشاهده</Button>

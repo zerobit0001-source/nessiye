@@ -20,15 +20,13 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useGetDebtByIdQuery } from "../../sales/api/ApiSales";
+import { formatDate, formatPrice } from "@/utils/formatters";
 
 interface PaymentsDetailsProps {
     open: boolean;
     handleClose: () => void;
     payment: PaymentType;
 }
-
-const formatPrice = (price: number) =>
-    new Intl.NumberFormat("fa-IR").format(price);
 
 const PaymetsDetails = ({
     open,
@@ -133,9 +131,10 @@ const PaymetsDetails = ({
                                         primary={`${formatPrice(
                                             pay.amount,
                                         )} تومان`}
-                                        secondary={new Date(
+                                        secondary={formatDate(
                                             pay.created_at,
-                                        ).toLocaleString("fa-IR")}
+                                            {},
+                                        )}
                                     />
                                 </ListItem>
                             ))}
