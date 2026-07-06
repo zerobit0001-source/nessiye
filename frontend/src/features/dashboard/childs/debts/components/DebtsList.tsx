@@ -2,12 +2,15 @@
 import React from "react";
 import { useGetDebtsQuery } from "../../sales/api/ApiSales";
 import DebtsCreaditsRows from "./DebtsCreaditsRows";
+import DebtsCreditsRowSkeleton from "./DebtsCreditsRowSkeleton";
 
 const DebtsList = () => {
     const { data, isLoading, error, isSuccess } = useGetDebtsQuery();
 
     if (isLoading) {
-        return <p>loading...</p>;
+        return Array.from({ length: 8 }).map((_, index) => (
+            <DebtsCreditsRowSkeleton key={index} />
+        ));
     }
     if (error) {
         return <p>Something went wrong.</p>;
