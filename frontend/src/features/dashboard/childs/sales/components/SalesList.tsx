@@ -2,12 +2,15 @@
 
 import { useGetSalesQuery } from "../api/ApiSales";
 import SaleRow from "./SaleRow";
+import SalesRowSkeleton from "./SalesRowSkeleton";
 
 const SalesList = () => {
     const { data, isLoading, error, isSuccess } = useGetSalesQuery();
 
     if (isLoading) {
-        return <p>loading...</p>;
+        return Array.from({ length: 8 }).map((_, index) => (
+            <SalesRowSkeleton key={index} />
+        ));
     }
     if (error) {
         return <p>Something went wrong.</p>;

@@ -44,3 +44,5 @@ todo :
  	+ overdues
  	+ markets
 + create the main page 
++ create the price formatter 
++ create the date formatter

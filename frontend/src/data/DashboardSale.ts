@@ -5,6 +5,4 @@ export const SaleBranchName: Array<string> = [
     "مشتری",
     "جمع",
     "تاریخ",
-    "نوع",
-    "وضعیت"
 ]
