@@ -24,6 +24,7 @@ so far :
 - create the payment detail dialog
 - create the price formatter 
 - create the date formatter
+- create the main page 
 
 
 
@@ -46,4 +47,3 @@ todo :
  	+ reports
  	+ overdues
  	+ markets
-+ create the main page 
