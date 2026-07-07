@@ -47,3 +47,4 @@ todo :
  	+ reports
  	+ overdues
  	+ markets
++ Fix the categories api
