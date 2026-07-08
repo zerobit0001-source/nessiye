@@ -48,3 +48,4 @@ todo :
  	+ overdues
  	+ markets
 + Fix the categories api
++ Fix the performance issue in frontend about getcurrentuser

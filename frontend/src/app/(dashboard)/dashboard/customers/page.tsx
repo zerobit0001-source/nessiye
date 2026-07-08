@@ -1,7 +1,6 @@
-
 import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
-import { Customers, CustomersBranchName } from "@/data/DashboardCustomers";
+import { CustomersBranchName } from "@/data/DashboardCustomers";
 import AddCustomerModal from "@/features/dashboard/components/AddCustomerModal";
 import BranchHead from "@/features/dashboard/components/BranchHead";
 import PagesFilterLinks from "@/features/dashboard/components/PagesFilterLinks";
