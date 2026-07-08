@@ -1,7 +1,7 @@
 import { CustomersUsernameAndId } from "@/data/AutoCompletesData";
 import { formPayMethod, MetodsType } from "./methods";
 import { BranchMap, categories, Category } from "@/utils/filteringData";
-import { ProductType } from "./types";
+import { CatergoyType, ProductType } from "./types";
 
 
 
@@ -35,7 +35,7 @@ export interface ProductModalFormType {
     buy_price: string | number,
     sell_price: string | number,
     exp_date: string | number,
-    category: Category | null,
+    category: number | null,
     description?: string
     stock?: number,
 }

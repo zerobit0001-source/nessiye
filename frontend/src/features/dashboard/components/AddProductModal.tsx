@@ -1,6 +1,5 @@
 "use client";
 
-import { branches, categories } from "@/utils/filteringData";
 import { AddRounded, CloseRounded, QrCodeRounded } from "@mui/icons-material";
 import {
     Autocomplete,
@@ -18,23 +17,30 @@ import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { productFormActions } from "../childs/products/slices/productFormSlice";
 import { ProductModalFormType } from "@/types/modalsTypes";
 import { validateAddProductForm } from "@/utils/validations/ProductValidation";
-import { useAddProductMutation } from "../childs/products/api/ApiProduct";
+import {
+    useAddProductMutation,
+    useGetCategoriesQuery,
+} from "../childs/products/api/ApiProduct";
 import AddProductScannerDilog from "../childs/products/components/AddProductScannerDilog";
+import { CatergoyType } from "@/types/types";
+import { PostProductsType } from "@/types/ApiResponesesType";
 
 const AddProductModal = () => {
     const formData = useAppSelector((e) => e.productsForm);
     const dispatch = useAppDispatch();
 
-    const [form, setForm] = useState<ProductModalFormType>({
-        name: formData.name,
-        barcode: formData.barcode,
-        buy_price: formData.buy_price,
-        sell_price: formData.sell_price,
-        exp_date: formData.exp_date,
-        category: formData.category,
-        description: formData.description,
-        stock: formData.stock,
+    const [form, setForm] = useState<PostProductsType>({
+        name: "",
+        barcode: "",
+        buy_price: 0,
+        sell_price: 0,
+        exp_date: "",
+        category: null,
+        description: "",
+        stock: 0,
     });
+    const [selectedCategory, setSelectedCategory] =
+        useState<CatergoyType | null>(null);
 
     const [open, setOpen] = useState(false);
     const [scannerOpen, setScannerOpen] = useState(false);
@@ -43,6 +49,13 @@ const AddProductModal = () => {
 
     const [addProduct, { isLoading, isSuccess, error, data }] =
         useAddProductMutation();
+    const {
+        data: categoriesData,
+        isLoading: categoryIsLoading,
+        error: categoryError,
+    } = useGetCategoriesQuery();
+
+    console.log(categoriesData);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let { name, value }: { name: string; value: string | number } =
@@ -244,14 +257,18 @@ const AddProductModal = () => {
                                     <Autocomplete
                                         disablePortal
                                         id="category-select"
-                                        options={categories}
+                                        options={
+                                            categoriesData?.categories ?? []
+                                        }
+                                        disabled={categoryIsLoading}
                                         getOptionLabel={(option) => option.name}
-                                        value={form.category || null}
+                                        value={selectedCategory || null}
                                         onChange={(event, newValue) => {
                                             setForm((prev) => ({
                                                 ...prev,
-                                                categorie: newValue,
+                                                category: newValue?.id,
                                             }));
+                                            setSelectedCategory(newValue);
                                         }}
                                         renderOption={(props, option) => {
                                             return (

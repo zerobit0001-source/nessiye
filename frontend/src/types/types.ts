@@ -69,9 +69,11 @@ export type ProductType = {
     sell_price: number;
     exp_date?: string;
     image?: string;
-    category: string;
+    category?: number;
+    category_name?: string;
     stock: number;
     description?: string;
+
 }
 export type ProductsListType = {
     id: number;
@@ -80,6 +82,11 @@ export type ProductsListType = {
     sell_price: number;
     image?: string;
     stock: number;
+}
+
+export interface CatergoyType {
+    id: number,
+    name: string
 }
 
 // customers

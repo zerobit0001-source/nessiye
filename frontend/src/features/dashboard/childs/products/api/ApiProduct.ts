@@ -1,4 +1,4 @@
-import { GetProductResponse, GetProductsResponse } from "@/types/ApiResponesesType";
+import { GetCategoriesResponse, GetProductResponse, GetProductsResponse } from "@/types/ApiResponesesType";
 import { ProductModalFormType } from "@/types/modalsTypes";
 import { GetProductsParams, ProductType } from "@/types/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
@@ -48,6 +48,9 @@ export const ApiProduct = createApi({
             }),
             invalidatesTags: ["Products"],
         }),
+        getCategories: builder.query<GetCategoriesResponse , void>({
+            query: () => "products/categories/"
+        })
 
     }),
 });
@@ -57,5 +60,6 @@ export const {
     useGetProductByIdQuery,
     useAddProductMutation,
     useDeleteProductMutation,
-    useUpdateProductMutation
+    useUpdateProductMutation,
+    useGetCategoriesQuery,
 } = ApiProduct;
