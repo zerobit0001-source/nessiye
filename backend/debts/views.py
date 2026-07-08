@@ -14,10 +14,24 @@ class DebtListView(APIView):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
 
-        debts = Debt.objects.filter(shop=request.user)
-        serializer = DebtSerializer(debts, many=True)
-        return Response({'ok': True, 'debts': serializer.data})
+        debts = Debt.objects.filter(
+            shop=request.user
+        ).select_related('customer__customer').prefetch_related('payments')
 
+        result = [
+            {
+                'id': d.id,
+                'customer_name': d.customer.customer.full_name,
+                'total_amount': d.amount,
+                'paid_amount': d.paid_amount,
+                'remaining_amount': d.remaining,
+                'created_at': d.created_at,
+                'is_paid': d.is_paid
+            }
+            for d in debts
+        ]
+
+        return Response({'ok': True, 'debts': result})
 
 class DebtDetailView(APIView):
     """This class for debt detail view for shop account"""
