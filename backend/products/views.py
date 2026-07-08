@@ -8,7 +8,7 @@ from customer_management.models import CustomerShop
 from django.db.models import Q
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
-from django.db.models import Sum, Count, F, ExpressionWrapper, IntegerField
+from django.db.models import Sum, F, ExpressionWrapper, IntegerField
 from sales.models import Sale
 
 class IsShop:
