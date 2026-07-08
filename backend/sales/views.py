@@ -23,6 +23,25 @@ class SaleListCreateView(APIView):
     #     serializer = SaleSerializer(sales, many=True)
     #     return Response({'ok': True, 'sales': serializer.data})
 
+    # def get(self, request):
+    #     if not request.user.is_shop:
+    #         return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+    # 
+    #     sales = Sale.objects.filter(
+    #         shop=request.user,
+    #         is_debt=False
+    #     ).select_related('customer').prefetch_related('items').annotate(
+    #         total_amount=Sum(
+    #             ExpressionWrapper(
+    #                 F('items__price') * F('items__quantity'),
+    #                 output_field=IntegerField()
+    #             )
+    #         )
+    #     )
+    # 
+    #     serializer = SaleSerializer(sales, many=True)
+    #     return Response({'ok': True, 'sales': serializer.data})
+
     def get(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
@@ -30,8 +49,8 @@ class SaleListCreateView(APIView):
         sales = Sale.objects.filter(
             shop=request.user,
             is_debt=False
-        ).select_related('customer').prefetch_related('items').annotate(
-            total_amount=Sum(
+        ).select_related('customer').annotate(
+            total=Sum(
                 ExpressionWrapper(
                     F('items__price') * F('items__quantity'),
                     output_field=IntegerField()
@@ -39,8 +58,17 @@ class SaleListCreateView(APIView):
             )
         )
     
-        serializer = SaleSerializer(sales, many=True)
-        return Response({'ok': True, 'sales': serializer.data})
+        result = [
+            {
+                'id': s.id,
+                'customer_name': s.customer.full_name if s.customer else None,
+                'total': s.total or 0,
+                'created_at': s.created_at
+            }
+            for s in sales
+        ]
+    
+        return Response({'ok': True, 'sales': result})
 
     @transaction.atomic
     def post(self, request):
