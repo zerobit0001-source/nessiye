@@ -21,6 +21,16 @@ export interface DebtType {
     status: "active" | "overdue" | "settled"
 }
 
+export interface ShowDebtsType {
+    id: number,
+    customer_name: string,
+    total_amount: number,
+    paid_amount: number,
+    remaining_amount: number,
+    is_paid: boolean,
+    created_at: string,
+}
+
 export interface SaleType {
     id: number,
     shop: number,

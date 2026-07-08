@@ -1,9 +1,10 @@
 "use client";
-import { DebtType } from "@/types/types";
+import { ShowDebtsType } from "@/types/types";
+import { formatDate } from "@/utils/formatters";
 import { Box, Typography } from "@mui/material";
 
 interface DebtsRowsProps {
-    debt: DebtType;
+    debt: ShowDebtsType;
 }
 
 const DebtsCreaditsRows = ({ debt }: DebtsRowsProps) => {
@@ -35,16 +36,16 @@ const DebtsCreaditsRows = ({ debt }: DebtsRowsProps) => {
                 {debt.customer_name}
             </Typography>
             <Typography variant="body2" className="text-center">
-                {debt.amount.toLocaleString("fa-IR")} ریال
+                {debt.total_amount.toLocaleString("fa-IR")} ریال
             </Typography>
             <Typography variant="body2" className="text-center">
                 {debt.paid_amount.toLocaleString("fa-IR")} ریال
             </Typography>
             <Typography variant="body2" className="text-center">
-                {debt.remaining.toLocaleString("fa-IR")} ریال
+                {debt.remaining_amount.toLocaleString("fa-IR")} ریال
             </Typography>
             <Typography variant="body2" className="text-center">
-                {debt.created_at}
+                {formatDate(debt.created_at , {dateStyle : 'short'})}
             </Typography>
             <div className="flex justify-center">
                 {/* {debt.status === "active" ? (
