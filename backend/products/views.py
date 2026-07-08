@@ -3,11 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
-from debts.models import Debt
+from debts.models import Debt, Payment
 from customer_management.models import CustomerShop
 from django.db.models import Q
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
+from django.db.models import Sum, Count, F, ExpressionWrapper, IntegerField
+from sales.models import Sale
 
 class IsShop:
     @staticmethod
@@ -54,12 +56,12 @@ class ProductListCreateView(APIView):
         barcode = request.query_params.get('barcode')
         search = request.query_params.get('search')
         category = request.query_params.get('category')
-    
+
         if request.user.is_authenticated and request.user.is_shop:
             products = Product.objects.filter(shop=request.user)
         else:
             products = Product.objects.all()
-    
+
         if barcode:
             product = products.filter(barcode=barcode).first()
             if not product:
@@ -72,13 +74,13 @@ class ProductListCreateView(APIView):
                 'created_at': product.created_at,
                 'stock': product.stock
             }})
-    
+
         if search:
             products = products.filter(Q(name__icontains=search) | Q(barcode__icontains=search))
-    
+
         if category:
             products = products.filter(category__name__icontains=category)
-    
+
         result = [
             {
                 'id': p.id,
@@ -90,7 +92,7 @@ class ProductListCreateView(APIView):
             }
             for p in products
         ]
-    
+
         return Response({"ok": True, "products": result})
 
     def post(self, request):
@@ -238,3 +240,46 @@ class ModalView(APIView):
             return Response({'ok': True, 'debts': result})
 
         return Response({'ok': False, 'error': 'تایپ نامعتبر است'}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class DashboardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        total_sales = Sale.objects.filter(
+            shop=request.user,
+            is_debt=False
+        ).annotate(
+            sale_total=Sum(
+                ExpressionWrapper(
+                    F('items__price') * F('items__quantity'),
+                    output_field=IntegerField()
+                )
+            )
+        ).aggregate(total=Sum('sale_total'))['total'] or 0
+
+        debt_data = Debt.objects.filter(shop=request.user).aggregate(
+            total_debts=Sum('amount')
+        )
+        total_debts = debt_data['total_debts'] or 0
+
+        total_paid = Payment.objects.filter(
+            debt__shop=request.user
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        number_of_customers = CustomerShop.objects.filter(shop=request.user).count()
+
+        return Response({
+            'ok': True,
+            'data': {
+                'total_sales_price': total_sales,
+                'total_debts_price': total_debts,
+                'total_price': total_sales + total_debts,
+                'total_payed_amount': total_paid,
+                'number_of_customers': number_of_customers
+            }
+        })
