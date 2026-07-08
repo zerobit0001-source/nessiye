@@ -24,6 +24,32 @@ class ProductListCreateView(APIView):
     
     # parser_classes = [MultiPartParser, FormParser]
 
+    # def get(self, request):
+    #     barcode = request.query_params.get('barcode')
+    #     search = request.query_params.get('search')
+    #     category = request.query_params.get('category')
+    # 
+    #     if request.user.is_authenticated and request.user.is_shop:
+    #         products = Product.objects.filter(shop=request.user)
+    #     # else:
+    #     #     products = Product.objects.all()
+# 
+    #     if search:
+    #         products = products.filter(Q(name__icontains=search) | Q(barcode__icontains=search))
+# 
+    #     if category:
+    #         products = products.filter(category__name__icontains=category)
+    # 
+    #     if barcode:
+    #         product = products.filter(barcode=barcode).first()
+    #         if not product:
+    #             return Response({'ok': False, 'message': 'محصول یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+    #         serializer = ProductSerializer(product)
+    #         return Response({"ok": True, "product": serializer.data})
+    # 
+    #     serializer = ProductSerializer(products, many=True)
+    #     return Response({"ok": True, "products": serializer.data})
+
     def get(self, request):
         barcode = request.query_params.get('barcode')
         search = request.query_params.get('search')
@@ -31,24 +57,41 @@ class ProductListCreateView(APIView):
     
         if request.user.is_authenticated and request.user.is_shop:
             products = Product.objects.filter(shop=request.user)
-        # else:
-        #     products = Product.objects.all()
-
-        if search:
-            products = products.filter(Q(name__icontains=search) | Q(barcode__icontains=search))
-
-        if category:
-            products = products.filter(category__name__icontains=category)
+        else:
+            products = Product.objects.all()
     
         if barcode:
             product = products.filter(barcode=barcode).first()
             if not product:
                 return Response({'ok': False, 'message': 'محصول یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
-            serializer = ProductSerializer(product)
-            return Response({"ok": True, "product": serializer.data})
+            return Response({"ok": True, "product": {
+                'id': product.id,
+                'name': product.name,
+                'barcode': product.barcode,
+                'sell_price': product.sell_price,
+                'created_at': product.created_at,
+                'stock': product.stock
+            }})
     
-        serializer = ProductSerializer(products, many=True)
-        return Response({"ok": True, "products": serializer.data})
+        if search:
+            products = products.filter(Q(name__icontains=search) | Q(barcode__icontains=search))
+    
+        if category:
+            products = products.filter(category__name__icontains=category)
+    
+        result = [
+            {
+                'id': p.id,
+                'name': p.name,
+                'barcode': p.barcode,
+                'sell_price': p.sell_price,
+                'created_at': p.created_at,
+                'stock': p.stock
+            }
+            for p in products
+        ]
+    
+        return Response({"ok": True, "products": result})
 
     def post(self, request):
         if not IsShop.check(request.user):
