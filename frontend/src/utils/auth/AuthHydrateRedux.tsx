@@ -1,17 +1,29 @@
 "use client";
 
+import { useLazyGetProfileQuery } from "@/features/account/api/ApiAccount";
 import { userInfoActions } from "@/features/auth/slices/userInformationsSlice";
-import { useAppDispatch } from "@/lib/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-interface AuthHydratorProps {
-    user: any;
-}
-
-export default function AuthHydrator({ user }: AuthHydratorProps) {
+export default function AuthHydrator() {
+    const userInfo = useAppSelector((s) => s.userInfo);
     const dispatch = useAppDispatch();
+    const [getProfile, { data: user, isLoading, error }] =
+        useLazyGetProfileQuery();
+    const router = useRouter();
 
     useEffect(() => {
+        if (!userInfo.isAuthenticated) {
+            getProfile();
+        }
+    }, [userInfo.isAuthenticated, getProfile]);
+
+    useEffect(() => {
+        if (!user) return;
+
+        console.log(user)
+
         dispatch(
             userInfoActions.updateForm({
                 field: "phone_number",
@@ -49,6 +61,13 @@ export default function AuthHydrator({ user }: AuthHydratorProps) {
             }),
         );
     }, [dispatch, user]);
+
+    useEffect(() => {
+        if (!error) return;
+
+        // logout
+        router.replace("/auth");
+    }, [error]);
 
     return null;
 }

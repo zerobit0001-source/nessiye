@@ -11,22 +11,22 @@ export default async function MainLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const user = await getCurrentUser();
+    // const user = await getCurrentUser();
 
-    if (!user) {
-        redirect("/auth?mode=login");
-    }
+    //     if (!user) {
+    //         redirect("/auth?mode=login");
+    //     }
 
-    if (!user.is_shop) {
-        redirect("/account");
-    }
+    //     if (!user.is_shop) {
+    //         redirect("/account");
+    //     }
 
     return (
         <div className="h-screen grid  grid-rows-[auto_1fr] ">
 
             {/* ser user information to redux */}
 
-            <AuthHydrator user={user} />
+            <AuthHydrator />
 
             {/* Navbar */}
             <div className="z-10">

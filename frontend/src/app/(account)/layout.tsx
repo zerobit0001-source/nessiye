@@ -8,19 +8,19 @@ export default async function MainLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const user = await getCurrentUser();
+    // const user = await getCurrentUser();
 
-    if (!user) {
-        redirect("/auth?mode=login");
-    }
+    // if (!user) {
+    //     redirect("/auth?mode=login");
+    // }
 
-    if (user.is_shop) {
-        redirect("/dashboard");
-    }
+    // if (user.is_shop) {
+    //     redirect("/dashboard");
+    // }
 
     return (
         <div className="container mx-auto">
-            <AuthHydrator user={user} />
+            <AuthHydrator />
             {children}
         </div>
     );

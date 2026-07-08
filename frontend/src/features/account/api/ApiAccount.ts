@@ -9,6 +9,10 @@ export const ApiAccount = createApi({
     }),
     tagTypes: ["Shops", "Shop"],
     endpoints: (builder) => ({
+        getProfile: builder.query<{ ok: boolean, phone_number: string, full_name: string, is_shop: boolean, shop_name: string, shop_address: string }, void>({
+            query: () => "account/profile/",
+            providesTags: ["Shops"]
+        }),
         getMe: builder.query<GetMeResponse, void>({
             query: () => "account/me",
             providesTags: ["Shops"]
@@ -21,6 +25,7 @@ export const ApiAccount = createApi({
 });
 
 export const {
+    useLazyGetProfileQuery,
     useGetMeQuery,
     useGetShopQuery
 } = ApiAccount;

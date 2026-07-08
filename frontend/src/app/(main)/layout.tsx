@@ -8,7 +8,6 @@ export default async function MainLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const user = await getCurrentUser();
 
     // if (!user) {
     //     redirect("/auth?mode=login");
@@ -21,7 +20,7 @@ export default async function MainLayout({
     return (
         <div className="">
             {/* <MainNavbar /> */}
-            {user && <AuthHydrator user={user} />}
+            <AuthHydrator />
             {children}
         </div>
     );

@@ -25,6 +25,7 @@ so far :
 - create the price formatter 
 - create the date formatter
 - create the main page 
+- Fix the categories api
 
 
 
@@ -47,5 +48,4 @@ todo :
  	+ reports
  	+ overdues
  	+ markets
-+ Fix the categories api
 + Fix the performance issue in frontend about getcurrentuser
