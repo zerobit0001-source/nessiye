@@ -1,3 +1,6 @@
+
+// debts
+
 export interface DebtType {
     id: number,
     customer: number,
@@ -21,7 +24,7 @@ export interface DebtType {
     status: "active" | "overdue" | "settled"
 }
 
-export interface ShowDebtsType {
+export interface DebtsListType {
     id: number,
     customer_name: string,
     total_amount: number,
@@ -30,6 +33,9 @@ export interface ShowDebtsType {
     is_paid: boolean,
     created_at: string,
 }
+
+
+// sales
 
 export interface SaleType {
     id: number,
@@ -46,6 +52,15 @@ export interface SaleType {
     total: number,
 }
 
+export interface SalesListType {
+    id: number,
+    customer_name: string,
+    total: number,
+    created_at: string
+}
+
+
+// products
 export type ProductType = {
     id: number;
     name: string;
@@ -58,6 +73,8 @@ export type ProductType = {
     stock: number;
     description?: string;
 }
+
+// customers
 
 export interface CustomerType {
     id: number | string,
@@ -74,6 +91,9 @@ export interface CustomersListType {
     total_debts: number
 }
 
+
+// shop
+
 export interface ShopType {
     shop_id: number,
     shop_name: string,
@@ -82,6 +102,8 @@ export interface ShopType {
     number_of_debts: number
 }
 
+
+// modals
 export interface ModalCustomersType {
     id: number,
     full_name: string,
@@ -110,6 +132,9 @@ export interface GetProductsParams {
     // page?: number;
     // ordering?: string;
 }
+
+
+// payments
 
 export interface PaymentType {
     id: number,

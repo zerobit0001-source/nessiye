@@ -1,9 +1,10 @@
 "use client";
-import { SaleType } from "@/types/types";
+import { SalesListType } from "@/types/types";
+import { formatDate } from "@/utils/formatters";
 import { Box, Typography } from "@mui/material";
 
 interface SaleRowPropType {
-    sale: SaleType;
+    sale: SalesListType;
 }
 
 const SaleRow = ({ sale }: SaleRowPropType) => {
@@ -47,7 +48,7 @@ const SaleRow = ({ sale }: SaleRowPropType) => {
                 {sale.total - sale.paid} ریال
             </Typography> */}
             <Typography variant="body2" className="text-center">
-                {sale.created_at}
+                {formatDate(sale.created_at, { dateStyle: "short" })}
             </Typography>
         </Box>
     );

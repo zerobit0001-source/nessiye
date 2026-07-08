@@ -1,10 +1,10 @@
 "use client";
-import { ShowDebtsType } from "@/types/types";
+import { DebtsListType } from "@/types/types";
 import { formatDate } from "@/utils/formatters";
 import { Box, Typography } from "@mui/material";
 
 interface DebtsRowsProps {
-    debt: ShowDebtsType;
+    debt: DebtsListType;
 }
 
 const DebtsCreaditsRows = ({ debt }: DebtsRowsProps) => {
