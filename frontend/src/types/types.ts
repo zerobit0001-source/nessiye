@@ -73,6 +73,14 @@ export type ProductType = {
     stock: number;
     description?: string;
 }
+export type ProductsListType = {
+    id: number;
+    name: string;
+    barcode?: string;
+    sell_price: number;
+    image?: string;
+    stock: number;
+}
 
 // customers
 
@@ -137,6 +145,14 @@ export interface GetProductsParams {
 // payments
 
 export interface PaymentType {
+    id: number,
+    customer_name: string,
+    customer_phone: string,
+    amount: number,
+    created_at: string,
+    debt_id: number
+}
+export interface PaymentsListType {
     id: number,
     customer_name: string,
     customer_phone: string,

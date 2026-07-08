@@ -1,4 +1,4 @@
-import { CustomersListType, CustomerType, DebtsListType, DebtType, ModalCustomersType, ModalProductsType, PaymentType, ProductType, SalesListType, SaleType, ShopType } from "./types"
+import { CustomersListType, CustomerType, DebtsListType, DebtType, ModalCustomersType, ModalProductsType, PaymentsListType, PaymentType, ProductsListType, ProductType, SalesListType, SaleType, ShopType } from "./types"
 
 
 
@@ -28,7 +28,7 @@ export interface GetDebtByIdResponeseType {
 // products
 export interface GetProductsResponse {
     ok: boolean,
-    products: ProductType[]
+    products: ProductsListType[]
 }
 export interface GetProductResponse {
     ok: boolean,
@@ -75,7 +75,7 @@ export interface GetShopDetailResponse {
 
 export interface GetPaymentsResponse {
     ok: boolean,
-    payments: PaymentType[]
+    payments: PaymentsListType[]
 }
 
 export interface addPaymentResponse {

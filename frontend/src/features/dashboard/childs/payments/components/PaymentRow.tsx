@@ -1,14 +1,14 @@
 "use client";
 
 import { Box, Button, Typography, useMediaQuery } from "@mui/material";
-import { PaymentType } from "@/types/types";
+import { PaymentsListType } from "@/types/types";
 import { theme } from "@/theme/theme";
 import { useState } from "react";
 import PaymetsDetails from "./PaymetsDetails";
 import { formatDate } from "@/utils/formatters";
 
 interface PaymentRowProps {
-    payment: PaymentType;
+    payment: PaymentsListType;
 }
 
 const PaymentRow = ({ payment }: PaymentRowProps) => {
@@ -60,7 +60,7 @@ const PaymentRow = ({ payment }: PaymentRowProps) => {
                 </Typography>
 
                 <Typography variant="body2" className="text-center">
-                    {formatDate(payment.created_at)}
+                    {formatDate(payment.created_at, { dateStyle: "short" })}
                 </Typography>
                 <div className=" flex justify-center ">
                     <Button variant="text">مشاهده</Button>

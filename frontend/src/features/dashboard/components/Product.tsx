@@ -1,10 +1,10 @@
-import { ProductShowType } from "@/types/productTypes";
+import { ProductsListType } from "@/types/types";
 import { ImageRounded } from "@mui/icons-material";
 import { Card, Typography } from "@mui/material";
 import Link from "next/link";
 
 interface ProductProps {
-    product: ProductShowType;
+    product: ProductsListType;
 }
 
 const Product = ({ product }: ProductProps) => {
@@ -24,12 +24,7 @@ const Product = ({ product }: ProductProps) => {
                     <Typography variant="body2">
                         قیمت : {product.sell_price}
                     </Typography>
-                    {product.exp_date && (
-                        <Typography variant="body2">
-                            تاریخ انقضا : {product.exp_date}
-                        </Typography>
-                    )}
-                    <Typography variant="body2">{product.category}</Typography>
+
                     <Typography variant="body2">
                         تعداد : {product.stock}
                     </Typography>

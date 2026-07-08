@@ -32,6 +32,8 @@ const ProductsList = ({ search, category }: GetProductsParams) => {
             </p>
         );
     }
+
+    console.log(data)
     return (
         <>
             {isSuccess && data.products.length > 0 ? (
