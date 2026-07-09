@@ -1,3 +1,4 @@
+import ToggleThemeBtn from "@/theme/ToggleThemeBtn";
 import ChoseMarketDialog from "@/features/dashboard/components/ChoseMarketDialog";
 import { Notifications } from "@mui/icons-material";
 import { Avatar, Card, IconButton, TextField, Typography } from "@mui/material";
@@ -26,6 +27,7 @@ const DashboardNavBar = () => {
                 <IconButton size="large">
                     <Notifications />
                 </IconButton>
+                <ToggleThemeBtn />
                 <Link href={"/dashboard/profile"}>
                     <Avatar
                         className="cursor-pointer"

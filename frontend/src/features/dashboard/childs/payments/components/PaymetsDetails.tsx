@@ -1,6 +1,5 @@
 "use client";
 
-import { theme } from "@/theme/theme";
 import { PaymentType } from "@/types/types";
 import {
     Box,
@@ -33,7 +32,7 @@ const PaymetsDetails = ({
     handleClose,
     payment,
 }: PaymentsDetailsProps) => {
-    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+    const fullScreen = false; //useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
 
     const { data, isLoading, error } = useGetDebtByIdQuery(payment.debt_id, {
         skip: !open,

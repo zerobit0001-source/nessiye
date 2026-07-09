@@ -27,6 +27,8 @@ so far :
 - create the main page 
 - Fix the categories api
 - Fix the performance issue in frontend about getcurrentuser
+- Connet the dashboard page to api
+- Create the dark mode 
 
 
 
@@ -49,5 +51,3 @@ todo :
  	+ reports
  	+ overdues
  	+ markets
-+ Create the dark mode 
-+ Connet the dashboard page to api

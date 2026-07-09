@@ -11,6 +11,7 @@ import { ApiAccount } from "@/features/account/api/ApiAccount"
 import { ApiPayment } from "@/features/dashboard/childs/payments/api/ApiPayment"
 import { ApiModalsData } from "@/features/dashboard/api/ApiModalsData"
 import { ApiDashboard } from "@/features/dashboard/childs/dashboard/api/ApiDashboard"
+import { themeSliceReducer } from "@/features/theme/themeSlice"
 
 
 
@@ -21,6 +22,7 @@ export const store = configureStore({
         paymentsForm: paymentSliceReducer,
         customersForm: customerSliceReducer,
         productsForm: productFormReducers,
+        theme: themeSliceReducer,
         [ApiProduct.reducerPath]: ApiProduct.reducer,
         [ApiCustomer.reducerPath]: ApiCustomer.reducer,
         [ApiSales.reducerPath]: ApiSales.reducer,

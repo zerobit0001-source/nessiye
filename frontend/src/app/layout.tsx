@@ -29,14 +29,13 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-
     return (
         <html lang="fa" dir="rtl">
             <body className={`${vazirmatn.variable}`}>
                 <ToastContainer position="bottom-center" autoClose={1500} />
-                <ThemeRegistry>
-                    <StoreProvider>{children}</StoreProvider>
-                </ThemeRegistry>
+                <StoreProvider>
+                    <ThemeRegistry>{children}</ThemeRegistry>
+                </StoreProvider>
             </body>
         </html>
     );
