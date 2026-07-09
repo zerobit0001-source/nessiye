@@ -26,6 +26,7 @@ so far :
 - create the date formatter
 - create the main page 
 - Fix the categories api
+- Fix the performance issue in frontend about getcurrentuser
 
 
 
@@ -48,4 +49,5 @@ todo :
  	+ reports
  	+ overdues
  	+ markets
-+ Fix the performance issue in frontend about getcurrentuser
++ Create the dark mode 
++ Connet the dashboard page to api
