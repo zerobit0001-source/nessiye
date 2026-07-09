@@ -1,8 +1,21 @@
+"use client";
 import SlideUpBoxAnimation from "@/components/SlideUpBoxAnimation";
 import { dashboardCards } from "@/data/DashboardDatas";
-import { Box, Card, Typography } from "@mui/material";
+import { Box, Card, Skeleton, Typography } from "@mui/material";
+import { useGetDashboardCardsQuery } from "../api/ApiDashboard";
+import { useEffect } from "react";
 
 const DashboardsCards = () => {
+    const { data, isLoading, error } = useGetDashboardCardsQuery();
+
+    useEffect(() => {
+        if (data) {
+            console.log("Dashboard Cards Data:", data);
+        }
+    }, [data]);
+
+    const dashboardData = data?.data;
+
     return (
         <Box className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-5">
             {dashboardCards.map((card, index) => (
@@ -19,7 +32,11 @@ const DashboardsCards = () => {
                             {card.title}
                         </Typography>
                         <Typography variant="h4" className="text-lg!">
-                            {card.value} {card.unit}
+                            {isLoading ? (
+                                <Skeleton width={100} />
+                            ) : (
+                                `${dashboardData?.[card.key].toLocaleString("fa-IR") ?? 0} ${card.unit ?? ''}`
+                            )}
                         </Typography>
                         <Typography variant="body2">
                             تغییر: {card.change}٪ ({card.changeType})

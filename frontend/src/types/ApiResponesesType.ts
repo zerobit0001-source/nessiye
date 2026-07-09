@@ -121,3 +121,16 @@ export interface GetModalsDebtsResponse {
     ok: boolean,
     debts: DebtType[]
 }
+
+// dasboard
+
+export interface GetDashboardCardsResponse {
+    ok: boolean,
+    data: {
+        total_sales_price: number,
+        total_debts_price: number,
+        total_price: number,
+        total_payed_amount: number,
+        number_of_customers: number,
+    }
+}

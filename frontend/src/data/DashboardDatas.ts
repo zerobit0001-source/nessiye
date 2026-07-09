@@ -1,64 +1,72 @@
 import { ChangeType, MuiColors } from "@/types/handiTypes";
 
-
 export interface DashboardCardData {
     id: string;
     title: string;
-    value: number;
     unit?: string;
     change: number;
     changeType: ChangeType;
     period: string;
     color: MuiColors;
+    key: keyof DashboardData;
+}
+
+export interface DashboardData {
+    total_sales_price: number;
+    total_debts_price: number;
+    total_price: number;
+    total_payed_amount: number;
+    number_of_customers: number;
 }
 
 export const dashboardCards: DashboardCardData[] = [
     {
         id: "totalOutstanding",
         title: "مجموع مطالبات",
-        value: 184.2,
-        unit: "م ریال",
+        unit: "تومان",
         change: 12.4,
-        changeType: "increase" as ChangeType,
+        changeType: "increase",
         period: "این ماه",
         color: "primary",
+        key: "total_price",
     },
     {
         id: "overdueAmount",
-        title: "مبلغ سررسید گذشته",
-        value: 28.4,
-        unit: "م ریال",
+        title: "مجموع بدهی‌ها",
+        unit: "تومان",
         change: 3,
-        changeType: "increase" as ChangeType,
+        changeType: "increase",
         period: "این هفته",
         color: "error",
+        key: "total_debts_price",
     },
     {
         id: "collectedThisMonth",
-        title: "وصولی این ماه",
-        value: 42.7,
-        unit: "م ریال",
+        title: "فروش کل",
+        unit: "تومان",
         change: 8.1,
-        changeType: "increase" as ChangeType,
+        changeType: "increase",
         period: "نسبت به ماه قبل",
         color: "success",
+        key: "total_sales_price",
     },
     {
         id: "activeCustomers",
-        title: "مشتریان فعال",
-        value: 247,
+        title: "مبلغ پرداخت شده",
+        unit: "تومان",
         change: 6,
-        changeType: "increase" as ChangeType,
+        changeType: "increase",
         period: "این ماه",
         color: "info",
+        key: "total_payed_amount",
     },
     {
         id: "activeCredits",
-        title: "اعتبارات فعال",
-        value: 183,
+        title: "تعداد مشتریان",
         change: 12,
-        changeType: "neutral" as ChangeType,
+        changeType: "neutral",
         period: "تسویه شده این ماه",
         color: "secondary",
+        key: "number_of_customers",
     },
 ];
