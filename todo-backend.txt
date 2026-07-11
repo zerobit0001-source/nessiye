@@ -17,4 +17,4 @@ so far :
     - Create a api for dashboard data /api/dashboard/ and return responese => {ok , data : { total_debts_price , total_sales_price , total_price , total_payed_amount , number_of_customers }}
 todo : 
     + fix the id of debts and payments
-    + create the customer pay authentication
+    + create the customer pay action
