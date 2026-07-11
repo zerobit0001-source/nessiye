@@ -79,28 +79,25 @@ const LoginCode = () => {
         }
     };
 
-    useEffect(() => {
-        const handlePaste = (e: ClipboardEvent) => {
-            const pasted = e.clipboardData?.getData("text") ?? "";
+    const handlePaste = (e: ClipboardEvent) => {
+        const pasted = e.clipboardData?.getData("text") ?? "";
 
-            const digits = pasted
-                .replace(/\D/g, "")
-                .slice(0, otp.length)
-                .split("");
+        const digits = pasted.replace(/\D/g, "").slice(0, otp.length).split("");
 
-            setOtp((prev) => {
-                const newOtp = [...prev];
+        setOtp((prev) => {
+            const newOtp = [...prev];
 
-                digits.forEach((digit, i) => {
-                    newOtp[i] = digit;
-                });
-
-                return newOtp;
+            digits.forEach((digit, i) => {
+                newOtp[i] = digit;
             });
 
-            inputRef.current[Math.min(digits.length, otp.length - 1)]?.focus();
-        };
+            return newOtp;
+        });
 
+        inputRef.current[Math.min(digits.length, otp.length - 1)]?.focus();
+    };
+
+    useEffect(() => {
         window.addEventListener("paste", handlePaste);
 
         return () => {
@@ -128,6 +125,7 @@ const LoginCode = () => {
                             onChange={(e) =>
                                 handleChange(e.target.value, index)
                             }
+                            onPaste={(e) => handlePaste(e)}
                             onKeyDown={(e) => handleKeyDown(e, index)}
                             inputProps={{
                                 maxLength: 1,

@@ -81,35 +81,31 @@ const RegisterCode = () => {
             setLoading(false);
         }
     };
+    const handlePaste = (e: ClipboardEvent) => {
+        const pasted = e.clipboardData?.getData("text") ?? "";
 
-   useEffect(() => {
-           const handlePaste = (e: ClipboardEvent) => {
-               const pasted = e.clipboardData?.getData("text") ?? "";
-   
-               const digits = pasted
-                   .replace(/\D/g, "")
-                   .slice(0, otp.length)
-                   .split("");
-   
-               setOtp((prev) => {
-                   const newOtp = [...prev];
-   
-                   digits.forEach((digit, i) => {
-                       newOtp[i] = digit;
-                   });
-   
-                   return newOtp;
-               });
-   
-               inputRef.current[Math.min(digits.length, otp.length - 1)]?.focus();
-           };
-   
-           window.addEventListener("paste", handlePaste);
-   
-           return () => {
-               window.removeEventListener("paste", handlePaste);
-           };
-       }, []);
+        const digits = pasted.replace(/\D/g, "").slice(0, otp.length).split("");
+
+        setOtp((prev) => {
+            const newOtp = [...prev];
+
+            digits.forEach((digit, i) => {
+                newOtp[i] = digit;
+            });
+
+            return newOtp;
+        });
+
+        inputRef.current[Math.min(digits.length, otp.length - 1)]?.focus();
+    };
+
+    useEffect(() => {
+        window.addEventListener("paste", handlePaste);
+
+        return () => {
+            window.removeEventListener("paste", handlePaste);
+        };
+    }, []);
 
     return (
         <>
@@ -131,6 +127,7 @@ const RegisterCode = () => {
                             onChange={(e) =>
                                 handleChange(e.target.value, index)
                             }
+                            onPaste={(e) => handlePaste(e)}
                             onKeyDown={(e) => handleKeyDown(e, index)}
                             inputProps={{
                                 maxLength: 1,
