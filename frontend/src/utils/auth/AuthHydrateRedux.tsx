@@ -62,12 +62,12 @@ export default function AuthHydrator() {
         );
     }, [dispatch, user]);
 
-    useEffect(() => {
-        if (!error) return;
+    // useEffect(() => {
+    //     if (!error) return;
 
-        // logout
-        router.replace("/auth");
-    }, [error]);
+    //     // logout
+    //     router.replace("/auth");
+    // }, [error]);
 
     return null;
 }
