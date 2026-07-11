@@ -51,3 +51,9 @@ todo :
  	+ reports
  	+ overdues
  	+ markets
++ implement the search for customers
++ implement the debts or sales details page or dialog
++ create the ui for cusotmer pay action
++ create the whole customer page 
++ create the setting page 
++ create the add category option
