@@ -1,7 +1,7 @@
 import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
 import BranchHead from "@/features/dashboard/components/BranchHead";
-import PagesFilterLinks from "@/features/dashboard/components/PagesFilterLinks";
+import PagesFilterLinks from "@/features/dashboard/childs/customers/components/CustomersSearch";
 import { Box } from "@mui/material";
 import SalesList from "@/features/dashboard/childs/sales/components/SalesList";
 import { SaleBranchName } from "@/data/DashboardSale";

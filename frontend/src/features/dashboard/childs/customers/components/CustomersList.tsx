@@ -6,8 +6,17 @@ import CustomerRow from "../../components/CustomerRow";
 import Link from "next/link";
 import CustomerRowSkeleton from "./CustomerRowSkeleton";
 
-const CustomersList = () => {
-    const { data, isLoading, error } = useGetCustomersQuery();
+export interface GetCustomersParams {
+    search?: string;
+    // page?: number;
+    // ordering?: string;
+}
+
+
+const CustomersList = ({search} : GetCustomersParams) => {
+    const { data, isLoading, error } = useGetCustomersQuery({
+        search
+    });
 
     if (isLoading) {
         return Array.from({ length: 8 }).map((_, index) => (

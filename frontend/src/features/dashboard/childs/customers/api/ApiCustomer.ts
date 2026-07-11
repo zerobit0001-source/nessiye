@@ -12,8 +12,14 @@ export const ApiCustomer = createApi({
     }),
     tagTypes: ["Customers", "Customer", "Credits"],
     endpoints: (builder) => ({
-        getCustomers: builder.query<GetCustomersResponse, void>({
-            query: () => "customers/",
+        getCustomers: builder.query<GetCustomersResponse, { search: string }>({
+            query: ({ search }) => ({
+                url: "customers/",
+                params: {
+                    search,
+                },
+            }),
+
             providesTags: ["Customers"]
         }),
         getCustomer: builder.query<GetCustomerResponse, string>({

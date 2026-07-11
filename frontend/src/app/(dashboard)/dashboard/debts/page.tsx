@@ -2,7 +2,7 @@ import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
 import { DebtsBranchName } from "@/data/DashboardCredits";
 import BranchHead from "@/features/dashboard/components/BranchHead";
-import PagesFilterLinks from "@/features/dashboard/components/PagesFilterLinks";
+import PagesFilterLinks from "@/features/dashboard/childs/customers/components/CustomersSearch";
 import { Box } from "@mui/material";
 import DebtsList from "@/features/dashboard/childs/debts/components/DebtsList";
 import AddDebtModal from "@/features/dashboard/components/AddDebtsModal";

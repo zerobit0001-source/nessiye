@@ -3,13 +3,21 @@ import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
 import { CustomersBranchName } from "@/data/DashboardCustomers";
 import AddCustomerModal from "@/features/dashboard/components/AddCustomerModal";
 import BranchHead from "@/features/dashboard/components/BranchHead";
-import PagesFilterLinks from "@/features/dashboard/components/PagesFilterLinks";
-import CustomerRow from "@/features/dashboard/childs/components/CustomerRow";
 import { Box } from "@mui/material";
-import Link from "next/link";
 import CustomersList from "@/features/dashboard/childs/customers/components/CustomersList";
+import CustomersSearch from "@/features/dashboard/childs/customers/components/CustomersSearch";
 
-const DashboardCustomers = () => {
+interface Props {
+    searchParams: Promise<{
+        search?: string;
+        page?: string;
+        ordering?: string;
+    }>;
+}
+
+const DashboardCustomers = async ({ searchParams }: Props) => {
+    const params = await searchParams;
+
     return (
         <Container>
             <DashboardsPageHeader
@@ -20,7 +28,7 @@ const DashboardCustomers = () => {
             </DashboardsPageHeader>
 
             <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                <PagesFilterLinks page="customers" />
+                <CustomersSearch  />
                 {/* branches */}
                 <BranchHead branches={CustomersBranchName} />
                 <CustomersList />
