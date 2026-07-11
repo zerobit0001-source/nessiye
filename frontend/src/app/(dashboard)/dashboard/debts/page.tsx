@@ -6,8 +6,9 @@ import PagesFilterLinks from "@/features/dashboard/childs/customers/components/C
 import { Box } from "@mui/material";
 import DebtsList from "@/features/dashboard/childs/debts/components/DebtsList";
 import AddDebtModal from "@/features/dashboard/components/AddDebtsModal";
+import { Suspense } from "react";
 
-const Orders = () => {
+const Debts = () => {
     return (
         <Container>
             <DashboardsPageHeader
@@ -17,7 +18,9 @@ const Orders = () => {
                 <AddDebtModal />
             </DashboardsPageHeader>
             <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                <PagesFilterLinks page="debts" />
+                <Suspense fallback={null}>
+                    <PagesFilterLinks page="debts" />
+                </Suspense>
                 <BranchHead branches={DebtsBranchName} />
                 <DebtsList />
             </Box>
@@ -25,4 +28,4 @@ const Orders = () => {
     );
 };
 
-export default Orders;
+export default Debts;

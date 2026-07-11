@@ -6,6 +6,7 @@ import { Box } from "@mui/material";
 import SalesList from "@/features/dashboard/childs/sales/components/SalesList";
 import { SaleBranchName } from "@/data/DashboardSale";
 import AddSaleModal from "@/features/dashboard/components/AddSaleModal";
+import { Suspense } from "react";
 
 const Sales = () => {
     return (
@@ -17,7 +18,9 @@ const Sales = () => {
                 <AddSaleModal />
             </DashboardsPageHeader>
             <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                <PagesFilterLinks page="sales" />
+                <Suspense fallback={null}>
+                    <PagesFilterLinks page="sales" />
+                </Suspense>
                 <BranchHead branches={SaleBranchName} />
                 <SalesList />
             </Box>
