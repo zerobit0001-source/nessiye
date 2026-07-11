@@ -21,6 +21,7 @@ class DebtListView(APIView):
         result = [
             {
                 'id': d.id,
+                'debt_id': d.debt_id,
                 'customer_name': d.customer.customer.full_name,
                 'total_amount': d.amount,
                 'paid_amount': d.paid_amount,
