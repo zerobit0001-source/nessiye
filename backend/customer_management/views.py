@@ -11,6 +11,7 @@ from debts.models import Debt
 from debts.serializers import DebtSerializer
 from django.db.models import Sum
 from accounts.models import User, OtpCode
+from django.db.models import Q
 import random
 
 
@@ -56,6 +57,14 @@ class CustomerListCreateView(APIView):
             total_debts=Sum('debts__amount'),
             total_paid=Sum('debts__payments__amount'),
         )
+
+        search_query = request.query_params.get('search', None)
+
+        if search_query:
+            customer_shops = customer_shops.filter(
+                Q(customer__full_name__icontains=search_query) |
+                Q(customer__phone_number__icontains=search_query)
+            )
     
         result = [
             {
