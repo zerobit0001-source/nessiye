@@ -178,6 +178,7 @@ class PaymentListView(APIView):
         result = [
             {
                 'id': p.id,
+                'payment_id': p.payment_id,
                 'debt_id': p.debt.id,
                 'customer_name': p.debt.customer.customer.full_name,
                 'customer_phone': p.debt.customer.customer.phone_number,
