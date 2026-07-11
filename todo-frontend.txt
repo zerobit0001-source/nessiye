@@ -29,6 +29,9 @@ so far :
 - Fix the performance issue in frontend about getcurrentuser
 - Connet the dashboard page to api
 - Create the dark mode 
+- implement the search for customers
+- implement the debts or sales details page or dialog
+
 
 
 
@@ -51,9 +54,7 @@ todo :
  	+ reports
  	+ overdues
  	+ markets
-+ implement the search for customers
-+ implement the debts or sales details page or dialog
 + create the ui for cusotmer pay action
-+ create the whole customer page 
++ create the whole panel for customers page 
 + create the setting page 
 + create the add category option
