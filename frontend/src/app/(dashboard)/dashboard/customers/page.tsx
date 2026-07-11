@@ -28,10 +28,10 @@ const DashboardCustomers = async ({ searchParams }: Props) => {
             </DashboardsPageHeader>
 
             <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                <CustomersSearch  />
+                <CustomersSearch />
                 {/* branches */}
                 <BranchHead branches={CustomersBranchName} />
-                <CustomersList />
+                <CustomersList search={params.search} />
             </Box>
         </Container>
     );

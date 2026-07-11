@@ -32,7 +32,7 @@ const DebtsCreaditsRows = ({ debt }: DebtsRowsProps) => {
                                "
             >
                 <Typography variant="body2" className="text-center">
-                    {debt.id}
+                    {debt.debt_id}
                 </Typography>
                 <Typography variant="body2" className="text-center">
                     {debt.customer_name}

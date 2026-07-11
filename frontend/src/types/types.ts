@@ -3,6 +3,7 @@
 
 export interface DebtType {
     id: number,
+    debt_id: string,
     customer: number,
     customer_name: string,
     customer_phone: string,
@@ -26,6 +27,7 @@ export interface DebtType {
 
 export interface DebtsListType {
     id: number,
+    debt_id: string,
     customer_name: string,
     total_amount: number,
     paid_amount: number,
