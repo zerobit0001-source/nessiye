@@ -21,6 +21,7 @@ class DebtListView(APIView):
         result = [
             {
                 'id': d.id,
+                'debt_id': d.debt_id,
                 'customer_name': d.customer.customer.full_name,
                 'total_amount': d.amount,
                 'paid_amount': d.paid_amount,
@@ -177,6 +178,7 @@ class PaymentListView(APIView):
         result = [
             {
                 'id': p.id,
+                'payment_id': p.payment_id,
                 'debt_id': p.debt.id,
                 'customer_name': p.debt.customer.customer.full_name,
                 'customer_phone': p.debt.customer.customer.phone_number,
@@ -187,3 +189,38 @@ class PaymentListView(APIView):
         ]
 
         return Response({'ok': True, 'payments': result})
+    
+class CustomerDebtPayView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, debt_id):
+        if request.user.is_shop:
+            return Response({'ok': False, 'error': 'این  برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            debt = Debt.objects.get(debt_id=debt_id, customer__customer=request.user)
+        except Debt.DoesNotExist:
+            return Response({'ok': False, 'error': 'بدهی یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        if debt.is_paid:
+            return Response({'ok': False, 'error': 'این بدهی قبلاً پرداخت شده است'}, status=status.HTTP_400_BAD_REQUEST)
+
+        pay_full = request.data.get('pay_full', False)
+        amount = request.data.get('amount', 0)
+
+        if pay_full:
+            amount = debt.remaining
+        else:
+            if not amount:
+                return Response({'ok': False, 'error': 'مبلغ الزامی است'}, status=status.HTTP_400_BAD_REQUEST)
+            if amount > debt.remaining:
+                amount = debt.remaining
+
+        Payment.objects.create(debt=debt, amount=amount)
+
+        return Response({
+            'ok': True,
+            'message': 'پرداخت ثبت شد',
+            'payment_id': Payment.objects.filter(debt=debt).last().payment_id,
+            'remaining': debt.remaining
+        })
