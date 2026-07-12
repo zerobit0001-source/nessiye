@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .models import Debt, Payment
 from .serializers import DebtSerializer
+from config.pagination import StandardPagination
 
 
 class DebtListView(APIView):
@@ -32,7 +33,11 @@ class DebtListView(APIView):
             for d in debts
         ]
 
-        return Response({'ok': True, 'debts': result})
+        pagination = StandardPagination()
+        paginated_result = pagination.paginate_queryset(result, request)
+        return pagination.get_paginated_response(paginated_result)
+
+        # return Response({'ok': True, 'debts': result})
 
 class DebtDetailView(APIView):
     """This class for debt detail view for shop account"""
