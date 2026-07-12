@@ -10,6 +10,7 @@ from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
 from django.db.models import Sum, F, ExpressionWrapper, IntegerField
 from sales.models import Sale
+from config.pagination import StandardPagination
 
 class IsShop:
     @staticmethod
@@ -93,7 +94,11 @@ class ProductListCreateView(APIView):
             for p in products
         ]
 
-        return Response({"ok": True, "products": result})
+        pagination = StandardPagination()
+        paginated_result = pagination.paginate_queryset(result, request)
+        return pagination.get_paginated_response(paginated_result)
+
+        # return Response({"ok": True, "products": result})
 
     def post(self, request):
         if not IsShop.check(request.user):
