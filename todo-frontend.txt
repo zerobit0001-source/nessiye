@@ -58,3 +58,199 @@ todo :
 + create the whole panel for customers page 
 + create the setting page 
 + create the add category option
+
+    ## Dashboard
+
+    + [ ] Dashboard summary cards
+
+    + [ ] Today's statistics cards
+
+    + [ ] Sales vs Payments chart
+
+    + [ ] Monthly Revenue chart
+
+    + [ ] Debt Status cards
+
+    + [ ] Top Debtors widget
+
+    + [ ] Low Stock widget
+
+    + [ ] Recent Activities widget
+
+    + [ ] Quick Actions section
+
+    ------------------------------------------------
+
+    ## Customers
+
+    + [ ] Customer filters
+
+    + [ ] Customer sorting
+
+    + [ ] Pagination
+
+    + [ ] Customer status chip
+
+    + [ ] Last payment column
+
+    + [ ] Last purchase column
+
+    ------------------------------------------------
+
+    ## Customer Details
+
+    + [ ] Customer timeline
+
+    + [ ] Statistics cards
+
+    + [ ] Notes section
+
+    + [ ] Better debt table
+
+    + [ ] Better sales table
+
+    ------------------------------------------------
+
+    ## Debts
+
+    + [ ] Debt filters
+
+    + [ ] Pagination
+
+    + [ ] Better status chips
+
+    ------------------------------------------------
+
+    ## Debt Details
+
+    + [ ] Progress bar
+
+    + [ ] Timeline
+
+    + [ ] Print receipt
+
+    ------------------------------------------------
+
+    ## Sales
+
+    + [ ] Filters
+
+    + [ ] Pagination
+
+    + [ ] Sale Details page
+
+    ------------------------------------------------
+
+    ## Payments
+
+    + [ ] Payment filters
+
+    + [ ] Payment Details Drawer
+
+    ------------------------------------------------
+
+    ## Products
+
+    + [ ] Product filters
+
+    + [ ] Product sorting
+
+    + [ ] Pagination
+
+    ------------------------------------------------
+
+    ## Product Details
+
+    + [ ] Stock history
+
+    + [ ] Sales history
+
+    ------------------------------------------------
+
+    ## Reports
+
+    + [ ] Reports dashboard
+
+    + [ ] Sales report
+
+    + [ ] Payments report
+
+    + [ ] Debt report
+
+    + [ ] Customer report
+
+    + [ ] Product report
+
+    + [ ] Export PDF
+
+    + [ ] Export Excel
+
+    ------------------------------------------------
+
+    ## Overdue Page
+
+    + [ ] Overdue debts table
+
+    + [ ] Filters
+
+    + [ ] Call customer action
+
+    ------------------------------------------------
+
+    ## Users
+
+    + [ ] User list
+
+    + [ ] Roles
+
+    + [ ] Permissions
+
+    ------------------------------------------------
+
+    ## Markets
+
+    + [ ] Markets page
+
+    ------------------------------------------------
+
+    ## Settings
+
+    + [ ] Shop settings
+
+    + [ ] Theme settings
+
+    + [ ] Language
+
+    + [ ] Currency
+
+    ------------------------------------------------
+
+    ## Global
+
+    + [ ] Global Search
+
+    + [ ] Notifications
+
+    + [ ] Dark Mode
+
+    + [ ] Loading Skeletons
+
+    + [ ] Empty States
+
+    + [ ] Error Pages
+
+    + [ ] Toast Messages
+
+    + [ ] Responsive Layout
+
+    + [ ] Performance Optimization
+
+    + [ ] Accessibility (A11y)
+
+    + [ ] SEO improvements
+
+    + [ ] Code Splitting
+
+    + [ ] Lazy Loading
+
+    + [ ] Unit Tests

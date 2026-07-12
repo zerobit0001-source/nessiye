@@ -16,5 +16,55 @@ so far :
     - Change the responese of /api/products/ to => {ok , products: [{id , name , barcode , sell_price , created_at , stock }]}
     - Create a api for dashboard data /api/dashboard/ and return responese => {ok , data : { total_debts_price , total_sales_price , total_price , total_payed_amount , number_of_customers }}
 todo : 
-    + fix the id of debts and payments
-    + create the customer pay action
+    - [ ] Fix debt ID generation
+
+    - [ ] Fix payment ID generation
+
+    - [ ] Create Customer Pay Action endpoint
+
+    - [ ] Dashboard Charts API
+        - Sales by month
+        - Payments by month
+        - Revenue by month
+
+    - [ ] Dashboard Recent Activities API
+
+    - [ ] Dashboard Top Debtors API
+
+    - [ ] Dashboard Low Stock Products API
+
+    - [ ] Dashboard Today's Statistics API
+
+    - [ ] Reports APIs
+        - Sales Report
+        - Payments Report
+        - Debts Report
+        - Customers Report
+        - Products Report
+
+    - [ ] Overdue Debts API
+
+    - [ ] Export PDF endpoint
+
+    - [ ] Export Excel endpoint
+
+    - [ ] Notification API
+
+    - [ ] Activity Logs API
+
+    - [ ] User Permissions API
+
+    - [ ] Search API
+        Search across:
+        - Customers
+        - Products
+        - Sales
+        - Debts
+        - Payments
+
+    - [ ] Pagination for all list endpoints
+
+    - [ ] Ordering support
+
+    - [ ] Filtering support
+    
