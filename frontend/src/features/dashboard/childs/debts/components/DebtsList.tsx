@@ -16,7 +16,7 @@ const DebtsList = () => {
         return <p>Something went wrong.</p>;
     }
 
-    const debts = data?.debts ?? [];
+    const debts = data?.results ?? [];
 
     console.log(debts);
 

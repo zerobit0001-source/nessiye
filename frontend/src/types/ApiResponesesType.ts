@@ -1,4 +1,4 @@
-import { CatergoyType, CustomersListType, CustomerType, DebtsListType, DebtType, ModalCustomersType, ModalProductsType, PaymentsListType, PaymentType, ProductsListType, ProductType, SalesListType, SaleType, ShopType } from "./types"
+import { CatergoyType, CustomersListType, CustomerType, DebtsListType, DebtType, ModalCustomersType, ModalProductsType, PaymentsListType, ProductsListType, ProductType, SalesListType, SaleType, ShopType } from "./types"
 
 
 
@@ -6,7 +6,8 @@ import { CatergoyType, CustomersListType, CustomerType, DebtsListType, DebtType,
 // sales
 export interface GetSalesResponesType {
     ok: boolean,
-    sales: SalesListType[]
+    count : number,
+    results: SalesListType[]
 }
 
 export interface PostSalesType {
@@ -17,7 +18,8 @@ export interface PostSalesType {
 // debts
 export interface GetDebtsResponeseType {
     ok: boolean,
-    debts: DebtsListType[]
+    count : number,
+    results: DebtsListType[]
 }
 export interface GetDebtByIdResponeseType {
     ok: boolean,
@@ -28,7 +30,8 @@ export interface GetDebtByIdResponeseType {
 // products
 export interface GetProductsResponse {
     ok: boolean,
-    products: ProductsListType[]
+    count : number,
+    results: ProductsListType[]
 }
 export interface GetProductResponse {
     ok: boolean,
@@ -89,7 +92,8 @@ export interface GetShopDetailResponse {
 
 export interface GetPaymentsResponse {
     ok: boolean,
-    payments: PaymentsListType[]
+    counts : number,
+    results: PaymentsListType[]
 }
 
 export interface addPaymentResponse {

@@ -36,8 +36,8 @@ const ProductsList = ({ search, category }: GetProductsParams) => {
     console.log(data)
     return (
         <>
-            {isSuccess && data.products.length > 0 ? (
-                data.products.map((product) => (
+            {isSuccess && data.results.length > 0 ? (
+                data.results.map((product) => (
                     <Product key={product.id} product={product} />
                 ))
             ) : (

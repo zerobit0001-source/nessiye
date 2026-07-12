@@ -15,7 +15,7 @@ const PaymentList = () => {
         return <p>Something went wrong.</p>;
     }
 
-    const payments = data?.payments ?? [];
+    const payments = data?.results ?? [];
     console.log(payments);
     return (
         <>

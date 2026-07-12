@@ -48,7 +48,7 @@ const PaymetsDetails = ({
             fullWidth
             maxWidth="sm"
         >
-            <DialogTitle>جزئیات پرداخت #{payment.id}</DialogTitle>
+            <DialogTitle>جزئیات پرداخت #{payment.payment_id}</DialogTitle>
 
             <DialogContent dividers>
                 {isLoading ? (

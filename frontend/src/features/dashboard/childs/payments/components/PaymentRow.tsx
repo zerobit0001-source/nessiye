@@ -1,8 +1,7 @@
 "use client";
 
-import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { PaymentsListType } from "@/types/types";
-import { theme } from "@/theme/theme";
 import { useState } from "react";
 import PaymetsDetails from "./PaymetsDetails";
 import { formatDate } from "@/utils/formatters";
@@ -42,7 +41,7 @@ const PaymentRow = ({ payment }: PaymentRowProps) => {
                                "
             >
                 <Typography variant="body2" className="text-center">
-                    {payment.id}
+                    {payment.payment_id}
                 </Typography>
                 <Typography variant="body2" className="text-center">
                     {payment.customer_name}

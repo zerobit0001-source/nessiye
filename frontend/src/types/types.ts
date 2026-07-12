@@ -160,6 +160,7 @@ export interface PaymentType {
     amount: number,
     created_at: string,
     debt_id: number
+    payment_id: string
 }
 export interface PaymentsListType {
     id: number,
@@ -167,5 +168,7 @@ export interface PaymentsListType {
     customer_phone: string,
     amount: number,
     created_at: string,
-    debt_id: number
+    debt_id: number,
+    payment_id: string
+
 }

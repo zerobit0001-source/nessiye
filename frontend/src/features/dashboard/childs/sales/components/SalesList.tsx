@@ -16,9 +16,10 @@ const SalesList = () => {
         return <p>Something went wrong.</p>;
     }
 
-    const sales = data?.sales ?? [];
+    const sales = data?.results ?? [];
 
-    console.log(sales);
+    console.log("this is sales " , sales);
+    console.log("this is data " , data);
 
     return (
         <>
