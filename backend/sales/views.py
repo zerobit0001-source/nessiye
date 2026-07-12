@@ -10,6 +10,7 @@ from products.models import Product
 from accounts.models import User
 from customer_management.models import CustomerShop
 from django.db.models import Sum, F, ExpressionWrapper, IntegerField
+from config.pagination import StandardPagination
 
 
 class SaleListCreateView(APIView):
@@ -67,8 +68,12 @@ class SaleListCreateView(APIView):
             }
             for s in sales
         ]
+
+        pagination = StandardPagination()
+        paginated_result = pagination.paginate_queryset(result, request)
+        return pagination.get_paginated_response(paginated_result)
     
-        return Response({'ok': True, 'sales': result})
+        # return Response({'ok': True, 'sales': result})
 
     @transaction.atomic
     def post(self, request):
