@@ -151,6 +151,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://nessiye-production.up.railway.app"
 ]
 
+
+USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # SILKY_PYTHON_PROFILER = True
