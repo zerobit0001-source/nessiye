@@ -193,7 +193,11 @@ class PaymentListView(APIView):
             for p in payments
         ]
 
-        return Response({'ok': True, 'payments': result})
+        pagination = StandardPagination()
+        paginated_result = pagination.paginate_queryset(result, request)
+        return pagination.get_paginated_response(paginated_result)
+
+        # return Response({'ok': True, 'payments': result})
     
 class CustomerDebtPayView(APIView):
     permission_classes = [IsAuthenticated]
