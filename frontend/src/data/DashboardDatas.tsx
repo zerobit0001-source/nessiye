@@ -1,4 +1,5 @@
 import { ChangeType, MuiColors } from "@/types/handiTypes";
+import { PaidRounded, PaymentsRounded, PersonAddRounded, PointOfSaleRounded, ReceiptLongRounded } from "@mui/icons-material";
 
 export interface DashboardCardData {
     id: string;
@@ -9,6 +10,7 @@ export interface DashboardCardData {
     period: string;
     color: MuiColors;
     key: keyof DashboardData;
+    icon? : React.ReactNode
 }
 
 export interface DashboardData {
@@ -22,43 +24,36 @@ export interface DashboardData {
 export const dashboardCards: DashboardCardData[] = [
     {
         id: "totalOutstanding",
-        title: "مجموع مطالبات",
+        title: "فروش امروز",
         unit: "تومان",
         change: 12.4,
         changeType: "increase",
         period: "این ماه",
         color: "primary",
-        key: "total_price",
+        key: "total_sales_price",
+        icon : <PointOfSaleRounded color="primary" />
     },
     {
         id: "overdueAmount",
-        title: "مجموع بدهی‌ها",
+        title: "پرداخت‌های امروز",
         unit: "تومان",
         change: 3,
         changeType: "increase",
         period: "این هفته",
         color: "error",
-        key: "total_debts_price",
+        key: "total_payed_amount",
+        icon : <PaymentsRounded color="error" />
     },
     {
         id: "collectedThisMonth",
-        title: "فروش کل",
+        title: "بدهی‌های جدید امروز",
         unit: "تومان",
         change: 8.1,
         changeType: "increase",
         period: "نسبت به ماه قبل",
         color: "success",
-        key: "total_sales_price",
-    },
-    {
-        id: "activeCustomers",
-        title: "مبلغ پرداخت شده",
-        unit: "تومان",
-        change: 6,
-        changeType: "increase",
-        period: "این ماه",
-        color: "info",
-        key: "total_payed_amount",
+        key: "total_debts_price",
+        icon : <ReceiptLongRounded color="success" />
     },
     {
         id: "activeCredits",
@@ -68,5 +63,7 @@ export const dashboardCards: DashboardCardData[] = [
         period: "تسویه شده این ماه",
         color: "secondary",
         key: "number_of_customers",
+        unit: "نفر",
+        icon : <PersonAddRounded color="secondary" />
     },
 ];
