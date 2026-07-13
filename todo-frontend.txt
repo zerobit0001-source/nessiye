@@ -61,7 +61,7 @@ todo :
 
     ## Dashboard
 
-    + [ ] Dashboard summary cards
+    + [ ] Dashboard summary carda
 
     + [ ] Today's statistics cards
 
