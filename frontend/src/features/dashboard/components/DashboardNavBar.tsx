@@ -1,43 +1,147 @@
-import ToggleThemeBtn from "@/theme/ToggleThemeBtn";
-import ChoseMarketDialog from "@/features/dashboard/components/ChoseMarketDialog";
-import { Notifications } from "@mui/icons-material";
-import { Avatar, Card, IconButton, TextField, Typography } from "@mui/material";
+"use client";
+
 import Link from "next/link";
+import ToggleThemeBtn from "@/theme/ToggleThemeBtn";
+import { useAppSelector } from "@/lib/redux/hooks";
+
+import {
+    Avatar,
+    Badge,
+    Box,
+    IconButton,
+    InputBase,
+    Paper,
+    Typography,
+    Divider,
+} from "@mui/material";
+
+import {
+    NotificationsOutlined,
+    Search,
+    KeyboardArrowDownRounded,
+} from "@mui/icons-material";
 
 const DashboardNavBar = () => {
+    const user = useAppSelector((s) => s.userInfo);
+
     return (
-        <Card className="w-full py-2! px-4!  flex items-center justify-between">
-            <div className="flex items-center gap-4">
-                <Typography
-                    variant="h6"
-                    className="text-center border-l border-gray-300 pl-4"
-                >
-                    داشبورد
-                </Typography>
-                <ChoseMarketDialog />
-            </div>
-            <div className="flex items-center gap-4">
-                <TextField
-                    variant="outlined"
-                    size="small"
-                    label="جستجو"
-                    placeholder="فروش ، خرید ، ..."
-                    className="hidden! lg:block!"
+        <Box
+            component="header"
+            sx={{
+                height: 60,
+                px: 3,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                bgcolor: "background.paper",
+                borderBottom: 1,
+                borderColor: "divider",
+            }}
+        >
+            
+            {/* Search */}
+            <Paper
+                elevation={0}
+                sx={{
+                    width: 380,
+                    display: {
+                        xs: "none",
+                        md: "flex",
+                    },
+                    alignItems: "center",
+                    px: 2,
+                    py: 0.5,
+                    borderRadius: 999,
+                    bgcolor: "action.hover",
+                    border: 1,
+                    borderColor: "divider",
+                }}
+            >
+                <Search
+                    sx={{
+                        color: "text.secondary",
+                        mr: 1,
+                    }}
                 />
-                <IconButton size="large">
-                    <Notifications />
-                </IconButton>
+
+                <InputBase
+                    placeholder="جستجوی مشتری، بدهی یا پرداخت..."
+                    sx={{
+                        flex: 1,
+                    }}
+                />
+            </Paper>
+
+            {/* Actions */}
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                }}
+                
+            >
                 <ToggleThemeBtn />
-                <Link href={"/dashboard/profile"}>
-                    <Avatar
-                        className="cursor-pointer"
-                        sx={{ bgcolor: "primary.main" }}
+
+                <IconButton>
+                    <Badge badgeContent={3} color="error">
+                        <NotificationsOutlined />
+                    </Badge>
+                </IconButton>
+
+                <Divider orientation="vertical" flexItem />
+
+                <Link href="/dashboard/profile">
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5,
+                            px: 1.2,
+                            borderRadius: 3,
+                            cursor: "pointer",
+                            transition: ".25s",
+                            border: 1,
+                            borderColor: "divider",
+
+                            "&:hover": {
+                                bgcolor: "action.hover",
+                            },
+                        }}
                     >
-                        P
-                    </Avatar>
+                        <Avatar
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                bgcolor: "primary.main",
+                            }}
+                        >
+                            {user.full_name?.charAt(0) ?? "؟"}
+                        </Avatar>
+
+                        <Box>
+                            <Typography fontWeight={700} fontSize={14}>
+                                {user.full_name}
+                            </Typography>
+
+                            <Typography
+                                variant="caption"
+                                color="text.secondary"
+                            >
+                                {user.shop_name}
+                            </Typography>
+                        </Box>
+
+                        <KeyboardArrowDownRounded
+                            sx={{
+                                color: "text.secondary",
+                            }}
+                        />
+                    </Paper>
                 </Link>
-            </div>
-        </Card>
+            </Box>
+        </Box>
     );
 };
 

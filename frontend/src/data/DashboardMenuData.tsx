@@ -17,7 +17,7 @@ export interface LinkItemType {
 
 export const links: Array<LinkItemType> = [
     {
-        group: "نمای کلی",
+        group: "اصلی",
         items: [
             {
                 name: "داشبورد",
@@ -52,7 +52,7 @@ export const links: Array<LinkItemType> = [
         ],
     },
     {
-        group: "تجزیه و تحلیل",
+        group: "تحلیل",
         items: [
             {
                 name: "گزارش ها",
@@ -67,7 +67,7 @@ export const links: Array<LinkItemType> = [
         ],
     },
     {
-        group: "ادمین",
+        group: "مدیریت",
         items: [
             {
                 name: "مارکت ها",

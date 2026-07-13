@@ -12,7 +12,7 @@ export default function MainLayout({
     return (
         <div className="flex h-screen overflow-hidden">
             {/* Sidebar */}
-            <aside className="hidden lg:flex w-60 shrink-0 border-l ">
+            <aside className="hidden lg:flex w-60 shrink-0 ">
                 <AuthHydrator />
                 <SideBar />
             </aside>
