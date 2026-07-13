@@ -7,6 +7,8 @@ import { CheckAuthServer } from "@/utils/auth/CheckAuth";
 import AddSaleModal from "@/features/dashboard/components/AddSaleModal";
 import DashboardPageHeader from "@/features/dashboard/childs/dashboard/components/DashboardPageHeader";
 
+// dasboard
+
 const Dashboard = async () => {
     await CheckAuthServer();
 
