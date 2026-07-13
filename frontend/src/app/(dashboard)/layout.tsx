@@ -2,48 +2,34 @@ import DashboardNavBar from "@/features/dashboard/components/DashboardNavBar";
 import SideBar from "@/features/dashboard/components/SideBar";
 import SlideUpAnimation from "@/components/SlideUpAnimation";
 import MobileMenu from "@/components/dash/MobileMenu";
-import { getCurrentUser } from "@/utils/auth/GetCurrentUser";
-import { redirect } from "next/navigation";
 import AuthHydrator from "@/utils/auth/AuthHydrateRedux";
 
-export default async function MainLayout({
+export default function MainLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    // const user = await getCurrentUser();
-
-    //     if (!user) {
-    //         redirect("/auth?mode=login");
-    //     }
-
-    //     if (!user.is_shop) {
-    //         redirect("/account");
-    //     }
-
     return (
-        <div className="h-screen grid  grid-rows-[auto_1fr] ">
+        <div className="flex h-screen overflow-hidden">
+            {/* Sidebar */}
+            <aside className="hidden lg:flex w-60 shrink-0 border-l ">
+                <AuthHydrator />
+                <SideBar />
+            </aside>
 
-            {/* ser user information to redux */}
+            {/* Mobile */}
+            <MobileMenu />
 
-            <AuthHydrator />
-
-            {/* Navbar */}
-            <div className="z-10">
+            {/* Content */}
+            <section className="flex flex-1 flex-col overflow-hidden">
                 <DashboardNavBar />
-            </div>
 
-            {/* Main Area */}
-            <div className="grid grid-cols-12">
-                <aside className="hidden lg:col-span-2 lg:block">
-                    <SideBar />
-                </aside>
-                <MobileMenu />
-
-                <main className="col-span-12! lg:col-span-10! p-4 overflow-auto">
-                    <SlideUpAnimation>{children}</SlideUpAnimation>
+                <main className="flex-1 overflow-y-auto p-6">
+                    <div className="mx-auto ">
+                        <SlideUpAnimation>{children}</SlideUpAnimation>
+                    </div>
                 </main>
-            </div>
+            </section>
         </div>
     );
 }
