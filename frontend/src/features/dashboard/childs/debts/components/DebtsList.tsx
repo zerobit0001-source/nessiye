@@ -16,26 +16,16 @@ import { styled } from "@mui/material/styles";
 import { useGetDebtsQuery } from "../../sales/api/ApiSales";
 import DebtsCreditsRowSkeleton from "./DebtsCreditsRowSkeleton";
 import DebtsCreaditsRows from "./DebtsCreaditsRows";
+import { useAppSelector } from "@/lib/redux/hooks";
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    cursor: "pointer",
-    transition: "0.2s",
+interface DebtsListProps {
+    search?: string;
+}
 
-    "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.action.hover,
-    },
+export default function DebtsList({ search }: DebtsListProps) {
+    const { data, isLoading, error } = useGetDebtsQuery({search});
 
-    "&:hover": {
-        backgroundColor: theme.palette.action.selected,
-    },
-
-    "&:last-child td, &:last-child th": {
-        border: 0,
-    },
-}));
-
-export default function DebtsList() {
-    const { data, isLoading, error } = useGetDebtsQuery();
+    const mode = useAppSelector((s) => s.theme);
 
     if (isLoading) {
         return Array.from({ length: 8 }).map((_, index) => (
@@ -53,19 +43,19 @@ export default function DebtsList() {
         return <Typography>بدهی‌ای یافت نشد.</Typography>;
     }
 
+    console.log(data);
+
     return (
-        <TableContainer
-            component={Paper}
-            elevation={0}
-            sx={{
-                borderRadius: 3,
-                border: "1px solid",
-                borderColor: "divider",
-            }}
-        >
-            <Table>
+        <TableContainer component={Paper}>
+            <Table
+                sx={{ minWidth: 800 }}
+                className="rounded-xl! overflow-hidden"
+                aria-label="customized table"
+            >
                 <TableHead>
-                    <TableRow>
+                    <TableRow
+                        className={`${mode.mode == "light" ? "bg-gray-200" : "bg-blue-700"}`}
+                    >
                         <TableCell align="center">شناسه</TableCell>
                         <TableCell align="center">مشتری</TableCell>
                         <TableCell align="center">جمع بدهی</TableCell>
@@ -75,7 +65,6 @@ export default function DebtsList() {
                         <TableCell align="center">وضعیت</TableCell>
                     </TableRow>
                 </TableHead>
-
                 <TableBody>
                     {debts.map((debt) => (
                         <DebtsCreaditsRows debt={debt} key={debt.id} />

@@ -69,7 +69,7 @@ export default function DebtsPageToolbar() {
         }, 500);
 
         return () => clearTimeout(timer);
-    }, [search, router, searchParams]);
+    }, [search]);
 
     const changeStatus = (value: string) => {
         const params = new URLSearchParams(searchParams.toString());

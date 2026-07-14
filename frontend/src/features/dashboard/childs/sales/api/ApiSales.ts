@@ -24,8 +24,13 @@ export const ApiSales = createApi({
             }),
             invalidatesTags: ["Sales", "Debts"]
         }),
-        getDebts: builder.query<GetDebtsResponeseType, void>({
-            query: () => "debts/",
+        getDebts: builder.query<GetDebtsResponeseType, { search?: string }>({
+            query: ({ search }) => ({
+                url: "debts/",
+                params: {
+                    search
+                }
+            }),
             providesTags: ["Debts"]
         }),
         getDebtById: builder.query<GetDebtByIdResponeseType, number>({

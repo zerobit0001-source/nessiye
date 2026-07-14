@@ -9,8 +9,15 @@ import AddDebtModal from "@/features/dashboard/components/AddDebtsModal";
 import { Suspense } from "react";
 import DebtsCards from "@/features/dashboard/childs/debts/components/DebtsPageCards";
 import DebtsPageToolbar from "@/features/dashboard/childs/debts/components/DebtsPageTollbar";
-
-const Debts = () => {
+interface Props {
+    searchParams: Promise<{
+        search?: string;
+        status?: string;
+        ordering?: string;
+    }>;
+}
+const Debts = async ({ searchParams }: Props) => {
+    const params = await searchParams;
     return (
         <Container>
             <DashboardsPageHeader
@@ -22,7 +29,7 @@ const Debts = () => {
             <DebtsCards />
             <DebtsPageToolbar />
             <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                <DebtsList />
+                <DebtsList search={params.search} />
             </Box>
         </Container>
     );
