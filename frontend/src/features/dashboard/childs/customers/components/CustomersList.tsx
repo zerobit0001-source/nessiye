@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useGetCustomersQuery } from "../api/ApiCustomer";
-import CustomerRow from "../../components/CustomerRow";
+import CustomerRow from "./CustomerRow";
 import Link from "next/link";
 import CustomerRowSkeleton from "./CustomerRowSkeleton";
 import {

@@ -1,8 +1,10 @@
 "use client";
 import { DebtsListType } from "@/types/types";
-import { formatDate } from "@/utils/formatters";
-import { Box, Typography } from "@mui/material";
+import { formatDate, formatPrice } from "@/utils/formatters";
 import Link from "next/link";
+import { TableCell, Chip, TableRow } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
 
 interface DebtsRowsProps {
     debt: DebtsListType;
@@ -10,86 +12,42 @@ interface DebtsRowsProps {
 
 const DebtsCreaditsRows = ({ debt }: DebtsRowsProps) => {
     return (
-        <Link href={`debts/${debt.id}`}>
-            <Box
-                onClick={() => {
-                    console.log(debt);
-                }}
-                className="w-300
-                                  xl:w-full
-                                  sticky top-0
-                                  z-50
-                                  grid 
-                                  grid-cols-7
-                                  items-center
-                                  justify-between
-                                  p-4
-                                  border-b
-                                  border-gray-400
-                                  hover:bg-gray-100
-                                  transition-all
-                                  cursor-pointer
-                               "
-            >
-                <Typography variant="body2" className="text-center">
+        <TableRow key={debt.id}>
+            <TableCell align="center">
+                <Link
+                    href={`/dashboard/debts/${debt.id}`}
+                    className="underline text-blue-400"
+                >
                     {debt.debt_id}
-                </Typography>
-                <Typography variant="body2" className="text-center">
-                    {debt.customer_name}
-                </Typography>
-                <Typography variant="body2" className="text-center">
-                    {debt.total_amount.toLocaleString("fa-IR")} ریال
-                </Typography>
-                <Typography variant="body2" className="text-center">
-                    {debt.paid_amount.toLocaleString("fa-IR")} ریال
-                </Typography>
-                <Typography variant="body2" className="text-center">
-                    {debt.remaining_amount.toLocaleString("fa-IR")} ریال
-                </Typography>
-                <Typography variant="body2" className="text-center">
-                    {formatDate(debt.created_at, { dateStyle: "short" })}
-                </Typography>
-                <div className="flex justify-center">
-                    {/* {debt.status === "active" ? (
-                    <Typography
-                        className="bg-blue-400/10 text-blue-500 rounded-full  text-center w-max px-3"
-                        variant="body2"
-                    >
-                        باز
-                    </Typography>
-                ) : debt.status === "overdue" ? (
-                    <Typography
-                        className="bg-red-400/10 text-red-500 rounded-full  text-center w-max px-3"
-                        variant="body2"
-                    >
-                        نشده
-                    </Typography>
-                ) : (
-                    <Typography
-                        className="bg-green-400/10 text-green-500 rounded-full  text-center w-max px-3"
-                        variant="body2"
-                    >
-                        بسته
-                    </Typography>
-                )} */}
-                    {debt.is_paid ? (
-                        <Typography
-                            className="bg-green-400/10 text-green-500 rounded-full  text-center w-max px-3"
-                            variant="body2"
-                        >
-                            پرداخت شده
-                        </Typography>
-                    ) : (
-                        <Typography
-                            className="bg-blue-400/10 text-blue-500 rounded-full  text-center w-max px-3"
-                            variant="body2"
-                        >
-                            پرداخت نشده
-                        </Typography>
-                    )}
-                </div>
-            </Box>
-        </Link>
+                </Link>
+            </TableCell>
+
+            <TableCell align="center">{debt.customer_name}</TableCell>
+
+            <TableCell align="center">
+                {formatPrice(debt.total_amount)} تومان
+            </TableCell>
+
+            <TableCell align="center">
+                {formatPrice(debt.paid_amount)} تومان
+            </TableCell>
+
+            <TableCell align="center">
+                {formatPrice(debt.remaining_amount)} تومان
+            </TableCell>
+
+            <TableCell align="center">
+                {formatDate(debt.created_at, { dateStyle: "short" })}
+            </TableCell>
+
+            <TableCell align="center">
+                <Chip
+                    size="small"
+                    label={debt.is_paid ? "تسویه شده" : "فعال"}
+                    color={debt.is_paid ? "success" : "warning"}
+                />
+            </TableCell>
+        </TableRow>
     );
 };
 

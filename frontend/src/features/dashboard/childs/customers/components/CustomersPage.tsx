@@ -11,12 +11,12 @@ import {
 import {
     useGetCustomerCreditsQuery,
     useGetCustomerQuery,
-} from "../customers/api/ApiCustomer";
+} from "../api/ApiCustomer";
 import Container from "@/components/dash/Container";
-import CustomerDetailsDebts from "../customers/components/CustomerDetailsDebts";
-import CustomerDetailsSales from "../customers/components/CustomerDetailsSales";
-import AddDebtForCustomerModal from "./AddDebtForCustomerModal";
-import AddSaleForCustomerModal from "./AddSaleForCustomerModal";
+import CustomerDetailsDebts from "./CustomerDetailsDebts";
+import CustomerDetailsSales from "./CustomerDetailsSales";
+import AddDebtForCustomerModal from "../../components/AddDebtForCustomerModal";
+import AddSaleForCustomerModal from "../../components/AddSaleForCustomerModal";
 
 const CustomersPage = ({ id }: { id: string }) => {
     const {

@@ -7,6 +7,8 @@ import { Box } from "@mui/material";
 import DebtsList from "@/features/dashboard/childs/debts/components/DebtsList";
 import AddDebtModal from "@/features/dashboard/components/AddDebtsModal";
 import { Suspense } from "react";
+import DebtsCards from "@/features/dashboard/childs/debts/components/DebtsPageCards";
+import DebtsPageToolbar from "@/features/dashboard/childs/debts/components/DebtsPageTollbar";
 
 const Debts = () => {
     return (
@@ -17,11 +19,9 @@ const Debts = () => {
             >
                 <AddDebtModal />
             </DashboardsPageHeader>
+            <DebtsCards />
+            <DebtsPageToolbar />
             <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                <Suspense fallback={null}>
-                    <PagesFilterLinks page="debts" />
-                </Suspense>
-                <BranchHead branches={DebtsBranchName} />
                 <DebtsList />
             </Box>
         </Container>
