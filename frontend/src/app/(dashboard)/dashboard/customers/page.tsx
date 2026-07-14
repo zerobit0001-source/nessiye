@@ -6,6 +6,8 @@ import BranchHead from "@/features/dashboard/components/BranchHead";
 import { Box } from "@mui/material";
 import CustomersList from "@/features/dashboard/childs/customers/components/CustomersList";
 import CustomersSearch from "@/features/dashboard/childs/customers/components/CustomersSearch";
+import CustomerCards from "@/features/dashboard/childs/customers/components/CustomersCards";
+import CustomersPageToolbar from "@/features/dashboard/childs/customers/components/CustomersPageToolbar";
 
 interface Props {
     searchParams: Promise<{
@@ -26,11 +28,12 @@ const DashboardCustomers = async ({ searchParams }: Props) => {
             >
                 <AddCustomerModal />
             </DashboardsPageHeader>
-
+            <CustomerCards />
+            <CustomersPageToolbar />
             <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                <CustomersSearch />
+                {/* <CustomersSearch /> */}
                 {/* branches */}
-                <BranchHead branches={CustomersBranchName} />
+                {/* <BranchHead branches={CustomersBranchName} /> */}
                 <CustomersList search={params.search} />
             </Box>
         </Container>
