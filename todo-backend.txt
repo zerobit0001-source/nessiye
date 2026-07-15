@@ -24,6 +24,8 @@ so far :
     - [ ] Dashboard Top Debtors API
 
     - [ ] Dashboard Low Stock Products API
+
+    - [ ] Pagination for all list endpoints
 todo : 
     - [ ] Dashboard Charts API
         - Sales by month
@@ -60,8 +62,6 @@ todo :
         - Sales
         - Debts
         - Payments
-
-    - [ ] Pagination for all list endpoints
 
     - [ ] Ordering support
 
