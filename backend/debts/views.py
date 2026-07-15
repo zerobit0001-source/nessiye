@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Debt, Payment
 from .serializers import DebtSerializer
 from config.pagination import StandardPagination
+from time import timezone
 
 
 class DebtListView(APIView):
@@ -233,3 +234,35 @@ class CustomerDebtPayView(APIView):
             'payment_id': Payment.objects.filter(debt=debt).last().payment_id,
             'remaining': debt.remaining
         })
+    
+
+class OverdueDebtsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        overdue_debts = Debt.objects.filter(
+            shop=request.user,
+            is_paid=False,
+            created_at__lt=timezone.now() - timezone.timedelta(days=30)
+        ).select_related('customer__customer')
+
+        result = [
+            {
+                'id': d.id,
+                'debt_id': d.debt_id,
+                'customer_name': d.customer.customer.full_name,
+                'total_amount': d.amount,
+                'paid_amount': d.paid_amount,
+                'remaining_amount': d.remaining,
+                'created_at': d.created_at
+            }
+            for d in overdue_debts
+        ]
+
+        pagination = StandardPagination()
+        paginated_result = pagination.paginate_queryset(result, request)
+        return pagination.get_paginated_response(paginated_result)
+    
