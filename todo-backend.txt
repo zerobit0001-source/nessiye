@@ -29,6 +29,8 @@ so far :
 
     - [ ] Dashboard Today's Statistics API
 
+    - [ ] Overdue Debts API
+
 todo : 
     - [ ] Dashboard Charts API
         - Sales by month
@@ -43,8 +45,6 @@ todo :
         - Debts Report
         - Customers Report
         - Products Report
-
-    - [ ] Overdue Debts API
 
     - [ ] Export PDF endpoint
 
