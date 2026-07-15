@@ -1,3 +1,4 @@
+from time import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -309,6 +310,29 @@ class DashboardView(APIView):
             for p in low_stock
         ]
 
+        today = timezone.now().date()
+        today_sales = Sale.objects.filter(
+            shop=request.user,
+            created_at__date=today,
+            is_debt=False).annotate(
+            sale_total=Sum(
+                ExpressionWrapper(
+                    F('items__price') * F('items__quantity'),
+                    output_field=IntegerField()
+                )
+            )
+        ).aggregate(total=Sum('sale_total'))['total'] or 0
+
+        today_debts = Debt.objects.filter(
+            shop=request.user,
+            created_at__date=today
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        today_paid = Payment.objects.filter(
+            debt__shop=request.user,
+            created_at__date=today
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
         return Response({
             'ok': True,
             'data': {
@@ -318,6 +342,9 @@ class DashboardView(APIView):
                 'total_payed_amount': total_paid,
                 'number_of_customers': number_of_customers,
                 'top_debtors': top_debtors_data,
-                'low_stock_products' : low_stock_data
+                'low_stock_products' : low_stock_data,
+                'today_sales': today_sales,
+                'today_debts': today_debts,
+                'today_paid': today_paid
             }
         })
