@@ -1,29 +1,38 @@
 import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
-import { PaymentBranchName } from "@/data/DashboardPayments";
 import PaymentList from "@/features/dashboard/childs/payments/components/PaymentList";
 import AddPaymentModal from "@/features/dashboard/components/AddPaymentModal";
-import BranchHead from "@/features/dashboard/components/BranchHead";
-import { AddRounded } from "@mui/icons-material";
-import { Box, Button, Typography } from "@mui/material";
-import Link from "next/link";
+import PaymentsPageToolbar from "@/features/dashboard/childs/payments/components/PaymetPageTollbar";
+import PaymentsPageCards from "@/features/dashboard/childs/payments/components/PaymentsPageCards";
+import DebtsCards from "@/features/dashboard/childs/debts/components/DebtsPageCards";
+import { Box } from "@mui/material";
+interface Props {
+  searchParams: Promise<{
+    search?: string;
+    status?: string;
+    ordering?: string;
+    period?: string;
+  }>;
+}
+const Payments = async ({ searchParams }: Props) => {
+  const params = await searchParams;
 
-const Payments = () => {
-    return (
-        <Container>
-            <DashboardsPageHeader
-                title="پرداختی ها"
-                caption="42 م ریال مبلغ جمع شده این ماه"
-            >
-                <AddPaymentModal />
-            </DashboardsPageHeader>
-
-            <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                <BranchHead branches={PaymentBranchName} />
-                <PaymentList />
-            </Box>
-        </Container>
-    );
+  return (
+    <Container>
+      <DashboardsPageHeader
+        title="پرداختی ها"
+        caption="42 م ریال مبلغ جمع شده این ماه"
+      >
+        <AddPaymentModal />
+      </DashboardsPageHeader>
+      <DebtsCards />
+      <PaymentsPageToolbar />
+      <Box className="w-full overflow-x-scroll xl:overflow-auto">
+        {/*<BranchHead branches={PaymentBranchName} />*/}
+        <PaymentList search={params.search} status={params.status} ordering={params.ordering} period={params.period} />
+      </Box>
+    </Container>
+  );
 };
 
 export default Payments;

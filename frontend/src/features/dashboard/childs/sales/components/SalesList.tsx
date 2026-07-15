@@ -13,6 +13,7 @@ import { useGetSalesQuery } from "../api/ApiSales";
 import SaleRow from "./SaleRow";
 import SalesRowSkeleton from "./SalesRowSkeleton";
 import { useAppSelector } from "@/lib/redux/hooks";
+import AppTable from "../../components/AppTable";
 
 interface Props {
   search?: string;
@@ -46,30 +47,17 @@ const SalesList = ({ search, ordering, status, period }: Props) => {
   console.log("this is data ", data);
 
   return (
-    <TableContainer component={Paper}>
-      <Table
-        sx={{ minWidth: 800 }}
-        className="rounded-xl! overflow-hidden"
-        aria-label="customized table"
-      >
-        <TableHead>
-          <TableRow
-            className={`${mode.mode == "light" ? "bg-gray-200" : "bg-blue-700"}`}
-          >
-            <TableCell align="center">شناسه</TableCell>
-            <TableCell align="center">مشتری</TableCell>
-            <TableCell align="center">جمغ</TableCell>
-            <TableCell align="center">تاریخ</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sales.map((debt) => (
-            <SaleRow sale={debt} key={debt.id} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <AppTable
+      headers={["شناسه", "مشتری", "جمع", "تاریخ"]}
+      data={sales}
+      renderRow={(sale) => <SaleRow sale={sale} key={sale.id} />}
+    />
   );
 };
 
 export default SalesList;
+
+// <TableCell align="center">شناسه</TableCell>
+// <TableCell align="center">مشتری</TableCell>
+// <TableCell align="center">جمغ</TableCell>
+// <TableCell align="center">تاریخ</TableCell>

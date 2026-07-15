@@ -17,6 +17,7 @@ import { useGetDebtsQuery } from "../../sales/api/ApiSales";
 import DebtsCreditsRowSkeleton from "./DebtsCreditsRowSkeleton";
 import DebtsCreaditsRows from "./DebtsCreaditsRows";
 import { useAppSelector } from "@/lib/redux/hooks";
+import AppTable from "../../components/AppTable";
 
 interface DebtsListProps {
   search?: string;
@@ -59,31 +60,26 @@ export default function DebtsList({
   console.log(data);
 
   return (
-    <TableContainer component={Paper}>
-      <Table
-        sx={{ minWidth: 800 }}
-        className="rounded-xl! overflow-hidden"
-        aria-label="customized table"
-      >
-        <TableHead>
-          <TableRow
-            className={`${mode.mode == "light" ? "bg-gray-200" : "bg-blue-700"}`}
-          >
-            <TableCell align="center">شناسه</TableCell>
-            <TableCell align="center">مشتری</TableCell>
-            <TableCell align="center">جمع بدهی</TableCell>
-            <TableCell align="center">پرداخت شده</TableCell>
-            <TableCell align="center">باقیمانده</TableCell>
-            <TableCell align="center">تاریخ</TableCell>
-            <TableCell align="center">وضعیت</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {debts.map((debt) => (
-            <DebtsCreaditsRows debt={debt} key={debt.id} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <AppTable
+      headers={[
+        "شناسه",
+        "مشتری",
+        "جمع بدهی",
+        "پرداخت شده",
+        "باقیمانده",
+        "تاریخ",
+        "وضعیت",
+      ]}
+      data={debts}
+      renderRow={(debt) => <DebtsCreaditsRows debt={debt} key={debt.id} />}
+    />
   );
 }
+
+// <TableCell align="center">شناسه</TableCell>
+// <TableCell align="center">مشتری</TableCell>
+// <TableCell align="center">جمع بدهی</TableCell>
+// <TableCell align="center">پرداخت شده</TableCell>
+// <TableCell align="center">باقیمانده</TableCell>
+// <TableCell align="center">تاریخ</TableCell>
+// <TableCell align="center">وضعیت</TableCell>
