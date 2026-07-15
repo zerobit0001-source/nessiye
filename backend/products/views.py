@@ -285,13 +285,13 @@ class DashboardView(APIView):
 
         top_debtors_data = [
             {
-                'customer_id': debtor.customer.id,
-                'full_name': debtor.customer.full_name,
-                'phone_number': debtor.customer.phone_number,
-                'total_debt': debtor.total_debt or 0,
-                'total_paid': debtor.total_paid or 0
+                'customer_name': cs.customer.full_name,
+                'phone_number': cs.customer.phone_number,
+                'total_debt': cs.total_debt or 0,
+                'total_paid': cs.total_paid or 0,
+                'remaining': (cs.total_debt or 0) - (cs.total_paid or 0)
             }
-            for debtor in top_debtors
+            for cs in top_debtors
         ]
 
         return Response({
@@ -301,6 +301,7 @@ class DashboardView(APIView):
                 'total_debts_price': total_debts,
                 'total_price': total_sales + total_debts,
                 'total_payed_amount': total_paid,
-                'number_of_customers': number_of_customers
-            },
+                'number_of_customers': number_of_customers,
+                'top_debtors': top_debtors_data
+            }
         })
