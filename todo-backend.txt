@@ -26,6 +26,8 @@ so far :
     - [ ] Dashboard Low Stock Products API
 
     - [ ] Pagination for all list endpoints
+
+    - [ ] Dashboard Today's Statistics API
 todo : 
     - [ ] Dashboard Charts API
         - Sales by month
@@ -34,7 +36,7 @@ todo :
 
     - [ ] Dashboard Recent Activities API
 
-    - [ ] Dashboard Today's Statistics API
+    
 
     - [ ] Reports APIs
         - Sales Report
