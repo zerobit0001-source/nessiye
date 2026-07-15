@@ -278,6 +278,22 @@ class DashboardView(APIView):
 
         number_of_customers = CustomerShop.objects.filter(shop=request.user).count()
 
+        top_debtors = CustomerShop.objects.filter(shop=request.user).select_related('customer').annotate(
+            total_debt=Sum('debts__amount'),
+            total_paid=Sum('debts__payments__amount')
+        ).order_by('-total_debt')[:5]
+
+        top_debtors_data = [
+            {
+                'customer_id': debtor.customer.id,
+                'full_name': debtor.customer.full_name,
+                'phone_number': debtor.customer.phone_number,
+                'total_debt': debtor.total_debt or 0,
+                'total_paid': debtor.total_paid or 0
+            }
+            for debtor in top_debtors
+        ]
+
         return Response({
             'ok': True,
             'data': {
@@ -286,5 +302,5 @@ class DashboardView(APIView):
                 'total_price': total_sales + total_debts,
                 'total_payed_amount': total_paid,
                 'number_of_customers': number_of_customers
-            }
+            },
         })
