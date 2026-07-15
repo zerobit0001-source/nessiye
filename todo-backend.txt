@@ -20,6 +20,10 @@ so far :
     - [ ] Fix payment ID generation
 
     - [ ] Create Customer Pay Action endpoint
+
+    - [ ] Dashboard Top Debtors API
+
+    - [ ] Dashboard Low Stock Products API
 todo : 
     - [ ] Dashboard Charts API
         - Sales by month
@@ -28,9 +32,7 @@ todo :
 
     - [ ] Dashboard Recent Activities API
 
-    - [ ] Dashboard Top Debtors API
 
-    - [ ] Dashboard Low Stock Products API
 
     - [ ] Dashboard Today's Statistics API
 
