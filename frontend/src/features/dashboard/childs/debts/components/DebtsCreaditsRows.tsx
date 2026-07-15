@@ -7,48 +7,48 @@ import { styled } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 
 interface DebtsRowsProps {
-    debt: DebtsListType;
+  debt: DebtsListType;
 }
 
 const DebtsCreaditsRows = ({ debt }: DebtsRowsProps) => {
-    return (
-        <TableRow key={debt.id}>
-            <TableCell align="center">
-                <Link
-                    href={`/dashboard/debts/${debt.id}`}
-                    className="underline text-blue-400"
-                >
-                    {debt.debt_id}
-                </Link>
-            </TableCell>
+  return (
+    <TableRow key={debt.id}>
+      <TableCell align="center">
+        <Link
+          href={`/dashboard/debts/${debt.id}`}
+          className="underline text-blue-400"
+        >
+          {debt.debt_id}
+        </Link>
+      </TableCell>
 
-            <TableCell align="center">{debt.customer_name}</TableCell>
+      <TableCell align="center">{debt.customer_name}</TableCell>
 
-            <TableCell align="center">
-                {formatPrice(debt.total_amount)} تومان
-            </TableCell>
+      <TableCell align="center">
+        {formatPrice(debt.total_amount)} تومان
+      </TableCell>
 
-            <TableCell align="center">
-                {formatPrice(debt.paid_amount)} تومان
-            </TableCell>
+      <TableCell align="center">
+        {formatPrice(debt.paid_amount)} تومان
+      </TableCell>
 
-            <TableCell align="center">
-                {formatPrice(debt.remaining_amount)} تومان
-            </TableCell>
+      <TableCell align="center">
+        {formatPrice(debt.remaining_amount)} تومان
+      </TableCell>
 
-            <TableCell align="center">
-                {formatDate(debt.created_at, { dateStyle: "short" })}
-            </TableCell>
+      <TableCell align="center">
+        {formatDate(debt.created_at, { dateStyle: "short" })}
+      </TableCell>
 
-            <TableCell align="center">
-                <Chip
-                    size="small"
-                    label={debt.is_paid ? "تسویه شده" : "فعال"}
-                    color={debt.is_paid ? "success" : "warning"}
-                />
-            </TableCell>
-        </TableRow>
-    );
+      <TableCell align="center">
+        <Chip
+          size="small"
+          label={debt.is_paid ? "تسویه شده" : "فعال"}
+          color={debt.is_paid ? "success" : "warning"}
+        />
+      </TableCell>
+    </TableRow>
+  );
 };
 
 export default DebtsCreaditsRows;
