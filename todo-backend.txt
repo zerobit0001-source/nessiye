@@ -28,7 +28,7 @@ so far :
     - [ ] Pagination for all list endpoints
 
     - [ ] Dashboard Today's Statistics API
-    
+
 todo : 
     - [ ] Dashboard Charts API
         - Sales by month
@@ -36,8 +36,6 @@ todo :
         - Revenue by month
 
     - [ ] Dashboard Recent Activities API
-
-    
 
     - [ ] Reports APIs
         - Sales Report
