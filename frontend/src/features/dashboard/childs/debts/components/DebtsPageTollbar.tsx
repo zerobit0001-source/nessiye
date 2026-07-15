@@ -3,187 +3,182 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-    Card,
-    Stack,
-    Chip,
-    OutlinedInput,
-    InputAdornment,
-    FormControl,
-    Select,
-    MenuItem,
-    IconButton,
-    Box,
+  Box,
+  Button,
+  Card,
+  Chip,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 import {
-    Search,
-    Tune,
-    PeopleOutline,
-    ErrorOutline,
-    AccessTime,
-    CheckCircleOutline,
+  DownloadOutlined,
+  FilterAltOutlined,
+  Search,
 } from "@mui/icons-material";
 
-const filters = [
-    {
-        label: "همه",
-        value: "all",
-        icon: <PeopleOutline fontSize="small" />,
-    },
-    {
-        label: "دارای بدهی",
-        value: "debt",
-        icon: <ErrorOutline fontSize="small" />,
-    },
-    {
-        label: "معوق",
-        value: "overdue",
-        icon: <AccessTime fontSize="small" />,
-    },
-    {
-        label: "تسویه‌شده",
-        value: "paid",
-        icon: <CheckCircleOutline fontSize="small" />,
-    },
-];
-
 export default function DebtsPageToolbar() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-    const [search, setSearch] = useState(searchParams.get("search") ?? "");
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
 
-    const status = searchParams.get("status") ?? "all";
-    const ordering = searchParams.get("ordering") ?? "-remaining_amount";
+  const status = searchParams.get("status") ?? "all";
+  const ordering = searchParams.get("ordering") ?? "-created_at";
+  const period = searchParams.get("period") ?? "month";
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            const params = new URLSearchParams(searchParams.toString());
+  // Search debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
 
-            if (search.trim()) {
-                params.set("search", search);
-            } else {
-                params.delete("search");
-            }
+      if (search.trim()) {
+        params.set("search", search);
+      } else {
+        params.delete("search");
+      }
 
-            router.replace(`?${params.toString()}`);
-        }, 500);
+      router.replace(`?${params.toString()}`);
+    }, 500);
 
-        return () => clearTimeout(timer);
-    }, [search]);
+    return () => clearTimeout(timer);
+  }, [search, router, searchParams]);
 
-    const changeStatus = (value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
+  const updateParam = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
 
-        if (value === "all") {
-            params.delete("status");
-        } else {
-            params.set("status", value);
-        }
+    if (key === "status" && value === "all") {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
 
-        router.replace(`?${params.toString()}`);
-    };
+    router.replace(`?${params.toString()}`);
+  };
 
-    const changeOrdering = (value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
-
-        params.set("ordering", value);
-
-        router.replace(`?${params.toString()}`);
-    };
-
-    return (
-        <Card
-            elevation={0}
-            sx={{
-                p: 1,
-                borderRadius: 3,
-                border: "1px solid",
-                borderColor: "divider",
-            }}
+  return (
+    <Card
+      elevation={0}
+      sx={{
+        p: 1.5,
+        borderRadius: 4,
+        border: "1px solid",
+        borderColor: "divider",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          flexWrap: {
+            xs: "wrap",
+            lg: "nowrap",
+          },
+        }}
+      >
+        {/* Export */}
+        <IconButton
+          sx={{
+            border: "1px solid",
+            borderColor: "divider",
+            width: 42,
+            height: 42,
+          }}
         >
-            <Box
-                className="
-            flex
-            flex-wrap
-            items-center
-            gap-3
-        "
-            >
-                {/* Search */}
-                <OutlinedInput
-                    size="small"
-                    placeholder="جستجو..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            <Search />
-                        </InputAdornment>
-                    }
-                    sx={{
-                        width: {
-                            xs: "100%",
-                            md: 280,
-                        },
-                    }}
-                />
+          <DownloadOutlined />
+        </IconButton>
 
-                {/* Filters */}
-                <Stack direction="row" spacing={1}>
-                    {filters.map((item) => (
-                        <Chip
-                            key={item.value}
-                            clickable
-                            icon={item.icon}
-                            label={item.label}
-                            color={
-                                status === item.value ? "primary" : "default"
-                            }
-                            variant={
-                                status === item.value ? "filled" : "outlined"
-                            }
-                            onClick={() => changeStatus(item.value)}
-                        />
-                    ))}
-                </Stack>
+        {/* Filter */}
+        <IconButton
+          sx={{
+            border: "1px solid",
+            borderColor: "divider",
+            width: 42,
+            height: 42,
+          }}
+        >
+          <FilterAltOutlined />
+        </IconButton>
 
-                {/* Spacer */}
-                <Box sx={{ flexGrow: 1 }} />
+        {/* Sorting */}
+        <FormControl
+          size="small"
+          sx={{
+            minWidth: 180,
+          }}
+        >
+          <Select
+            value={ordering}
+            onChange={(e) => updateParam("ordering", e.target.value)}
+          >
+            <MenuItem value="-created_at">جدیدترین</MenuItem>
 
-                {/* Sort */}
-                <FormControl
-                    size="small"
-                    sx={{
-                        minWidth: 180,
-                    }}
-                >
-                    <Select
-                        value={ordering}
-                        onChange={(e) => changeOrdering(e.target.value)}
-                    >
-                        <MenuItem value="-remaining_amount">
-                            بیشترین بدهی
-                        </MenuItem>
+            <MenuItem value="created_at">قدیمی‌ترین</MenuItem>
 
-                        <MenuItem value="remaining_amount">
-                            کمترین بدهی
-                        </MenuItem>
+            <MenuItem value="-total_amount">بیشترین مبلغ</MenuItem>
 
-                        <MenuItem value="-created_at">جدیدترین</MenuItem>
+            <MenuItem value="total_amount">کمترین مبلغ</MenuItem>
+          </Select>
+        </FormControl>
 
-                        <MenuItem value="created_at">قدیمی‌ترین</MenuItem>
-                    </Select>
-                </FormControl>
+        {/* Search */}
+        <OutlinedInput
+          size="small"
+          fullWidth
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="جستجو بر اساس نام مشتری یا شماره فاکتور"
+          endAdornment={
+            <InputAdornment position="end">
+              <Search />
+            </InputAdornment>
+          }
+          sx={{
+            flex: 1,
+            minWidth: 320,
+            mx: 1,
+          }}
+        />
 
-                <IconButton
-                    sx={{
-                        border: "1px solid",
-                        borderColor: "divider",
-                    }}
-                >
-                    <Tune />
-                </IconButton>
-            </Box>
-        </Card>
-    );
+        {/* Status */}
+        <Chip
+          clickable
+          label="همه"
+          color={status === "all" ? "primary" : "default"}
+          variant={status === "all" ? "filled" : "outlined"}
+          onClick={() => updateParam("status", "all")}
+        />
+
+        {/* Period */}
+        <ToggleButtonGroup
+          exclusive
+          value={period}
+          onChange={(_, value) => {
+            if (value) {
+              updateParam("period", value);
+            }
+          }}
+          sx={{
+            "& .MuiToggleButton-root": {
+              textTransform: "none",
+              px: 2,
+              height: 40,
+            },
+          }}
+        >
+          <ToggleButton value="today">امروز</ToggleButton>
+
+          <ToggleButton value="week">هفته</ToggleButton>
+
+          <ToggleButton value="month">ماه</ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+    </Card>
+  );
 }

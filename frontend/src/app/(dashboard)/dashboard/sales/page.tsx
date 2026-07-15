@@ -7,25 +7,38 @@ import SalesList from "@/features/dashboard/childs/sales/components/SalesList";
 import { SaleBranchName } from "@/data/DashboardSale";
 import AddSaleModal from "@/features/dashboard/components/AddSaleModal";
 import { Suspense } from "react";
+import SalesPageCards from "@/features/dashboard/childs/sales/components/SalesPageCard";
+import SalesToolbar from "@/features/dashboard/childs/sales/components/SalesPageTollbar";
+interface Props {
+  searchParams: Promise<{
+    search?: string;
+    status?: string;
+    ordering?: string;
+    period?: string;
+  }>;
+}
+const Sales = async ({ searchParams }: Props) => {
+  const params = await searchParams;
 
-const Sales = () => {
-    return (
-        <Container>
-            <DashboardsPageHeader
-                title="فروش ها"
-                caption="128 حساب ، 180000000 ریال جمع حساب ها"
-            >
-                <AddSaleModal />
-            </DashboardsPageHeader>
-            <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                <Suspense fallback={null}>
-                    <PagesFilterLinks page="sales" />
-                </Suspense>
-                <BranchHead branches={SaleBranchName} />
-                <SalesList />
-            </Box>
-        </Container>
-    );
+  return (
+    <Container>
+      <DashboardsPageHeader
+        title="فروش ها"
+        caption="128 حساب ، 180000000 ریال جمع حساب ها"
+      >
+        <AddSaleModal />
+      </DashboardsPageHeader>
+      <SalesPageCards />
+      <SalesToolbar />
+      <Box className="w-full overflow-x-scroll xl:overflow-auto">
+        {/*<Suspense fallback={null}>
+          <PagesFilterLinks page="sales" />
+        </Suspense>*/}
+        {/*<BranchHead branches={SaleBranchName} />*/}
+        <SalesList search={params.search} />
+      </Box>
+    </Container>
+  );
 };
 
 export default Sales;
