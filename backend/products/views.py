@@ -294,6 +294,21 @@ class DashboardView(APIView):
             for cs in top_debtors
         ]
 
+        low_stock = Product.objects.filter(
+            shop = request.user,
+            stock__gt = 0 
+        ).order_by("stock")[:5]
+
+        low_stock_data = [
+            {
+                'id': p.id,
+                'name': p.name,
+                'stock': p.stock,
+                'barcode': p.barcode
+            }
+            for p in low_stock
+        ]
+
         return Response({
             'ok': True,
             'data': {
@@ -302,6 +317,7 @@ class DashboardView(APIView):
                 'total_price': total_sales + total_debts,
                 'total_payed_amount': total_paid,
                 'number_of_customers': number_of_customers,
-                'top_debtors': top_debtors_data
+                'top_debtors': top_debtors_data,
+                'low_stock_products' : low_stock_data
             }
         })
