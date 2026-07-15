@@ -11,6 +11,7 @@ interface Props {
     search?: string;
     status?: string;
     ordering?: string;
+    period?: string;
   }>;
 }
 const Debts = async ({ searchParams }: Props) => {
@@ -26,7 +27,12 @@ const Debts = async ({ searchParams }: Props) => {
       <DebtsCards />
       <DebtsPageToolbar />
       <Box className="w-full overflow-x-scroll xl:overflow-auto">
-        <DebtsList search={params.search} />
+        <DebtsList
+          search={params.search}
+          status={params.status}
+          ordering={params.ordering}
+          period={params.period}
+        />
       </Box>
     </Container>
   );

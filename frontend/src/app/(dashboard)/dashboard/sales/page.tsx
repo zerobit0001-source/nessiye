@@ -35,7 +35,12 @@ const Sales = async ({ searchParams }: Props) => {
           <PagesFilterLinks page="sales" />
         </Suspense>*/}
         {/*<BranchHead branches={SaleBranchName} />*/}
-        <SalesList search={params.search} />
+        <SalesList
+          search={params.search}
+          status={params.status}
+          ordering={params.ordering}
+          period={params.period}
+        />
       </Box>
     </Container>
   );
