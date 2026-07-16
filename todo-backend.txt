@@ -31,13 +31,12 @@ so far :
 
     - [ ] Overdue Debts API
 
+    - [ ] Dashboard Recent Activities API
 todo : 
     - [ ] Dashboard Charts API
         - Sales by month
         - Payments by month
         - Revenue by month
-
-    - [ ] Dashboard Recent Activities API
 
     - [ ] Reports APIs
         - Sales Report
