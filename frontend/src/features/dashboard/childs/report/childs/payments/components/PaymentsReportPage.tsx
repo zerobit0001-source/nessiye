@@ -1,69 +1,62 @@
 import Container from "@/components/dash/Container";
 import { Button, Card, Typography } from "@mui/material";
-import StatsCard from "../../components/StatCard";
 import {
   AssignmentTurnedInRounded,
   AttachMoneyRounded,
   PointOfSaleRounded,
   ReceiptRounded,
 } from "@mui/icons-material";
-import DateRangePicker from "./DateRangePicker";
+import StatsCard from "@/features/dashboard/childs/components/StatCard";
+import DateRangePicker from "../../../components/DateRangePicker";
 
-const SaleReportPage = () => {
+const PaymentsReportPage = () => {
   return (
     <Container>
       <Card className="w-full flex items-center justify-center p-4 rounded-lg!">
         <DateRangePicker />
+
       </Card>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         <StatsCard
-          title="مجموع فروش"
-          value="29000000"
+          title="مجموع پرداخت‌ها"
+          value={29000000}
           unit="تومان"
           icon={<PointOfSaleRounded />}
           iconBg="primary.light"
           iconColor="primary.dark"
         />
         <StatsCard
-          title="فروش نسیه"
-          value="43000000"
+          title="پرداخت‌های امروز"
+          value={43000000}
           unit="تومان"
           icon={<AssignmentTurnedInRounded />}
           iconBg="warning.light"
           iconColor="warning.dark"
         />
         <StatsCard
-          title="تعداد فاکتورها"
+          title="تعداد پرداخت‌ها"
           value="280"
           unit="عدد"
           icon={<ReceiptRounded />}
           iconBg="success.light"
           iconColor="success.dark"
         />
-        <StatsCard
-          title="تعداد اقلام فروخته شده"
-          value={120}
-          unit="عدد"
-          icon={<AttachMoneyRounded />}
-          iconBg="secondary.light"
-          iconColor="secondary.dark"
-        />
       </div>
       <div className="grid grid-cols-6 gap-2">
         <Card className="col-span-full lg:col-span-4 bg-black shadow">
-          <Typography variant="subtitle2">روند فروش</Typography>
+          <Typography variant="subtitle2">روند پرداخت‌ها</Typography>
           <Typography variant="caption">نمودار فروش</Typography>
         </Card>
         <Card className="col-span-full lg:col-span-2 bg-black shadow">
-          <Typography variant="subtitle2">فروش نقدی vs نسیه</Typography>
+          <Typography variant="subtitle2">پرداخت نسبت به بدهی</Typography>
           <Typography variant="caption">روند فروش</Typography>
         </Card>
         <Card className="col-span-full lg:col-span-2 bg-black shadow">
-          <Typography variant="subtitle2">مشتریان برتر</Typography>
+          <Typography variant="subtitle2">آخرین پرداخت‌ها</Typography>
           <Typography variant="caption">بر اساس مبلغ فروش این دوره</Typography>
         </Card>
         <Card className="col-span-full lg:col-span-4 bg-black shadow">
-          <Typography variant="subtitle2">پرفروش‌ترین محصولات</Typography>
+          <Typography variant="subtitle2">بزرگ‌ترین پرداخت‌ها</Typography>
           <Typography variant="caption">بر اساس مبلغ خرید این دوره</Typography>
         </Card>
       </div>
@@ -71,4 +64,4 @@ const SaleReportPage = () => {
   );
 };
 
-export default SaleReportPage;
+export default PaymentsReportPage;

@@ -12,6 +12,7 @@ import {
 import Container from "@/components/dash/Container";
 import { InstallDesktopRounded } from "@mui/icons-material";
 import ReportTabs from "@/features/dashboard/childs/report/components/ReportPageTabs";
+import SaleReportPage from "@/features/dashboard/childs/report/components/SaleReportPage";
 
 const Report = () => {
   return (
@@ -25,6 +26,7 @@ const Report = () => {
         </Button>
       </DashboardsPageHeader>
       <ReportTabs />
+      <SaleReportPage />
     </Container>
   );
 };

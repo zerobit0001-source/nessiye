@@ -1,15 +1,10 @@
-import {
-  Card,
-  CardContent,
-  Stack,
-  Typography,
-  Avatar,
-} from "@mui/material";
+import { formatPrice } from "@/utils/formatters";
+import { Card, CardContent, Stack, Typography, Avatar } from "@mui/material";
 import { ReactNode } from "react";
 
 interface StatsCardProps {
   title: string;
-  value: number | string;
+  value: number;
   unit?: string;
   icon: ReactNode;
   iconBg: string;
@@ -26,7 +21,7 @@ export default function StatsCard({
 }: StatsCardProps) {
   return (
     <Card
-      elevation={0}
+      elevation={1}
       sx={{
         borderRadius: 4,
         border: "1px solid",
@@ -43,27 +38,17 @@ export default function StatsCard({
         }}
       >
         <Stack spacing={0.5}>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            fontWeight={500}
-          >
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>
             {title}
           </Typography>
 
           <Stack direction="row" spacing={1} alignItems="baseline">
-            <Typography
-              variant="h4"
-              fontWeight={700}
-            >
-              {value}
+            <Typography variant="h5" fontWeight={700}>
+              {formatPrice(value)}
             </Typography>
 
             {unit && (
-              <Typography
-                variant="body2"
-                color="text.secondary"
-              >
+              <Typography variant="body2" color="text.secondary">
                 {unit}
               </Typography>
             )}
