@@ -5,7 +5,7 @@ import DebtsList from "@/features/dashboard/childs/debts/components/DebtsList";
 import AddDebtModal from "@/features/dashboard/components/AddDebtsModal";
 import { Suspense } from "react";
 import DebtsCards from "@/features/dashboard/childs/debts/components/DebtsPageCards";
-import DebtsPageToolbar from "@/features/dashboard/childs/debts/components/DebtsPageTollbar";
+import DebtsPageToolbar from "@/features/dashboard/childs/debts/components/DebtsPageToolbar";
 interface Props {
   searchParams: Promise<{
     search?: string;

@@ -8,7 +8,7 @@ import { SaleBranchName } from "@/data/DashboardSale";
 import AddSaleModal from "@/features/dashboard/components/AddSaleModal";
 import { Suspense } from "react";
 import SalesPageCards from "@/features/dashboard/childs/sales/components/SalesPageCard";
-import SalesToolbar from "@/features/dashboard/childs/sales/components/SalesPageTollbar";
+import SalesToolbar from "@/features/dashboard/childs/sales/components/SalesPageToolbar";
 interface Props {
   searchParams: Promise<{
     search?: string;
