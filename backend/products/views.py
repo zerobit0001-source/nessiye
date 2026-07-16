@@ -12,6 +12,7 @@ from .serializers import ProductSerializer, CategorySerializer
 from django.db.models import Sum, F, ExpressionWrapper, IntegerField
 from sales.models import Sale
 from config.pagination import StandardPagination
+from activity.services import log_activity
 
 class IsShop:
     @staticmethod
@@ -108,6 +109,14 @@ class ProductListCreateView(APIView):
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(shop=request.user)
+
+        log_activity(
+            shop=request.user,
+            action='create',
+            entity='product',
+            title=f'اضافه شد {serializer.instance.name} محصول',
+            object_id=serializer.instance.id
+        )
 
         return Response({'ok': True, 'message': 'محصول با موفقیت اضافه شد', 'product': serializer.data}, status=status.HTTP_201_CREATED)
     
