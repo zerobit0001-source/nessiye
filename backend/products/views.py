@@ -13,6 +13,7 @@ from django.db.models import Sum, F, ExpressionWrapper, IntegerField
 from sales.models import Sale
 from config.pagination import StandardPagination
 from activity.services import log_activity
+from activity.models import Activity
 
 class IsShop:
     @staticmethod
@@ -342,6 +343,20 @@ class DashboardView(APIView):
             created_at__date=today
         ).aggregate(total=Sum('amount'))['total'] or 0
 
+        activity = Activity.objects.filter(shop=request.user).order_by('-created_at')[:5]
+
+        activity_data = [
+            {
+                'action': a.action,
+                'entity': a.entity,
+                'title': a.title,
+                'object_id': a.object_id,
+                'metadata': a.metadata,
+                'created_at': a.created_at
+            }
+            for a in activity
+        ]
+
         return Response({
             'ok': True,
             'data': {
@@ -354,6 +369,7 @@ class DashboardView(APIView):
                 'low_stock_products' : low_stock_data,
                 'today_sales': today_sales,
                 'today_debts': today_debts,
-                'today_paid': today_paid
+                'today_paid': today_paid,
+                'recent_activities': activity_data
             }
         })
