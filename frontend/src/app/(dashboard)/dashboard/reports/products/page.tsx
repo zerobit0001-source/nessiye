@@ -13,7 +13,7 @@ import Container from "@/components/dash/Container";
 import { InstallDesktopRounded } from "@mui/icons-material";
 import ReportTabs from "@/features/dashboard/childs/report/components/ReportPageTabs";
 
-const Report = () => {
+const ReportPayments = () => {
   return (
     <Container>
       <DashboardsPageHeader
@@ -29,4 +29,4 @@ const Report = () => {
   );
 };
 
-export default Report;
+export default ReportPayments;
