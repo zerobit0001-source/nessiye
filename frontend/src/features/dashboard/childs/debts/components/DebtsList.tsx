@@ -1,23 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Chip,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Typography } from "@mui/material";
 import { useGetDebtsQuery } from "../../sales/api/ApiSales";
 import DebtsCreditsRowSkeleton from "./DebtsCreditsRowSkeleton";
 import DebtsCreaditsRows from "./DebtsCreaditsRows";
 import { useAppSelector } from "@/lib/redux/hooks";
 import AppTable from "../../components/AppTable";
+import { useState } from "react";
 
 interface DebtsListProps {
   search?: string;
@@ -32,11 +22,14 @@ export default function DebtsList({
   ordering,
   period,
 }: DebtsListProps) {
+  const [page, setPage] = useState(1);
+
   const { data, isLoading, error } = useGetDebtsQuery({
     search,
     status,
     ordering,
     period,
+    page,
   });
 
   const mode = useAppSelector((s) => s.theme);
@@ -72,6 +65,13 @@ export default function DebtsList({
       ]}
       data={debts}
       renderRow={(debt) => <DebtsCreaditsRows debt={debt} key={debt.id} />}
+      pagination={{
+        page,
+        totalPages: data?.total_pages ?? 1,
+        totalItems: data?.count ?? 0,
+        pageSize: data?.page_size ?? 20,
+        onChange: setPage,
+      }}
     />
   );
 }

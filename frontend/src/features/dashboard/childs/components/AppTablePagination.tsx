@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, IconButton, Pagination, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Pagination,
+  PaginationItem,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { ChevronLeft, ChevronRight, MoreHoriz } from "@mui/icons-material";
 
 interface AppTablePaginationProps {
@@ -41,9 +48,9 @@ export default function AppTablePagination({
       </Typography>
 
       <Stack direction="row" spacing={1} alignItems="center">
-        <IconButton disabled={page === 1} onClick={() => onChange(page - 1)}>
+        {/*<IconButton disabled={page === 1} onClick={() => onChange(page - 1)}>
           <ChevronRight />
-        </IconButton>
+        </IconButton>*/}
 
         <Pagination
           page={page}
@@ -53,28 +60,15 @@ export default function AppTablePagination({
           shape="rounded"
           siblingCount={1}
           boundaryCount={1}
-          renderItem={(item) => {
-            if (
-              item.type === "start-ellipsis" ||
-              item.type === "end-ellipsis"
-            ) {
-              return (
-                <IconButton disabled>
-                  <MoreHoriz fontSize="small" />
-                </IconButton>
-              );
-            }
-
-            return undefined;
-          }}
+          renderItem={(item) => <PaginationItem {...item} />}
         />
 
-        <IconButton
+        {/*<IconButton
           disabled={page === totalPages}
           onClick={() => onChange(page + 1)}
         >
           <ChevronLeft />
-        </IconButton>
+        </IconButton>*/}
       </Stack>
     </Box>
   );

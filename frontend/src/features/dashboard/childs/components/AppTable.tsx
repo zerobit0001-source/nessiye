@@ -17,12 +17,20 @@ interface AppTableProps<T> {
   headers: string[];
   data: T[];
   renderRow: (item: T) => ReactNode;
+  pagination?: {
+    page: number;
+    totalPages: number;
+    totalItems: number;
+    pageSize: number;
+    onChange: (page: number) => void;
+  };
 }
 
 export default function AppTable<T>({
   headers,
   data,
   renderRow,
+  pagination,
 }: AppTableProps<T>) {
   const mode = useAppSelector((s) => s.theme);
 
@@ -43,13 +51,7 @@ export default function AppTable<T>({
 
         <TableBody>{data.map(renderRow)}</TableBody>
       </Table>
-      <AppTablePagination
-        page={1}
-        totalPages={10}
-        totalItems={100}
-        pageSize={10}
-        onChange={() => {}}
-      />
+      {pagination && <AppTablePagination {...pagination} />}
     </TableContainer>
   );
 }
