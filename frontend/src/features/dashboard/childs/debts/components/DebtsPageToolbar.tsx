@@ -52,7 +52,13 @@ export default function DebtsPageToolbar() {
   const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (key === "status" && value === "all") {
+    if (key == "ordering" && value == "-created_at") {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    
+    if (key === "period" && value === "all") {
       params.delete(key);
     } else {
       params.set(key, value);
@@ -152,7 +158,7 @@ export default function DebtsPageToolbar() {
           label="همه"
           color={status === "all" ? "primary" : "default"}
           variant={status === "all" ? "filled" : "outlined"}
-          onClick={() => updateParam("status", "all")}
+          onClick={() => updateParam("period", "all")}
         />
 
         {/* Period */}
