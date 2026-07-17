@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { useAppSelector } from "@/lib/redux/hooks";
+import AppTablePagination from "./AppTablePagination";
 
 interface AppTableProps<T> {
   headers: string[];
@@ -42,6 +43,13 @@ export default function AppTable<T>({
 
         <TableBody>{data.map(renderRow)}</TableBody>
       </Table>
+      <AppTablePagination
+        page={1}
+        totalPages={10}
+        totalItems={100}
+        pageSize={10}
+        onChange={() => {}}
+      />
     </TableContainer>
   );
 }
