@@ -60,6 +60,8 @@ class ProductListCreateView(APIView):
         barcode = request.query_params.get('barcode')
         search = request.query_params.get('search')
         category = request.query_params.get('category')
+        ordering = request.query_params.get('ordering', '-created_at')
+        status = request.query_params.get('status')
 
         if request.user.is_authenticated and request.user.is_shop:
             products = Product.objects.filter(shop=request.user)
@@ -84,6 +86,27 @@ class ProductListCreateView(APIView):
 
         if category:
             products = products.filter(category__name__icontains=category)
+
+
+        # status filter
+        if status == 'stocked':
+            products = products.filter(stock__gt=10)
+        elif status == 'low_stock':
+            products = products.filter(stock__gt=0, stock__lte=10)
+        elif status == 'out_of_stock':
+            products = products.filter(stock=0)
+
+        # ordering
+        ordering_map = {
+            'amount': 'sell_price',
+            '-amount': '-sell_price',
+            'name': 'name',
+            '-name': '-name',
+            'created_at': 'created_at',
+            '-created_at': '-created_at'
+        }
+        if ordering in ordering_map:
+            products = products.order_by(ordering_map[ordering])
 
         result = [
             {
