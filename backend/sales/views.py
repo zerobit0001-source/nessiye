@@ -17,33 +17,6 @@ from activity.services import log_activity
 class SaleListCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
-    # def get(self, request):
-    #     if not request.user.is_shop:
-    #         return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
-# 
-    #     sales = Sale.objects.filter(shop=request.user, is_debt=False).prefetch_related('items__product')
-    #     serializer = SaleSerializer(sales, many=True)
-    #     return Response({'ok': True, 'sales': serializer.data})
-
-    # def get(self, request):
-    #     if not request.user.is_shop:
-    #         return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
-    # 
-    #     sales = Sale.objects.filter(
-    #         shop=request.user,
-    #         is_debt=False
-    #     ).select_related('customer').prefetch_related('items').annotate(
-    #         total_amount=Sum(
-    #             ExpressionWrapper(
-    #                 F('items__price') * F('items__quantity'),
-    #                 output_field=IntegerField()
-    #             )
-    #         )
-    #     )
-    # 
-    #     serializer = SaleSerializer(sales, many=True)
-    #     return Response({'ok': True, 'sales': serializer.data})
-
     def get(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
