@@ -169,7 +169,7 @@ class DebtPayView(APIView):
             shop=request.user,
             action='create',
             entity='payment',
-            title=f'پرداخت شد {serializer.instance.customer.full_name} بدهی',
+            title=f'پرداخت شد {serializer.instance.customer_name} بدهی',
             object_id=serializer.instance.id
         )
 
