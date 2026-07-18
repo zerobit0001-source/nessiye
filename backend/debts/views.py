@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Debt, Payment
 from .serializers import DebtSerializer
 from config.pagination import StandardPagination
-from time import timezone
+from django.utils import timezone
 
 
 class DebtListView(APIView):
