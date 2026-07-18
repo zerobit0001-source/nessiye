@@ -12,6 +12,7 @@ from debts.serializers import DebtSerializer
 from django.db.models import Sum
 from accounts.models import User, OtpCode
 from django.db.models import Q
+from activity.models import log_activity
 import random
 
 
@@ -138,6 +139,16 @@ class CustomerVerifyView(APIView):
 
         CustomerShop.objects.create(shop=request.user, customer=customer)
         serializer = CustomerSerializer(customer)
+
+
+        log_activity(
+            shop=request.user,
+            action='create',
+            entity='customer',
+            title=f'اضافه شد {serializer.instance.full_name} مشتری',
+            object_id=serializer.instance.id
+        )
+
         return Response({'ok': True, 'message': 'مشتری با موفقیت اضافه شد', 'customer': serializer.data}, status=status.HTTP_201_CREATED)
 
 
