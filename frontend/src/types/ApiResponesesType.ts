@@ -1,4 +1,5 @@
 import {
+  ActivityType,
   CatergoyType,
   CustomersListType,
   CustomerType,
@@ -154,5 +155,17 @@ export interface GetDashboardCardsResponse {
     total_price: number;
     total_payed_amount: number;
     number_of_customers: number;
+    low_stock_products: ProductsListType[];
+    recent_activities: ActivityType[];
+    today_debts: number;
+    today_paid: number;
+    today_sales: number;
+    top_debtors: {
+      customer_name: string;
+      phone_number: string;
+      total_debt: number;
+      total_paid: number;
+      remaining: number;
+    }[];
   };
 }

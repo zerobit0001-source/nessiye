@@ -1,3 +1,4 @@
+import { CustomersListType } from "@/types/types";
 import {
   Avatar,
   Box,
@@ -47,7 +48,20 @@ const employees: Employee[] = [
   },
 ];
 
-export default function TopDebtors() {
+interface TopDebtorsProps {
+  data: {
+    customer_name: string;
+    phone_number: string;
+    total_debt: number;
+    total_paid: number;
+    remaining: number;
+  }[];
+}
+
+export default function TopDebtors({ data }: TopDebtorsProps) {
+  const calculateProgress = (remaining: number, total: number) => {
+    return (remaining / total) * 100;
+  };
   return (
     <Card
       sx={{
@@ -78,8 +92,8 @@ export default function TopDebtors() {
         </Typography>
       </Stack>
 
-      {employees.map((employee, index) => (
-        <Box key={employee.phone}>
+      {data?.map((customer, index) => (
+        <Box key={customer.phone_number}>
           <Stack direction="row" alignItems="center" spacing={2}>
             {/* Avatar */}
             <Avatar
@@ -92,22 +106,25 @@ export default function TopDebtors() {
                 fontWeight: 700,
               }}
             >
-              {employee.avatar}
+              {customer.customer_name[0]}
             </Avatar>
 
             {/* Name + phone */}
             <Box flex={1}>
               <Typography fontWeight={700} fontSize={14}>
-                {employee.name}
+                {customer.customer_name}
               </Typography>
 
               <Typography color="text.secondary" fontSize={12}>
-                {employee.phone}
+                {customer.phone_number}
               </Typography>
 
               <LinearProgress
                 variant="determinate"
-                value={employee.progress}
+                value={calculateProgress(
+                  customer.remaining,
+                  customer.total_debt,
+                )}
                 sx={{
                   mt: 1,
                   height: 5,
@@ -124,11 +141,11 @@ export default function TopDebtors() {
 
             {/* Amount */}
             <Typography color="error" fontWeight={700} fontSize={14}>
-              {employee.amount.toLocaleString("fa-IR")}
+              {customer.remaining.toLocaleString("fa-IR")}
             </Typography>
           </Stack>
 
-          {index !== employees.length - 1 && <Divider sx={{ my: 2 }} />}
+          {index !== data.length - 1 && <Divider sx={{ my: 2 }} />}
         </Box>
       ))}
     </Card>
