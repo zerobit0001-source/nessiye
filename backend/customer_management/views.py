@@ -57,6 +57,16 @@ class CustomerListCreateView(APIView):
             }
             for cs in customer_shops
         ]
+
+        if filtering == 'active':
+            result = [r for r in result if r['remaining_amount'] > 0]
+
+        elif filtering == 'settled':
+            result = [r for r in result if r['remaining_amount'] <= 0]
+        
+        elif filtering == 'overdue':
+            thirty_days_ago = timezone.now() - timedelta(days=30)
+            result = [r for r in result if r['remaining_amount'] > 0 and r['last_debt'] and r['last_debt'] < thirty_days_ago]
     
         return Response({'ok': True, 'customers': result})
 
