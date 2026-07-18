@@ -9,13 +9,14 @@ from sales.models import Sale
 from sales.serializers import SaleSerializer
 from debts.models import Debt
 from debts.serializers import DebtSerializer
-from django.db.models import Sum
+from django.db.models import Max, Sum
 from accounts.models import User, OtpCode
 from django.db.models import Q
 from activity.services import log_activity
 import random
 from django.utils import timezone
 from datetime import timedelta
+
 
 class CustomerListCreateView(APIView):
     """This view allows shop users to list their customers and add new customers by phone number with OTP verification."""
@@ -34,6 +35,7 @@ class CustomerListCreateView(APIView):
         ).select_related('customer').annotate(
             total_debts=Sum('debts__amount'),
             total_paid=Sum('debts__payments__amount'),
+            last_debt=Max('debts__created_at')
         )
 
 
