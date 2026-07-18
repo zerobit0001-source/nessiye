@@ -135,6 +135,14 @@ class SaleListCreateView(APIView):
                 amount=total
             )
 
+            log_activity(
+                shop=request.user,
+                action='create',
+                entity='debt',
+                title=f'بدهی ثبت شد {customer_shop.customer.full_name}',
+                object_id=Debt.objects.filter(shop=request.user, customer=customer_shop).last().id
+            )
+
         result = SaleSerializer(sale)
 
         log_activity(
