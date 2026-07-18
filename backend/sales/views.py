@@ -128,7 +128,7 @@ class SaleListCreateView(APIView):
  
  
         result = SaleSerializer(sale)
-        
+
         if is_debt:
             total = sum(item.price * item.quantity for item in sale.items.all())
             Debt.objects.create(
@@ -153,7 +153,7 @@ class SaleListCreateView(APIView):
                 shop=request.user,
                 action='create',
                 entity='sale',
-                title=f'فروش ثبت شد {result.instance.customer.customer.full_name if result.instance.customer else "بدون مشتری"}',
+                title=f'فروش ثبت شد {result.instance.customer.full_name if result.instance.customer else "بدون مشتری"}',
                 object_id=result.instance.id
             )
 
