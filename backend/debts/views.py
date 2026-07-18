@@ -156,10 +156,26 @@ class PaymentListView(APIView):
     def get(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+        
+        ordering = request.query_params.get('ordering', '-created_at')
+        period = request.query_params.get('period', None)
 
         payments = Payment.objects.filter(
             debt__shop=request.user
         ).select_related('debt__customer__customer')
+
+        # period filter
+        now = timezone.now()
+        if period == 'today':
+            payments = payments.filter(created_at__date=now.date())
+        elif period == 'this_week':
+            payments = payments.filter(created_at__gte=now - timedelta(days=7))
+        elif period == 'this_month':
+            payments = payments.filter(created_at__gte=now - timedelta(days=30))
+
+        # ordering
+        if ordering in ['created_at', '-created_at', 'amount', '-amount']:
+            payments = payments.order_by(ordering)
 
         result = [
             {
