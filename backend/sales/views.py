@@ -11,6 +11,7 @@ from accounts.models import User
 from customer_management.models import CustomerShop
 from django.db.models import Sum, F, ExpressionWrapper, IntegerField
 from config.pagination import StandardPagination
+from activity.services import log_activity
 
 
 class SaleListCreateView(APIView):
@@ -135,6 +136,15 @@ class SaleListCreateView(APIView):
             )
 
         result = SaleSerializer(sale)
+
+        log_activity(
+            shop=request.user,
+            action='create',
+            entity='sale',
+            title=f'فروش ثبت شد {result.instance.customer.full_name if result.instance.customer else "بدون مشتری"}',
+            object_id=result.instance.id
+        )
+
         return Response({'ok': True, 'message': 'فروش با موفقیت ثبت شد', 'sale': result.data}, status=status.HTTP_201_CREATED)
 
 
