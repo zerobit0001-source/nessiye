@@ -142,16 +142,17 @@ class SaleListCreateView(APIView):
                 title=f'بدهی ثبت شد {customer_shop.customer.full_name}',
                 object_id=Debt.objects.filter(shop=request.user, customer=customer_shop).last().id
             )
+        
+        else:   
+            result = SaleSerializer(sale)
 
-        result = SaleSerializer(sale)
-
-        log_activity(
-            shop=request.user,
-            action='create',
-            entity='sale',
-            title=f'فروش ثبت شد {result.instance.customer.full_name if result.instance.customer else "بدون مشتری"}',
-            object_id=result.instance.id
-        )
+            log_activity(
+                shop=request.user,
+                action='create',
+                entity='sale',
+                title=f'فروش ثبت شد {result.instance.customer.customer.full_name if result.instance.customer else "بدون مشتری"}',
+                object_id=result.instance.id
+            )
 
         return Response({'ok': True, 'message': 'فروش با موفقیت ثبت شد', 'sale': result.data}, status=status.HTTP_201_CREATED)
 
