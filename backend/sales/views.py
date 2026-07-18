@@ -1,3 +1,4 @@
+from datetime import timedelta, timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,6 +21,9 @@ class SaleListCreateView(APIView):
     def get(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+        
+        ordering = request.query_params.get('ordering', '-created_at')
+        period = request.query_params.get('period', None)
     
         sales = Sale.objects.filter(
             shop=request.user,
@@ -32,6 +36,22 @@ class SaleListCreateView(APIView):
                 )
             )
         )
+
+        # period filter
+        now = timezone.now()
+        if period == 'today':
+            sales = sales.filter(created_at__date=now.date())
+        elif period == 'this_week':
+            sales = sales.filter(created_at__gte=now - timedelta(days=7))
+        elif period == 'this_month':
+            sales = sales.filter(created_at__gte=now - timedelta(days=30))
+    
+        # ordering
+        if ordering in ['created_at', '-created_at']:
+            sales = sales.order_by(ordering)
+        elif ordering in ['amount', '-amount']:
+            sales = sales.order_by(ordering.replace('amount', 'total'))
+
     
         result = [
             {
