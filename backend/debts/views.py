@@ -164,6 +164,15 @@ class DebtPayView(APIView):
         Payment.objects.create(debt=debt, amount=amount)
 
         serializer = DebtSerializer(debt)
+
+        log_activity(
+            shop=request.user,
+            action='create',
+            entity='payment',
+            title=f'پرداخت شد {serializer.instance.customer.full_name} بدهی',
+            object_id=serializer.instance.id
+        )
+
         return Response({
             'ok': True,
             'message': 'پرداخت ثبت شد',
