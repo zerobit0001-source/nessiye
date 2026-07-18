@@ -32,6 +32,13 @@ so far :
     - [ ] Overdue Debts API
 
     - [ ] Dashboard Recent Activities API
+
+    > create the ordering filtering and search
+        - customers ?ordering=[amount , -amount , created_at , -created_at] ?filtering=[active , overdue , settled]
+        - debts ?ordering=[-created_at , created_at , remaining_amount , -remaining_amount , amount , -amount] ?status=[active , overdue , settled] ?period=[today , this_week , this_month]
+        - sales ?ordering=[-created_at , created_at , remaining_amount , -remaining_amount , amount , -amount] ?period=[today , this_week , this_month]
+        - payments ?ordering=[-created_at , created_at , remaining_amount , -remaining_amount , amount , -amount] ?period=[today , this_week , this_month]
+        - products ?ordering=[-created_at , created_at , amount , -amount , name , -name] ?status=[stocked , out_of_stock , low_stock]
 todo :
     - [ ] Dashboard Charts API
         - Sales by month
@@ -67,9 +74,4 @@ todo :
 
     - [ ] Filtering support
 
-    > create the ordering filtering and search
-        - customers ?ordering=[amount , -amount , created_at , -created_at] ?filtering=[active , overdue , settled]
-        - debts ?ordering=[-created_at , created_at , remaining_amount , -remaining_amount , amount , -amount] ?status=[active , overdue , settled] ?period=[today , this_week , this_month]
-        - sales ?ordering=[-created_at , created_at , remaining_amount , -remaining_amount , amount , -amount] ?period=[today , this_week , this_month]
-        - payments ?ordering=[-created_at , created_at , remaining_amount , -remaining_amount , amount , -amount] ?period=[today , this_week , this_month]
-        - products ?ordering=[-created_at , created_at , amount , -amount , name , -name] ?status=[stocked , out_of_stock , low_stock]
+
