@@ -12,7 +12,8 @@ from debts.serializers import DebtSerializer
 from django.db.models import Sum
 from accounts.models import User, OtpCode
 from django.db.models import Q
-from activity.models import log_activity
+from activity.models import Activity
+from activity.services import log_activity
 import random
 
 
