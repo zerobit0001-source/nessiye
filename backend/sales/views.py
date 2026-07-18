@@ -125,7 +125,10 @@ class SaleListCreateView(APIView):
 
             product.stock -= item['quantity']
             product.save()
-
+ 
+ 
+        result = SaleSerializer(sale)
+        
         if is_debt:
             total = sum(item.price * item.quantity for item in sale.items.all())
             Debt.objects.create(
@@ -144,7 +147,7 @@ class SaleListCreateView(APIView):
             )
         
         else:   
-            result = SaleSerializer(sale)
+            # result = SaleSerializer(sale)
 
             log_activity(
                 shop=request.user,
