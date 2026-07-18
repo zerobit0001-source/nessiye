@@ -6,6 +6,7 @@ from .models import Debt, Payment
 from .serializers import DebtSerializer
 from config.pagination import StandardPagination
 from django.utils import timezone
+from datetime import timedelta
 from activity.services import log_activity
 
 
@@ -16,10 +17,29 @@ class DebtListView(APIView):
     def get(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+        
+        ordering = request.query_params.get('ordering', '-created_at')
+        debt_status = request.query_params.get('status', None)
+        period = request.query_params.get('period', None)
 
         debts = Debt.objects.filter(
             shop=request.user
         ).select_related('customer__customer').prefetch_related('payments')
+
+        # period filtering
+
+        now = timezone.now()
+        if period == 'today':
+            debts = debts.filter(created_at__date=now.date())
+        elif period == 'this_week':
+            start_of_week = now - timezone.timedelta(days=now.weekday())
+            debts = debts.filter(created_at__date__gte=start_of_week.date())
+        elif period == 'this_month':
+            debts = debts.filter(created_at__year=now.year, created_at__month=now.month)
+
+        # ordering
+        if ordering in ['created_at', '-created_at', 'amount', '-amount']:
+            debts = debts.order_by(ordering)
 
         result = [
             {
@@ -34,6 +54,21 @@ class DebtListView(APIView):
             }
             for d in debts
         ]
+
+        #status filter 
+
+        if debt_status == 'active':
+            result = [r for r in result if r['remaining_amount'] > 0]
+        elif debt_status == 'settled':
+            result = [r for r in result if r['remaining_amount'] == 0]
+        elif debt_status == 'overdue':
+            thirty_days_ago = timezone.now() - timedelta(days=30)
+            result = [r for r in result if r['remaining_amount'] > 0 and r['created_at'] < thirty_days_ago]
+
+        #ordering remaining_amount
+        if ordering == ['remaining_amount', '-remaining_amount']:
+            reverse = ordering.startswith('-')
+            result = sorted(result, key=lambda x: x['remaining_amount'], reverse=reverse)
 
         pagination = StandardPagination()
         paginated_result = pagination.paginate_queryset(result, request)
