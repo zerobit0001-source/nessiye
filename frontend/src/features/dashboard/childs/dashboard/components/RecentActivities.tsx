@@ -7,46 +7,91 @@ import {
   PersonAddAltOutlined,
   WarningAmberOutlined,
 } from "@mui/icons-material";
+import { ActivityType } from "@/types/types";
+import { timeAgo } from "@/utils/formatters";
 
-const activities = [
-  {
-    title: "علی موسوی مبلغ ۵۰۰,۰۰۰ تومان پرداخت کرد",
-    time: "۵ دقیقه پیش",
-    icon: <PaymentsOutlined />,
-    color: "#12b76a",
-    bg: "#e8fff4",
-  },
-  {
-    title: "فاکتور جدید برای نگار صادقی ثبت شد",
-    time: "۲۲ دقیقه پیش",
-    icon: <ShoppingCartOutlined />,
-    color: "#2563eb",
-    bg: "#edf3ff",
-  },
-  {
-    title: "بدهی جدید برای محمد کریمی ثبت شد",
-    time: "۴۵ دقیقه پیش",
-    icon: <ReceiptLongOutlined />,
-    color: "#f59e0b",
-    bg: "#fff7e6",
-  },
-  {
-    title: "مشتری جدید یاسمین قاسمی اضافه شد",
-    time: "۱ ساعت پیش",
-    icon: <PersonAddAltOutlined />,
-    color: "#9333ea",
-    bg: "#f5edff",
-  },
-  {
-    title: "بدهی حسین نجاتی ۱۰ روز معوق شد",
-    time: "۱ ساعت پیش",
-    icon: <WarningAmberOutlined />,
-    color: "#ef4444",
-    bg: "#ffeded",
-  },
-];
+// const activities = [
+//   {
+//     title: "علی موسوی مبلغ ۵۰۰,۰۰۰ تومان پرداخت کرد",
+//     time: "۵ دقیقه پیش",
+//     icon: <PaymentsOutlined />,
+//     color: "#12b76a",
+//     bg: "#e8fff4",
+//   },
+//   {
+//     title: "فاکتور جدید برای نگار صادقی ثبت شد",
+//     time: "۲۲ دقیقه پیش",
+//     icon: <ShoppingCartOutlined />,
+//     color: "#2563eb",
+//     bg: "#edf3ff",
+//   },
+//   {
+//     title: "بدهی جدید برای محمد کریمی ثبت شد",
+//     time: "۴۵ دقیقه پیش",
+//     icon: <ReceiptLongOutlined />,
+//     color: "#f59e0b",
+//     bg: "#fff7e6",
+//   },
+//   {
+//     title: "مشتری جدید یاسمین قاسمی اضافه شد",
+//     time: "۱ ساعت پیش",
+//     icon: <PersonAddAltOutlined />,
+//     color: "#9333ea",
+//     bg: "#f5edff",
+//   },
+//   {
+//     title: "بدهی حسین نجاتی ۱۰ روز معوق شد",
+//     time: "۱ ساعت پیش",
+//     icon: <WarningAmberOutlined />,
+//     color: "#ef4444",
+//     bg: "#ffeded",
+//   },
+// ];
 
-export default function RecentActivities() {
+interface RecentActivitiesProps {
+  data: ActivityType[];
+}
+
+export default function RecentActivities({ data }: RecentActivitiesProps) {
+  const getLigthColor = (entity: string) => {
+    switch (entity) {
+      case "payment":
+        return "success.light";
+      case "debt":
+        return "warning.light";
+      case "customer":
+        return "secondary.light";
+      default:
+        return "info.light";
+    }
+  };
+
+  const getDarkColor = (entity: string) => {
+    switch (entity) {
+      case "payment":
+        return "success.dark";
+      case "debt":
+        return "warning.dark";
+      case "customer":
+        return "secondary.dark";
+      default:
+        return "info.dark";
+    }
+  };
+
+  const getIcon = (entity: string) => {
+    switch (entity) {
+      case "payment":
+        return <PaymentsOutlined />;
+      case "debt":
+        return <ReceiptLongOutlined />;
+      case "customer":
+        return <PersonAddAltOutlined />;
+      default:
+        return <ShoppingCartOutlined />;
+    }
+  };
+
   return (
     <Card
       sx={{
@@ -77,7 +122,7 @@ export default function RecentActivities() {
         </Typography>
       </Stack>
 
-      {activities.map((item, index) => (
+      {data.map((item, index) => (
         <Box key={index}>
           <Stack direction="row" alignItems="center" spacing={2}>
             {/* Icon */}
@@ -85,11 +130,11 @@ export default function RecentActivities() {
               sx={{
                 width: 38,
                 height: 38,
-                bgcolor: item.bg,
-                color: item.color,
+                bgcolor: getLigthColor(item.entity),
+                color: getDarkColor(item.entity),
               }}
             >
-              {item.icon}
+              {getIcon(item.entity)}
             </Avatar>
 
             {/* Text */}
@@ -99,12 +144,12 @@ export default function RecentActivities() {
               </Typography>
 
               <Typography fontSize={12} color="text.secondary" mt={0.3}>
-                {item.time}
+                {timeAgo(item.created_at)}
               </Typography>
             </Box>
           </Stack>
 
-          {index !== activities.length - 1 && (
+          {index !== data.length - 1 && (
             <Divider
               sx={{
                 my: 1.8,

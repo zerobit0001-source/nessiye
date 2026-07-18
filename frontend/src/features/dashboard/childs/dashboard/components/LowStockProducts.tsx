@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import { ProductsListType } from "@/types/types";
 
 const products = [
   {
@@ -37,7 +38,11 @@ const products = [
   },
 ];
 
-export default function LowStockProducts() {
+interface LowStockProductsProps {
+  data: ProductsListType[];
+}
+
+export default function LowStockProducts({ data }: LowStockProductsProps) {
   return (
     <Card
       sx={{
@@ -68,8 +73,8 @@ export default function LowStockProducts() {
         </Typography>
       </Stack>
 
-      {products.map((product, index) => (
-        <Box key={product.name}>
+      {data.map((product, index) => (
+        <Box key={index}>
           <Stack
             direction="row"
             alignItems="center"
@@ -94,26 +99,26 @@ export default function LowStockProducts() {
                 </Typography>
 
                 <Typography fontSize={12} color="text.secondary">
-                  {product.category}
+                  {product.category ?? "بدونه نوع"}
                 </Typography>
               </Box>
             </Stack>
 
             {/* Count */}
             <Chip
-              label={product.count}
+              label={product.stock}
               size="small"
               sx={{
                 fontWeight: 700,
                 fontSize: 12,
-                bgcolor: product.danger ? "#ffecec" : "#fff5e6",
-                color: product.danger ? "#ef4444" : "#f59e0b",
+                bgcolor: "#fff5e6",
+                color: "#f59e0b",
                 borderRadius: 2,
               }}
             />
           </Stack>
 
-          {index !== products.length - 1 && (
+          {index !== data.length - 1 && (
             <Divider
               sx={{
                 my: 1.5,

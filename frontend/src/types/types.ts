@@ -1,5 +1,7 @@
 // debts
 
+import { PublicTurborepoAccessTraceResult } from "next/dist/build/turborepo-access-trace/types";
+
 export interface DebtType {
   id: number;
   debt_id: string;
@@ -162,4 +164,16 @@ export interface PaymentsListType {
   created_at: string;
   debt_id: number;
   payment_id: string;
+}
+
+//  activity
+
+export interface ActivityType {
+  id: number;
+  action: "create" | "update" | "delete";
+  created_at: string;
+  entity: "customer" | "product" | "debt" | "sale" | "payment";
+  title: string,
+  object_id: number;
+  
 }
