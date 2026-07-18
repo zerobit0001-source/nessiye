@@ -18,6 +18,9 @@ import {
 export interface GetSalesResponesType {
   ok: boolean;
   count: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
   results: SalesListType[];
 }
 

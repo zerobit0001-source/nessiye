@@ -1,19 +1,11 @@
 "use client";
 
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
 import { useGetSalesQuery } from "../api/ApiSales";
 import SaleRow from "./SaleRow";
 import SalesRowSkeleton from "./SalesRowSkeleton";
-import { useAppSelector } from "@/lib/redux/hooks";
 import AppTable from "../../components/AppTable";
+import { useState } from "react";
+import { Alert } from "@mui/material";
 
 interface Props {
   search?: string;
@@ -22,35 +14,43 @@ interface Props {
   period?: string;
 }
 
+const headers = ["شناسه", "مشتری", "جمع", "تاریخ"];
+
 const SalesList = ({ search, ordering, status, period }: Props) => {
-  const { data, isLoading, error, isSuccess } = useGetSalesQuery({
+  const [page, setPage] = useState(1);
+
+  const { data, isLoading, error } = useGetSalesQuery({
     search,
     status,
     ordering,
     period,
+    page,
   });
 
-  const mode = useAppSelector((s) => s.theme);
-
   if (isLoading) {
-    return Array.from({ length: 8 }).map((_, index) => (
-      <SalesRowSkeleton key={index} />
+    return Array.from({ length: 8 }).map((_, i) => (
+      <SalesRowSkeleton key={i} />
     ));
   }
+
   if (error) {
-    return <p>Something went wrong.</p>;
+    return <Alert severity="error">خطایی رخ داد.</Alert>;
   }
 
   const sales = data?.results ?? [];
 
-  console.log("this is sales ", sales);
-  console.log("this is data ", data);
-
   return (
     <AppTable
-      headers={["شناسه", "مشتری", "جمع", "تاریخ"]}
+      headers={headers}
       data={sales}
-      renderRow={(sale) => <SaleRow sale={sale} key={sale.id} />}
+      renderRow={(sale) => <SaleRow key={sale.id} sale={sale} />}
+      pagination={{
+        page,
+        totalPages: data?.total_pages ?? 1,
+        totalItems: data?.count ?? 0,
+        pageSize: data?.page_size ?? 20,
+        onChange: setPage,
+      }}
     />
   );
 };

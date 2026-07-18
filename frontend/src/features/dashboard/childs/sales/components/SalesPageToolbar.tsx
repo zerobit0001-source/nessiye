@@ -47,7 +47,7 @@ export default function SalesToolbar() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, router, searchParams]);
+  }, [search, router]);
 
   const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());

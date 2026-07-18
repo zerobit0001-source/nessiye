@@ -16,15 +16,22 @@ export const ApiSales = createApi({
   endpoints: (builder) => ({
     getSales: builder.query<
       GetSalesResponesType,
-      { search?: string; status?: string; ordering?: string; period?: string }
+      {
+        search?: string;
+        status?: string;
+        ordering?: string;
+        period?: string;
+        page?: number;
+      }
     >({
-      query: ({ search, status, ordering, period }) => ({
+      query: ({ search, status, ordering, period, page }) => ({
         url: "sales/",
         params: {
           search,
           status,
           ordering,
           period,
+          page,
         },
       }),
       providesTags: ["Sales"],

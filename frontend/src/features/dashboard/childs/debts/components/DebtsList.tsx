@@ -1,11 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { Typography } from "@mui/material";
 import { useGetDebtsQuery } from "../../sales/api/ApiSales";
 import DebtsCreditsRowSkeleton from "./DebtsCreditsRowSkeleton";
 import DebtsCreaditsRows from "./DebtsCreaditsRows";
-import { useAppSelector } from "@/lib/redux/hooks";
 import AppTable from "../../components/AppTable";
 import { useState } from "react";
 
@@ -32,7 +30,6 @@ export default function DebtsList({
     page,
   });
 
-  const mode = useAppSelector((s) => s.theme);
 
   if (isLoading) {
     return Array.from({ length: 8 }).map((_, index) => (
