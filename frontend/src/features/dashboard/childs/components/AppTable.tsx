@@ -32,14 +32,14 @@ export default function AppTable<T>({
   renderRow,
   pagination,
 }: AppTableProps<T>) {
-  const mode = useAppSelector((s) => s.theme);
+  const mode = useAppSelector((s) => s.theme.mode);
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 800 }}>
         <TableHead>
           <TableRow
-            className={mode.mode === "light" ? "bg-gray-200" : "bg-blue-700"}
+            className={mode === "light" ? "bg-gray-200" : "bg-blue-700"}
           >
             {headers.map((header) => (
               <TableCell key={header} align="center">

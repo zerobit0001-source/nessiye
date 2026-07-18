@@ -1,27 +1,28 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type ThemeMode = "light" | "dark";
+export type ThemeMode = "light" | "dark";
 
 interface ThemeState {
-    mode: ThemeMode;
+  mode: ThemeMode;
 }
 
 const initialState: ThemeState = {
-    mode: "light",
+  mode: "light",
 };
 
 const themeSlice = createSlice({
-    name: "theme",
-    initialState,
-    reducers: {
-        setTheme(state, action: PayloadAction<ThemeMode>) {
-            state.mode = action.payload;
-        },
-        toggleTheme(state) {
-            state.mode = state.mode === "light" ? "dark" : "light";
-        },
+  name: "theme",
+  initialState,
+  reducers: {
+    setTheme(state, action: PayloadAction<ThemeMode>) {
+      state.mode = action.payload;
     },
+    toggleTheme(state) {
+      state.mode = state.mode === "light" ? "dark" : "light";
+    },
+  },
 });
 
 export const { setTheme, toggleTheme } = themeSlice.actions;
-export const themeSliceReducer = themeSlice.reducer;
+
+export default themeSlice.reducer;

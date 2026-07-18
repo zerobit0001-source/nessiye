@@ -2,8 +2,7 @@
 import { toggleTheme } from "@/features/theme/themeSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { DarkModeRounded, LightModeRounded } from "@mui/icons-material";
-import { Button, IconButton } from "@mui/material";
-import React from "react";
+import { IconButton } from "@mui/material";
 
 const ToggleThemeBtn = () => {
     const dispatch = useAppDispatch();
