@@ -12,7 +12,10 @@ interface DebtsRowsProps {
 
 const DebtsCreaditsRows = ({ debt }: DebtsRowsProps) => {
   return (
-    <TableRow key={debt.id}>
+    <TableRow
+      key={debt.id}
+      className="cursor-pointer hover:bg-blue-100/30! group transition-all"
+    >
       <TableCell align="center">
         <Link
           href={`/dashboard/debts/${debt.id}`}

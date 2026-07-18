@@ -47,6 +47,9 @@ export interface GetDebtByIdResponeseType {
 export interface GetProductsResponse {
   ok: boolean;
   count: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
   results: ProductsListType[];
 }
 export interface GetProductResponse {

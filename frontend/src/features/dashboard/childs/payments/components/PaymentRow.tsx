@@ -31,7 +31,7 @@ const PaymentRow = ({ payment }: PaymentRowProps) => {
       <TableRow
         key={payment.id}
         onClick={handleClickOpen}
-        className="cursor-pointer"
+        className="cursor-pointer hover:bg-blue-100/30! group transition-all"
       >
         <TableCell align="center">{payment.payment_id}</TableCell>
 

@@ -1,174 +1,165 @@
-
 // debts
 
 export interface DebtType {
-    id: number,
-    debt_id: string,
-    customer: number,
-    customer_name: string,
-    customer_phone: string,
-    sale: number,
-    amount: number,
-    paid_amount: number,
-    remaining: number,
-    is_paid: boolean,
-    items: {
-        id: number;
-        product_id: number;
-        product_name: string;
-        quantity: number;
-        price: number;
-    }[];
-    description: string,
-    created_at: string,
-    payments?: PaymentType[]
-    status: "active" | "overdue" | "settled"
+  id: number;
+  debt_id: string;
+  customer: number;
+  customer_name: string;
+  customer_phone: string;
+  sale: number;
+  amount: number;
+  paid_amount: number;
+  remaining: number;
+  is_paid: boolean;
+  items: {
+    id: number;
+    product_id: number;
+    product_name: string;
+    quantity: number;
+    price: number;
+  }[];
+  description: string;
+  created_at: string;
+  payments?: PaymentType[];
+  status: "active" | "overdue" | "settled";
 }
 
 export interface DebtsListType {
-    id: number,
-    debt_id: string,
-    customer_name: string,
-    total_amount: number,
-    paid_amount: number,
-    remaining_amount: number,
-    is_paid: boolean,
-    created_at: string,
+  id: number;
+  debt_id: string;
+  customer_name: string;
+  total_amount: number;
+  paid_amount: number;
+  remaining_amount: number;
+  is_paid: boolean;
+  created_at: string;
 }
-
 
 // sales
 
 export interface SaleType {
-    id: number,
-    shop: number,
-    customer: number,
-    customer_name: string,
-    items: {
-        id: number,
-        product_id: number,
-        product_name: string,
-        quantity: number,
-        price: number
-    }[],
-    total: number,
+  id: number;
+  shop: number;
+  customer: number;
+  customer_name: string;
+  items: {
+    id: number;
+    product_id: number;
+    product_name: string;
+    quantity: number;
+    price: number;
+  }[];
+  total: number;
 }
 
 export interface SalesListType {
-    id: number,
-    customer_name: string,
-    total: number,
-    created_at: string
+  id: number;
+  customer_name: string;
+  total: number;
+  created_at: string;
 }
-
 
 // products
 export type ProductType = {
-    id: number;
-    name: string;
-    barcode?: string;
-    buy_price: number;
-    sell_price: number;
-    exp_date?: string;
-    image?: string;
-    category?: number;
-    category_name?: string;
-    stock: number;
-    description?: string;
-
-}
+  id: number;
+  name: string;
+  barcode?: string;
+  buy_price: number;
+  sell_price: number;
+  exp_date?: string;
+  image?: string;
+  category?: number;
+  category_name?: string;
+  stock: number;
+  description?: string;
+};
 export type ProductsListType = {
-    id: number;
-    name: string;
-    barcode?: string;
-    sell_price: number;
-    image?: string;
-    stock: number;
-}
+  id: number;
+  name: string;
+  barcode?: string;
+  sell_price: number;
+  image?: string;
+  stock: number;
+};
 
 export interface CatergoyType {
-    id: number,
-    name: string
+  id: number;
+  name: string;
 }
 
 // customers
 
 export interface CustomerType {
-    id: number | string,
-    phone_number: string,
-    full_name: string
+  id: number | string;
+  phone_number: string;
+  full_name: string;
 }
 
 export interface CustomersListType {
-    id: number | string,
-    phone_number: string,
-    full_name: string,
-    paid_amount: number,
-    remaining_amount: number,
-    total_debts: number
+  id: number | string;
+  phone_number: string;
+  full_name: string;
+  paid_amount: number;
+  remaining_amount: number;
+  total_debts: number;
 }
-
 
 // shop
 
 export interface ShopType {
-    shop_id: number,
-    shop_name: string,
-    shop_address: string,
-    total_amount: number,
-    number_of_debts: number
+  shop_id: number;
+  shop_name: string;
+  shop_address: string;
+  total_amount: number;
+  number_of_debts: number;
 }
-
 
 // modals
 export interface ModalCustomersType {
-    id: number,
-    full_name: string,
-    phone_number: string,
+  id: number;
+  full_name: string;
+  phone_number: string;
 }
 
 export interface ModalProductsType {
-    id: number,
-    name: string,
-    barcode?: string,
-    sell_price: number,
+  id: number;
+  name: string;
+  barcode?: string;
+  sell_price: number;
 }
 
 export interface ModalDebtsType {
-    id: number,
-    remaining: number,
-    created_at: string,
-    is_paid: boolean,
+  id: number;
+  remaining: number;
+  created_at: string;
+  is_paid: boolean;
 }
-
 
 // products search params
 export interface GetProductsParams {
-    search?: string;
-    category?: string;
-    // page?: number;
-    // ordering?: string;
+  search?: string;
+  category?: string;
+  page?: number;
+  ordering?: string;
 }
-
 
 // payments
 
 export interface PaymentType {
-    id: number,
-    customer_name: string,
-    customer_phone: string,
-    amount: number,
-    created_at: string,
-    debt_id: number
-    payment_id: string
+  id: number;
+  customer_name: string;
+  customer_phone: string;
+  amount: number;
+  created_at: string;
+  debt_id: number;
+  payment_id: string;
 }
 export interface PaymentsListType {
-    id: number,
-    customer_name: string,
-    customer_phone: string,
-    amount: number,
-    created_at: string,
-    debt_id: number,
-    payment_id: string
-
+  id: number;
+  customer_name: string;
+  customer_phone: string;
+  amount: number;
+  created_at: string;
+  debt_id: number;
+  payment_id: string;
 }

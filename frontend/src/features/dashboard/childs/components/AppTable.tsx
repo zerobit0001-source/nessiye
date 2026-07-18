@@ -36,7 +36,7 @@ export default function AppTable<T>({
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 800 }}>
+      <Table sx={{ minWidth: 800 }} className="rounded-xl! overflow-hidden">
         <TableHead>
           <TableRow
             className={mode === "light" ? "bg-gray-200" : "bg-blue-700"}

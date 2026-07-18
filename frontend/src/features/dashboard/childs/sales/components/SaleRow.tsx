@@ -12,7 +12,10 @@ interface SaleRowPropType {
 
 const SaleRow = ({ sale }: SaleRowPropType) => {
   return (
-    <TableRow key={sale.id}>
+    <TableRow
+      key={sale.id}
+      className="cursor-pointer hover:bg-blue-100/30! group transition-all"
+    >
       <TableCell align="center">
         <Link
           href={`/dashboard/sales/${sale.id}`}
@@ -27,7 +30,7 @@ const SaleRow = ({ sale }: SaleRowPropType) => {
       <TableCell align="center">{formatPrice(sale.total)} تومان</TableCell>
 
       <TableCell align="center">
-        {formatDate(sale.created_at, { dateStyle: "short" })} تومان
+        {formatDate(sale.created_at, { dateStyle: "short" })}
       </TableCell>
     </TableRow>
   );
