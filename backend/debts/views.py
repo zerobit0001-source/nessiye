@@ -6,6 +6,7 @@ from .models import Debt, Payment
 from .serializers import DebtSerializer
 from config.pagination import StandardPagination
 from django.utils import timezone
+from activity.services import log_activity
 
 
 class DebtListView(APIView):
