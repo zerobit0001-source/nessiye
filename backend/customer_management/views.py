@@ -24,6 +24,10 @@ class CustomerListCreateView(APIView):
     def get(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+        
+        search_query = request.query_params.get('search', None)
+        ordering = request.query_params.get('ordering', '-total_debts')
+        filtering = request.query_params.get('filter', None)
     
         customer_shops = CustomerShop.objects.filter(
             shop=request.user
@@ -32,7 +36,7 @@ class CustomerListCreateView(APIView):
             total_paid=Sum('debts__payments__amount'),
         )
 
-        search_query = request.query_params.get('search', None)
+
 
         if search_query:
             customer_shops = customer_shops.filter(
