@@ -58,6 +58,7 @@ class CustomerListCreateView(APIView):
             for cs in customer_shops
         ]
 
+        #filtering
         if filtering == 'active':
             result = [r for r in result if r['remaining_amount'] > 0]
 
