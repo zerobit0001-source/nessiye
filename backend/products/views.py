@@ -198,6 +198,14 @@ class CategoryListCreateView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        log_activity(
+            shop=request.user,
+            action='create',
+            entity='category',
+            title=f'اضافه شد {serializer.instance.name} دسته‌بندی',
+            object_id=serializer.instance.id
+        )
+
         return Response({'ok': True, 'message': 'دسته‌بندی با موفقیت اضافه شد', 'category': serializer.data}, status=status.HTTP_201_CREATED)
     
 
