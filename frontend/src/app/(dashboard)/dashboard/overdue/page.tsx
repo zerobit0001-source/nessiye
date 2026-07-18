@@ -5,6 +5,7 @@ import OverduesPage from "@/features/dashboard/childs/overdue/components/Overdue
 import BranchHead from "@/features/dashboard/components/BranchHead";
 import { PriorityHighRounded } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
+import { Suspense } from "react";
 
 const Overdues = () => {
   return (
@@ -15,7 +16,9 @@ const Overdues = () => {
       >
         <div className=""></div>
       </DashboardsPageHeader>
-     <OverduesPage />
+      <Suspense fallback={<div>Loading...</div>}>
+        <OverduesPage />
+      </Suspense>
       {/*<Box className="w-full overflow-x-scroll xl:overflow-auto">
         <BranchHead branches={overdueBranchs} />
         {OverdueReports.map((overdue) => (
