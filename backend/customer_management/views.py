@@ -68,6 +68,14 @@ class CustomerListCreateView(APIView):
         elif filtering == 'overdue':
             thirty_days_ago = timezone.now() - timedelta(days=30)
             result = [r for r in result if r['remaining_amount'] > 0 and r['last_debt'] and r['last_debt'] < thirty_days_ago]
+
+        #ordering
+
+        reverse = ordering.startswith('-')
+        order_field = ordering.lstrip('-')
+
+        if order_field in ['total_debts', 'paid_amount', 'remaining_amount']:
+            result = sorted(result, key=lambda x: x.get(order_field, 0), reverse=reverse)
     
         return Response({'ok': True, 'customers': result})
 
