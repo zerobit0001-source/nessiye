@@ -52,7 +52,10 @@ export default function SalesToolbar() {
   const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (key === "status" && value === "all" || key === "period" && value === "all") {
+    if (
+      (key === "status" && value === "all") ||
+      (key === "period" && value === "all")
+    ) {
       params.delete(key);
     } else {
       params.set(key, value);
@@ -82,7 +85,6 @@ export default function SalesToolbar() {
           },
         }}
       >
-
         {/* Sorting */}
         <FormControl
           size="small"
@@ -98,9 +100,9 @@ export default function SalesToolbar() {
 
             <MenuItem value="created_at">قدیمی‌ترین</MenuItem>
 
-            <MenuItem value="-total_amount">بیشترین مبلغ</MenuItem>
+            <MenuItem value="-amount">بیشترین مبلغ</MenuItem>
 
-            <MenuItem value="total_amount">کمترین مبلغ</MenuItem>
+            <MenuItem value="amount">کمترین مبلغ</MenuItem>
           </Select>
         </FormControl>
 
@@ -124,7 +126,7 @@ export default function SalesToolbar() {
         />
 
         {/* Status */}
-        
+
         {/* Period */}
         <ToggleButtonGroup
           exclusive

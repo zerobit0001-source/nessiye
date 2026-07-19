@@ -101,9 +101,9 @@ export default function PaymentsPageToolbar() {
 
             <MenuItem value="created_at">قدیمی‌ترین</MenuItem>
 
-            <MenuItem value="-total_amount">بیشترین مبلغ</MenuItem>
+            <MenuItem value="-amount">بیشترین مبلغ</MenuItem>
 
-            <MenuItem value="total_amount">کمترین مبلغ</MenuItem>
+            <MenuItem value="amount">کمترین مبلغ</MenuItem>
           </Select>
         </FormControl>
 

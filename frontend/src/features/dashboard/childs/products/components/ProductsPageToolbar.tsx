@@ -118,9 +118,9 @@ export default function ProductsPageToolbar() {
 
             <MenuItem value="created_at">قدیمی‌ترین</MenuItem>
 
-            <MenuItem value="-price">بیشترین قیمت</MenuItem>
+            <MenuItem value="-amount">بیشترین قیمت</MenuItem>
 
-            <MenuItem value="price">کمترین قیمت</MenuItem>
+            <MenuItem value="amount">کمترین قیمت</MenuItem>
 
             <MenuItem value="name">نام (A-Z)</MenuItem>
 
