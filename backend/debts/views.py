@@ -176,6 +176,10 @@ class PaymentListView(APIView):
         # ordering
         if ordering in ['created_at', '-created_at', 'amount', '-amount']:
             payments = payments.order_by(ordering)
+        # elif ordering == 'amount':
+        #     payments = payments.order_by('amount')
+        # elif ordering == '-amount':
+        #     payments = payments.order_by('-amount')
 
         result = [
             {
@@ -189,6 +193,15 @@ class PaymentListView(APIView):
             }
             for p in payments
         ]
+
+        # if ordering == 'remaining_amount':
+        #     result = sorted(result, key=lambda x: x['remaining_amount'])
+        # elif ordering == '-remaining_amount':
+        #     result = sorted(result, key=lambda x: x['remaining_amount'], reverse=True)
+        # elif ordering == 'amount':
+        #     result = sorted(result, key=lambda x: x['total_amount'])
+        # elif ordering == '-amount':
+        #     result = sorted(result, key=lambda x: x['total_amount'], reverse=True)
 
         pagination = StandardPagination()
         paginated_result = pagination.paginate_queryset(result, request)
