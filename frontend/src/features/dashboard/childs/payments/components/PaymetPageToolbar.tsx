@@ -30,7 +30,7 @@ export default function PaymentsPageToolbar() {
 
   const status = searchParams.get("status") ?? "all";
   const ordering = searchParams.get("ordering") ?? "-created_at";
-  const period = searchParams.get("period") ?? "month";
+  const period = searchParams.get("period") ?? "all";
 
   // Search debounce
   useEffect(() => {
@@ -52,9 +52,12 @@ export default function PaymentsPageToolbar() {
   const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (key === "status" && value === "all") {
+    if (
+      (key === "status" && value === "all") ||
+      (key === "period" && value === "all") ||
+      (key === "ordering" && value === "-created_at")
+    ) {
       params.delete(key);
-      params.delete("period");
     } else {
       params.set(key, value);
     }
@@ -83,30 +86,6 @@ export default function PaymentsPageToolbar() {
           },
         }}
       >
-        {/* Export */}
-        <IconButton
-          sx={{
-            border: "1px solid",
-            borderColor: "divider",
-            width: 42,
-            height: 42,
-          }}
-        >
-          <DownloadOutlined />
-        </IconButton>
-
-        {/* Filter */}
-        <IconButton
-          sx={{
-            border: "1px solid",
-            borderColor: "divider",
-            width: 42,
-            height: 42,
-          }}
-        >
-          <FilterAltOutlined />
-        </IconButton>
-
         {/* Sorting */}
         <FormControl
           size="small"
@@ -147,15 +126,6 @@ export default function PaymentsPageToolbar() {
           }}
         />
 
-        {/* Status */}
-        <Chip
-          clickable
-          label="همه"
-          color={status === "all" ? "primary" : "default"}
-          variant={status === "all" ? "filled" : "outlined"}
-          onClick={() => updateParam("status", "all")}
-        />
-
         {/* Period */}
         <ToggleButtonGroup
           exclusive
@@ -173,6 +143,7 @@ export default function PaymentsPageToolbar() {
             },
           }}
         >
+          <ToggleButton value="all">همه</ToggleButton>
           <ToggleButton value="today">امروز</ToggleButton>
 
           <ToggleButton value="this_week">هفته</ToggleButton>
