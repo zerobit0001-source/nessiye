@@ -11,7 +11,7 @@ interface Props {
     category?: string;
     page?: string;
     ordering?: string;
-    stock_status?: string;
+    status?: string;
   }>;
 }
 const Products = async ({ searchParams }: Props) => {
@@ -29,7 +29,7 @@ const Products = async ({ searchParams }: Props) => {
           search={params.search}
           category={params.category}
           ordering={params.ordering}
-          stock_status={params.stock_status}
+          status={params.status}
           page={params.page}
         />
       </div>

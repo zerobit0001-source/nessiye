@@ -16,14 +16,14 @@ export const ApiProduct = createApi({
   tagTypes: ["Products"],
   endpoints: (builder) => ({
     getProducts: builder.query<GetProductsResponse, GetProductsParams>({
-      query: ({ search, category, page, ordering, stock_status }) => ({
+      query: ({ search, category, page, ordering, status }) => ({
         url: "/products/",
         params: {
           search,
           category,
           page,
           ordering,
-          stock_status,
+          status,
         },
       }),
       providesTags: ["Products"],
