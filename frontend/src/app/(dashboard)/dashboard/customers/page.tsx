@@ -10,34 +10,40 @@ import CustomerCards from "@/features/dashboard/childs/customers/components/Cust
 import CustomersPageToolbar from "@/features/dashboard/childs/customers/components/CustomersPageToolbar";
 
 interface Props {
-    searchParams: Promise<{
-        search?: string;
-        page?: string;
-        ordering?: string;
-    }>;
+  searchParams: Promise<{
+    search?: string;
+    page?: string;
+    ordering?: string;
+    filtering?: string;
+  }>;
 }
 
 const DashboardCustomers = async ({ searchParams }: Props) => {
-    const params = await searchParams;
+  const params = await searchParams;
 
-    return (
-        <Container>
-            <DashboardsPageHeader
-                title="مشتری ها"
-                caption="247 مشتری ثبت نام کرده ، 6 نا مشتری این ماه"
-            >
-                <AddCustomerModal />
-            </DashboardsPageHeader>
-            <CustomerCards />
-            <CustomersPageToolbar />
-            <Box className="w-full overflow-x-scroll xl:overflow-auto">
-                {/* <CustomersSearch /> */}
-                {/* branches */}
-                {/* <BranchHead branches={CustomersBranchName} /> */}
-                <CustomersList search={params.search} />
-            </Box>
-        </Container>
-    );
+  return (
+    <Container>
+      <DashboardsPageHeader
+        title="مشتری ها"
+        caption="247 مشتری ثبت نام کرده ، 6 نا مشتری این ماه"
+      >
+        <AddCustomerModal />
+      </DashboardsPageHeader>
+      <CustomerCards />
+      <CustomersPageToolbar />
+      <Box className="w-full overflow-x-scroll xl:overflow-auto">
+        {/* <CustomersSearch /> */}
+        {/* branches */}
+        {/* <BranchHead branches={CustomersBranchName} /> */}
+        <CustomersList
+          search={params.search}
+          ordering={params.ordering}
+          page={params.page}
+          filtering={params.filtering}
+        />
+      </Box>
+    </Container>
+  );
 };
 
 export default DashboardCustomers;

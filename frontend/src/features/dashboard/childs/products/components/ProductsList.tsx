@@ -14,9 +14,10 @@ export interface GetProductsParams {
   category?: string;
   page?: number;
   ordering?: string;
+  stock_status?: string;
 }
 
-const ProductsList = ({ search, category, ordering }: GetProductsParams) => {
+const ProductsList = ({ search, category, ordering, stock_status }: GetProductsParams) => {
   const [page, setPage] = useState(1);
 
   const { data, error, isLoading, isSuccess } = useGetProductsQuery({
@@ -24,6 +25,7 @@ const ProductsList = ({ search, category, ordering }: GetProductsParams) => {
     category,
     page,
     ordering,
+    stock_status,
   });
 
   const router = useRouter();

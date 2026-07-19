@@ -22,6 +22,7 @@ export default function DebtsList({
 }: DebtsListProps) {
   const [page, setPage] = useState(1);
 
+
   const { data, isLoading, error } = useGetDebtsQuery({
     search,
     status,
@@ -29,7 +30,6 @@ export default function DebtsList({
     period,
     page,
   });
-
 
   if (isLoading) {
     return Array.from({ length: 8 }).map((_, index) => (

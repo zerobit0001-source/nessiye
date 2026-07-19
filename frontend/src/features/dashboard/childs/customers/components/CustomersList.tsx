@@ -22,13 +22,20 @@ export interface GetCustomersParams {
   search?: string;
   page?: number;
   ordering?: string;
+  filtering?: string;
 }
 
-const CustomersList = ({ search, page, ordering }: GetCustomersParams) => {
+const CustomersList = ({
+  search,
+  page,
+  ordering,
+  filtering,
+}: GetCustomersParams) => {
   const { data, isLoading, error } = useGetCustomersQuery({
     search,
     page,
     ordering,
+    filtering,
   });
 
   const mode = useAppSelector((s) => s.theme);

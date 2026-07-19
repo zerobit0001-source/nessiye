@@ -1,98 +1,93 @@
 import { authenticatedFetch } from "@/lib/authenticatedFetch";
 import { NextResponse } from "next/server";
 
-
 export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
 
-    try {
+    const queryString = searchParams.toString();
 
-        const result = await authenticatedFetch('payments/')
-
-        if (!result || result.response.status == 401) {
-            return NextResponse.json(
-                {
-                    error: "Unauthorized",
-                },
-                {
-                    status: 401,
-                }
-            );
-        }
-
-        const data = await result.response.json();
-
-        const response = NextResponse.json(data, {
-            status: result.response.status,
-        });
-
-        if (result.newAccess) {
-            response.cookies.set("access", result.newAccess, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                path: "/",
-            });
-
-
-        }
-        return response;
-
-    } catch (error) {
-        console.error("Error fetching products:", error);
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        );
+    const endpoint = queryString ? `payments/?${queryString}` : "payments/";
+    const result = await authenticatedFetch(endpoint);
+    if (!result || result.response.status == 401) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        },
+      );
     }
+
+    const data = await result.response.json();
+
+    const response = NextResponse.json(data, {
+      status: result.response.status,
+    });
+
+    if (result.newAccess) {
+      response.cookies.set("access", result.newAccess, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      });
+    }
+    return response;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
 }
 
-
 export async function POST(req: Request) {
-    try {
+  try {
+    const body = await req.json();
+    const { debt_id, amount, pay_full } = await body;
 
-        const body = await req.json();
-        const { debt_id, amount, pay_full } = await body
+    const result = await authenticatedFetch(`debts/${debt_id}/pay/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount, pay_full }),
+    });
 
-        const result = await authenticatedFetch(`debts/${debt_id}/pay/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ amount, pay_full }),
-        });
-
-        if (!result || result.response.status == 401) {
-            return NextResponse.json(
-                {
-                    error: "Unauthorized",
-                },
-                {
-                    status: 401,
-                }
-            );
-        }
-
-        const data = await result.response.json();
-
-        const response = NextResponse.json(data, {
-            status: result.response.status,
-        });
-
-        if (result.newAccess) {
-            response.cookies.set("access", result.newAccess, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                path: "/",
-            });
-        }
-        return response;
-
-    } catch (error) {
-        console.error("Error adding product:", error);
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        );
+    if (!result || result.response.status == 401) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        },
+      );
     }
+
+    const data = await result.response.json();
+
+    const response = NextResponse.json(data, {
+      status: result.response.status,
+    });
+
+    if (result.newAccess) {
+      response.cookies.set("access", result.newAccess, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      });
+    }
+    return response;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
 }

@@ -143,6 +143,7 @@ export interface GetProductsParams {
   category?: string;
   page?: number;
   ordering?: string;
+  stock_status?: string;
 }
 
 // payments

@@ -4,22 +4,24 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
-  Button,
   Card,
-  Chip,
   FormControl,
   IconButton,
   InputAdornment,
+  ListItemIcon,
+  ListItemText,
+  Menu,
   MenuItem,
   OutlinedInput,
   Select,
-  ToggleButton,
-  ToggleButtonGroup,
 } from "@mui/material";
 import {
+  CheckCircleOutline,
   DownloadOutlined,
   FilterAltOutlined,
+  PendingOutlined,
   Search,
+  WarningAmberOutlined,
 } from "@mui/icons-material";
 
 export default function DebtsPageToolbar() {
@@ -28,9 +30,12 @@ export default function DebtsPageToolbar() {
 
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const openFilter = Boolean(anchorEl);
+
   const status = searchParams.get("status") ?? "all";
   const ordering = searchParams.get("ordering") ?? "-created_at";
-  const period = searchParams.get("period") ?? "month";
 
   // Search debounce
   useEffect(() => {
@@ -47,24 +52,46 @@ export default function DebtsPageToolbar() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, router, searchParams]);
+  }, [search, router]);
 
   const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (key == "ordering" && value == "-created_at") {
-      params.delete(key);
-    } else {
-      params.set(key, value);
-    }
-    
-    if (key === "period" && value === "all") {
-      params.delete(key);
-    } else {
-      params.set(key, value);
+    switch (key) {
+      case "ordering":
+        if (value === "-created_at") {
+          params.delete("ordering");
+        } else {
+          params.set("ordering", value);
+        }
+        break;
+
+      case "status":
+        if (value === "all") {
+          params.delete("status");
+        } else {
+          params.set("status", value);
+        }
+        break;
+
+      default:
+        params.set(key, value);
     }
 
     router.replace(`?${params.toString()}`);
+  };
+
+  const handleOpenFilter = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseFilter = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSelectStatus = (value: string) => {
+    updateParam("status", value);
+    handleCloseFilter();
   };
 
   return (
@@ -102,6 +129,7 @@ export default function DebtsPageToolbar() {
 
         {/* Filter */}
         <IconButton
+          onClick={handleOpenFilter}
           sx={{
             border: "1px solid",
             borderColor: "divider",
@@ -111,6 +139,60 @@ export default function DebtsPageToolbar() {
         >
           <FilterAltOutlined />
         </IconButton>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={openFilter}
+          onClose={handleCloseFilter}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          <MenuItem
+            selected={status === "all"}
+            onClick={() => handleSelectStatus("all")}
+          >
+            <ListItemText>همه</ListItemText>
+          </MenuItem>
+
+          <MenuItem
+            selected={status === "settled"}
+            onClick={() => handleSelectStatus("settled")}
+          >
+            <ListItemIcon>
+              <CheckCircleOutline color="success" />
+            </ListItemIcon>
+
+            <ListItemText>پرداخت شده</ListItemText>
+          </MenuItem>
+
+          <MenuItem
+            selected={status === "active"}
+            onClick={() => handleSelectStatus("active")}
+          >
+            <ListItemIcon>
+              <PendingOutlined color="warning" />
+            </ListItemIcon>
+
+            <ListItemText>پرداخت نشده</ListItemText>
+          </MenuItem>
+
+          <MenuItem
+            selected={status === "overdue"}
+            onClick={() => handleSelectStatus("overdue")}
+          >
+            <ListItemIcon>
+              <WarningAmberOutlined color="error" />
+            </ListItemIcon>
+
+            <ListItemText>تاریخ گذشته</ListItemText>
+          </MenuItem>
+        </Menu>
 
         {/* Sorting */}
         <FormControl
@@ -151,39 +233,6 @@ export default function DebtsPageToolbar() {
             mx: 1,
           }}
         />
-
-        {/* Status */}
-        <Chip
-          clickable
-          label="همه"
-          color={status === "all" ? "primary" : "default"}
-          variant={status === "all" ? "filled" : "outlined"}
-          onClick={() => updateParam("period", "all")}
-        />
-
-        {/* Period */}
-        <ToggleButtonGroup
-          exclusive
-          value={period}
-          onChange={(_, value) => {
-            if (value) {
-              updateParam("period", value);
-            }
-          }}
-          sx={{
-            "& .MuiToggleButton-root": {
-              textTransform: "none",
-              px: 2,
-              height: 40,
-            },
-          }}
-        >
-          <ToggleButton value="today">امروز</ToggleButton>
-
-          <ToggleButton value="week">هفته</ToggleButton>
-
-          <ToggleButton value="month">ماه</ToggleButton>
-        </ToggleButtonGroup>
       </Box>
     </Card>
   );

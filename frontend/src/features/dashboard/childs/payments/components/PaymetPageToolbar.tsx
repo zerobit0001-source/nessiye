@@ -47,13 +47,14 @@ export default function PaymentsPageToolbar() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, router, searchParams]);
+  }, [search, router]);
 
   const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (key === "status" && value === "all") {
       params.delete(key);
+      params.delete("period");
     } else {
       params.set(key, value);
     }
@@ -174,9 +175,9 @@ export default function PaymentsPageToolbar() {
         >
           <ToggleButton value="today">امروز</ToggleButton>
 
-          <ToggleButton value="week">هفته</ToggleButton>
+          <ToggleButton value="this_week">هفته</ToggleButton>
 
-          <ToggleButton value="month">ماه</ToggleButton>
+          <ToggleButton value="this_month">ماه</ToggleButton>
         </ToggleButtonGroup>
       </Box>
     </Card>

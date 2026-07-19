@@ -17,6 +17,8 @@ const PaymentList = ({ search, status, ordering, period }: Props) => {
     period,
   });
 
+  console.log("this is period", period);
+
   if (isLoading) {
     return Array.from({ length: 8 }).map((_, index) => (
       <PaymentsRowSkeleton key={index} />
