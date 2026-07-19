@@ -31,7 +31,7 @@ export default function ProductsPageToolbar() {
 
   const ordering = searchParams.get("ordering") ?? "-created_at";
 
-  const stockStatus = searchParams.get("stock_status") ?? "all";
+  const stockStatus = searchParams.get("status") ?? "all";
 
   // Keep input synced with URL (Back/Forward navigation)
   useEffect(() => {
@@ -153,7 +153,7 @@ export default function ProductsPageToolbar() {
           value={stockStatus}
           onChange={(_, value) => {
             if (value !== null) {
-              updateParam("stock_status", value);
+              updateParam("status", value);
             }
           }}
           sx={{
@@ -170,11 +170,11 @@ export default function ProductsPageToolbar() {
         >
           <ToggleButton value="all">همه</ToggleButton>
 
-          <ToggleButton value="stock">موجود</ToggleButton>
+          <ToggleButton value="stocked">موجود</ToggleButton>
 
           <ToggleButton value="low_stock">کم موجود</ToggleButton>
 
-          <ToggleButton value="non_stock">ناموجود</ToggleButton>
+          <ToggleButton value="out_of_stock">ناموجود</ToggleButton>
         </ToggleButtonGroup>
       </Box>
     </Card>
