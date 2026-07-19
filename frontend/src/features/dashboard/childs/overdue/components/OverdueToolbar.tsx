@@ -47,12 +47,15 @@ export default function OverdueToolbar() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, router, searchParams]);
+  }, [search, router]);
 
   const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (key === "status" && value === "all") {
+    if (
+      (key === "status" && value === "all") ||
+      (key === "period" && value === "all")
+    ) {
       params.delete(key);
     } else {
       params.set(key, value);
@@ -82,30 +85,6 @@ export default function OverdueToolbar() {
           },
         }}
       >
-        {/* Export */}
-        <IconButton
-          sx={{
-            border: "1px solid",
-            borderColor: "divider",
-            width: 42,
-            height: 42,
-          }}
-        >
-          <DownloadOutlined />
-        </IconButton>
-
-        {/* Filter */}
-        <IconButton
-          sx={{
-            border: "1px solid",
-            borderColor: "divider",
-            width: 42,
-            height: 42,
-          }}
-        >
-          <FilterAltOutlined />
-        </IconButton>
-
         {/* Sorting */}
         <FormControl
           size="small"
@@ -172,11 +151,10 @@ export default function OverdueToolbar() {
             },
           }}
         >
-          <ToggleButton value="today">امروز</ToggleButton>
-
-          <ToggleButton value="week">هفته</ToggleButton>
-
-          <ToggleButton value="month">ماه</ToggleButton>
+          <ToggleButton value="all">همه</ToggleButton>
+          <ToggleButton value="lower_7">کمتر از 7 روز</ToggleButton>
+          <ToggleButton value="higher_7_30">۷ تا ۳۰ روز</ToggleButton>
+          <ToggleButton value="higher_30">بیش از ۳۰ روز</ToggleButton>
         </ToggleButtonGroup>
       </Box>
     </Card>
