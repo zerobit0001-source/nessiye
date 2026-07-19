@@ -254,9 +254,8 @@ class OverdueDebtsView(APIView):
 
         overdue_debts = Debt.objects.filter(
             shop=request.user,
-            is_paid=False,
-            created_at__lt=timezone.now() - timezone.timedelta(days=30)
-        ).select_related('customer__customer')
+            created_at__lt=timezone.now() - timedelta(days=30)
+        ).select_related('customer__customer').prefetch_related('payments')
 
         result = [
             {
@@ -269,6 +268,7 @@ class OverdueDebtsView(APIView):
                 'created_at': d.created_at
             }
             for d in overdue_debts
+            if not d.is_paid
         ]
 
         pagination = StandardPagination()
