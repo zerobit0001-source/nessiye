@@ -42,7 +42,11 @@ export default function ProductsPageToolbar() {
     (key: string, value: string) => {
       const params = new URLSearchParams(searchParamsString);
 
-      if (!value || value === "all") {
+      if (
+        !value ||
+        value === "all" ||
+        (key === "ordering" && value === "-created_at")
+      ) {
         params.delete(key);
       } else {
         params.set(key, value);
@@ -96,38 +100,6 @@ export default function ProductsPageToolbar() {
           },
         }}
       >
-        <Tooltip title="Export">
-          <span>
-            <IconButton
-              disabled
-              sx={{
-                width: 42,
-                height: 42,
-                border: "1px solid",
-                borderColor: "divider",
-              }}
-            >
-              <DownloadOutlined />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        <Tooltip title="Advanced Filters">
-          <span>
-            <IconButton
-              disabled
-              sx={{
-                width: 42,
-                height: 42,
-                border: "1px solid",
-                borderColor: "divider",
-              }}
-            >
-              <FilterAltOutlined />
-            </IconButton>
-          </span>
-        </Tooltip>
-
         <FormControl
           size="small"
           sx={{
