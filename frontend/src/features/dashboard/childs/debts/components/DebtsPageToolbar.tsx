@@ -115,17 +115,6 @@ export default function DebtsPageToolbar() {
           },
         }}
       >
-        {/* Export */}
-        <IconButton
-          sx={{
-            border: "1px solid",
-            borderColor: "divider",
-            width: 42,
-            height: 42,
-          }}
-        >
-          <DownloadOutlined />
-        </IconButton>
 
         {/* Filter */}
         <IconButton
