@@ -15,22 +15,81 @@ so far :
 - make the authentication form responsive
 - create the profile page
 - create the logout or signout in profile page ( after you create the profile page )
-- connect the authentication to API 
-- create the RTKQUERY structure 
-- Fix the customers list page props 
+- connect the authentication to API
+- create the RTKQUERY structure
+- Fix the customers list page props
 - Fix the product search and filter
-- implement the paste otp code in input 
-- create the fast pay for payments page 
+- implement the paste otp code in input
+- create the fast pay for payments page
 - create the payment detail dialog
-- create the price formatter 
+- create the price formatter
 - create the date formatter
-- create the main page 
+- create the main page
 - Fix the categories api
 - Fix the performance issue in frontend about getcurrentuser
 - Connet the dashboard page to api
-- Create the dark mode 
+- Create the dark mode
 - implement the search for customers
 - implement the debts or sales details page or dialog
+# dashboards whole udpates
+    ------------------------------------------------
+    # dashboard
+    ------------------------------------------------
+    - [ * ] Dashboard summary carda
+    - [ * ] Today's statistics cards
+    - [ * ] Debt Status cards
+    - [ * ] Top Debtors widget
+    - [ * ] Low Stock widget
+    - [ * ] Recent Activities widget
+    - [ * ] Quick Actions section
+    ------------------------------------------------
+    # Customers
+    ------------------------------------------------
+    - [ * ] Customer filters
+    - [ * ] Customer sorting
+    - [ * ] Customer status chip
+    - [ * ] Last payment column
+    - [ * ] Last purchase column
+    ------------------------------------------------
+    # Debts
+    ------------------------------------------------
+    - [ * ] Debt filters
+    - [ * ] Pagination
+    - [ * ] Better status chips
+    ------------------------------------------------
+    # Sales
+    ------------------------------------------------
+    - [ * ] Filters
+    - [ * ] Pagination
+    ------------------------------------------------
+    # Payments
+    ------------------------------------------------
+    - [ * ] Payment filters
+    - [ * ] Payment Details Drawer
+    ------------------------------------------------
+    # Products
+    ------------------------------------------------
+    - [ * ] Product filters
+    - [ * ] Product sorting
+    - [ * ] Pagination
+    ------------------------------------------------
+    # Reports
+    ------------------------------------------------
+    - [ * ] Reports dashboard
+    - [ * ] Sales report
+    - [ * ] Payments report
+    - [ * ] Debt report
+    - [ * ] Customer report
+    - [ * ] Product report
+    ------------------------------------------------
+    # Global
+    ------------------------------------------------
+    - [ * ] Dark Mode
+    - [ * ] Responsive Layout
+
+
+
+
 
 
 
@@ -55,45 +114,24 @@ todo :
  	+ overdues
  	+ markets
 + create the ui for cusotmer pay action
-+ create the whole panel for customers page 
-+ create the setting page 
++ create the whole panel for customers page
++ create the setting page
 + create the add category option
 
     ## Dashboard
 
-    + [ ] Dashboard summary carda
-
-    + [ ] Today's statistics cards
 
     + [ ] Sales vs Payments chart
 
     + [ ] Monthly Revenue chart
 
-    + [ ] Debt Status cards
 
-    + [ ] Top Debtors widget
-
-    + [ ] Low Stock widget
-
-    + [ ] Recent Activities widget
-
-    + [ ] Quick Actions section
 
     ------------------------------------------------
 
     ## Customers
 
-    + [ ] Customer filters
-
-    + [ ] Customer sorting
-
     + [ ] Pagination
-
-    + [ ] Customer status chip
-
-    + [ ] Last payment column
-
-    + [ ] Last purchase column
 
     ------------------------------------------------
 
@@ -113,11 +151,8 @@ todo :
 
     ## Debts
 
-    + [ ] Debt filters
+    empty
 
-    + [ ] Pagination
-
-    + [ ] Better status chips
 
     ------------------------------------------------
 
@@ -133,29 +168,20 @@ todo :
 
     ## Sales
 
-    + [ ] Filters
-
-    + [ ] Pagination
-
     + [ ] Sale Details page
 
     ------------------------------------------------
 
     ## Payments
 
-    + [ ] Payment filters
-
-    + [ ] Payment Details Drawer
+    empty
 
     ------------------------------------------------
 
     ## Products
 
-    + [ ] Product filters
+    empty
 
-    + [ ] Product sorting
-
-    + [ ] Pagination
 
     ------------------------------------------------
 
@@ -168,18 +194,6 @@ todo :
     ------------------------------------------------
 
     ## Reports
-
-    + [ ] Reports dashboard
-
-    + [ ] Sales report
-
-    + [ ] Payments report
-
-    + [ ] Debt report
-
-    + [ ] Customer report
-
-    + [ ] Product report
 
     + [ ] Export PDF
 
@@ -231,8 +245,6 @@ todo :
 
     + [ ] Notifications
 
-    + [ ] Dark Mode
-
     + [ ] Loading Skeletons
 
     + [ ] Empty States
@@ -240,8 +252,6 @@ todo :
     + [ ] Error Pages
 
     + [ ] Toast Messages
-
-    + [ ] Responsive Layout
 
     + [ ] Performance Optimization
 

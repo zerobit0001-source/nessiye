@@ -9,6 +9,8 @@ import { useGetDashboardCardsQuery } from "../api/ApiDashboard";
 const DashboardsRecents = () => {
   const { data, isLoading, error } = useGetDashboardCardsQuery();
 
+  console.log(error);
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.error.message}</div>;
 
