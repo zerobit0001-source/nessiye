@@ -4,12 +4,25 @@ import SlideUpAnimation from "@/components/SlideUpAnimation";
 import { useGetMeQuery } from "@/features/account/api/ApiAccount";
 import ShopsCard from "@/features/account/components/ShopsCard";
 import { useAppSelector } from "@/lib/redux/hooks";
-import { ReceiptRounded, StoreRounded } from "@mui/icons-material";
+import {
+  AccountBalanceWallet,
+  CheckCircleOutlineRounded,
+  LocationOnRounded,
+  LogoutRounded,
+  ReceiptLongRounded,
+  ReceiptRounded,
+  StorefrontRounded,
+  StoreRounded,
+  WalletRounded,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
+  Card,
   CircularProgress,
   Divider,
+  IconButton,
+  LinearProgress,
   Typography,
 } from "@mui/material";
 
@@ -31,86 +44,275 @@ const page = () => {
   return (
     <Container>
       <SlideUpAnimation>
-        <div className="px-4 md:px-0">
-          <Box>
-            <Typography variant="caption">شنبه ، 26 خرداد 1405</Typography>
-            <p className="font-bold! text-xl! md:text-2xl! lg:3xl!">
-              درود ، {user.full_name} 👋
-            </p>
-            <Typography variant="caption">
-              خلاصه بدهی‌های شما در فروشگاه‌های مختلف
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              bgcolor: "primary.main",
-              color: "white",
-              borderRadius: 5,
-              p: 5,
-            }}
-            className="w-full"
-          >
-            <div className="">
-              <Typography variant="body2">مجموع بدهی کل</Typography>
-              <p className="font-bold! text-xl! md:text-2xl! lg:3xl!">
-                {data?.total_amount.toLocaleString("fa-IR")}
-              </p>
-              <Typography variant="body2">تومان</Typography>
-            </div>
-            <Divider
-              sx={{
-                borderColor: "rgba(255,255,255,0.18)",
-                my: 2.5,
-              }}
-            />
-            <div className="flex gap-4 w-full">
-              <Box
-                sx={{
-                  bgcolor: "rgba(255,255,255,0.12)",
-                  backdropFilter: "blur(8px)",
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  borderRadius: 5,
-                  py: 5,
-                }}
-                className="w-full p-5 flex flex-col items-center gap-2"
-              >
-                <StoreRounded />
-                <p className="font-bold! text-xl! md:text-2xl! lg:3xl!">
-                  {data?.shops.length}
-                </p>
-                <Typography variant="body2">فروشگاه بدهکار</Typography>
-              </Box>
-              <Box
-                sx={{
-                  bgcolor: "rgba(255,255,255,0.12)",
-                  backdropFilter: "blur(8px)",
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  borderRadius: 5,
-                  py: 5,
-                }}
-                className="w-full p-5 flex flex-col items-center gap-2"
-              >
-                <ReceiptRounded />
-                <p className="font-bold! text-xl! md:text-2xl! lg:3xl!">
-                  {data?.number_of_debts}
-                </p>
-                <Typography variant="body2">فاکتور باز</Typography>
-              </Box>
-            </div>
-          </Box>
-          <div className="flex items-center justify-between w-full my-4!">
-            <div className="">
+        <div className="max-w-5xl m-auto p-4 md:p-0 flex flex-col gap-5">
+          <div className="flex justify-between items-center">
+            <span>
               <Typography variant="h5" className="font-bold!">
-                فروشگاه های بدهکار
+                سلام ، {user?.full_name} 👋
               </Typography>
-            </div>
-            <Button variant="outlined">5 فروشگاه</Button>
+              <Typography variant="caption">
+                خلاصه وضعیت حساب و بدهی‌های شما در پورتال نسیه
+              </Typography>
+            </span>
+            <IconButton>
+              <LogoutRounded />
+            </IconButton>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <Card
+              elevation={1}
+              className="border border-red-500 bg-red-500/30! flex flex-col gap-2 rounded-xl! p-4 "
+            >
+              <AccountBalanceWallet color="error" />
+              <span>
+                <Typography variant="caption">کل بدهی باقیمانده</Typography>
+                <Typography
+                  variant="subtitle1"
+                  className="font-bold!"
+                  color="error"
+                >
+                  4,850,000 تومان
+                </Typography>
+              </span>
+            </Card>
+            <Card
+              elevation={1}
+              className="border border-green-500 bg-green-500/30! flex flex-col gap-2 rounded-xl! p-4 "
+            >
+              <CheckCircleOutlineRounded color="success" />
+              <span>
+                <Typography variant="caption">کل مبلغ پرداختی</Typography>
+                <Typography
+                  variant="subtitle1"
+                  className="font-bold!"
+                  color="success"
+                >
+                  12,400,000 تومان
+                </Typography>
+              </span>
+            </Card>
+            <Card
+              elevation={1}
+              className="flex flex-col gap-2 rounded-xl! p-4 "
+            >
+              <StorefrontRounded color="primary" />
+              <span>
+                <Typography variant="caption">کل بدهی باقیمانده</Typography>
+                <Typography
+                  variant="subtitle1"
+                  className="font-bold!"
+                  color="primary"
+                >
+                  4,850,000 تومان
+                </Typography>
+              </span>
+            </Card>
+            <Card
+              elevation={1}
+              className="flex flex-col gap-2 rounded-xl! p-4 md:col-span-full lg:col-span-1"
+            >
+              <ReceiptLongRounded color="warning" />
+              <span>
+                <Typography variant="caption">کل بدهی باقیمانده</Typography>
+                <Typography
+                  variant="subtitle1"
+                  className="font-bold!"
+                  color="warning"
+                >
+                  4,850,000 تومان
+                </Typography>
+              </span>
+            </Card>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {my_shops?.map((shop) => (
-              <ShopsCard shop={shop} key={shop.shop_id} />
-            ))}
+          <Typography variant="h6" className="font-bold! mt-5!">
+            فروشگاه‌های طرف حساب
+          </Typography>
+
+          <div className="flex flex-col gap-6">
+            <Card
+              elevation={2}
+              className="flex flex-col p-6 gap-6 rounded-xl! border transition-all! border-gray-300 hover:border-blue-400 "
+            >
+              <div className="flex items-center gap-2">
+                <StorefrontRounded color="primary" />
+                <span>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    سوپرمارکت آنلاین کوروش (شعبه سعادت‌آباد)
+                  </Typography>
+                  <Typography variant="caption">
+                    <LocationOnRounded color="disabled" fontSize="small" />
+                    تهران، سعادت‌آباد، بلوار پاکنژاد، پلاک ۱۲
+                  </Typography>
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <Typography variant="caption">بدهی باقیمانده</Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="error"
+                    className="font-bold!"
+                  >
+                    3,200,000 تومان
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption">کل پرداختی</Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="success"
+                    className="font-bold!"
+                  >
+                    8,500,000 تومان
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption">بدهی‌های باز</Typography>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    3 فقره
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption">آخرین خرید</Typography>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    ۱۴۰۳/۰۲/۱۵
+                  </Typography>
+                </div>
+              </div>
+              <div>
+                <span className="w-full flex items-center justify-between">
+                  <Typography variant="caption">میزان تسویه حساب</Typography>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    62%
+                  </Typography>
+                </span>
+                <LinearProgress variant="determinate" value={62} />
+              </div>
+              <Button variant="contained">ورود به فروشگاه</Button>
+            </Card>
+            <Card
+              elevation={2}
+              className="flex flex-col p-6 gap-6 rounded-xl! border transition-all! border-gray-300 hover:border-blue-400 "
+            >
+              <div className="flex items-center gap-2">
+                <StorefrontRounded color="primary" />
+                <span>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    سوپرمارکت آنلاین کوروش (شعبه سعادت‌آباد)
+                  </Typography>
+                  <Typography variant="caption">
+                    <LocationOnRounded color="disabled" fontSize="small" />
+                    تهران، سعادت‌آباد، بلوار پاکنژاد، پلاک ۱۲
+                  </Typography>
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <Typography variant="caption">بدهی باقیمانده</Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="error"
+                    className="font-bold!"
+                  >
+                    3,200,000 تومان
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption">کل پرداختی</Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="success"
+                    className="font-bold!"
+                  >
+                    8,500,000 تومان
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption">بدهی‌های باز</Typography>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    3 فقره
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption">آخرین خرید</Typography>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    ۱۴۰۳/۰۲/۱۵
+                  </Typography>
+                </div>
+              </div>
+              <div>
+                <span className="w-full flex items-center justify-between">
+                  <Typography variant="caption">میزان تسویه حساب</Typography>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    62%
+                  </Typography>
+                </span>
+                <LinearProgress variant="determinate" value={62} />
+              </div>
+              <Button variant="contained">ورود به فروشگاه</Button>
+            </Card>
+            <Card
+              elevation={2}
+              className="flex flex-col p-6 gap-6 rounded-xl! border transition-all! border-gray-300 hover:border-blue-400 "
+            >
+              <div className="flex items-center gap-2">
+                <StorefrontRounded color="primary" />
+                <span>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    سوپرمارکت آنلاین کوروش (شعبه سعادت‌آباد)
+                  </Typography>
+                  <Typography variant="caption">
+                    <LocationOnRounded color="disabled" fontSize="small" />
+                    تهران، سعادت‌آباد، بلوار پاکنژاد، پلاک ۱۲
+                  </Typography>
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <Typography variant="caption">بدهی باقیمانده</Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="error"
+                    className="font-bold!"
+                  >
+                    3,200,000 تومان
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption">کل پرداختی</Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="success"
+                    className="font-bold!"
+                  >
+                    8,500,000 تومان
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption">بدهی‌های باز</Typography>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    3 فقره
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="caption">آخرین خرید</Typography>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    ۱۴۰۳/۰۲/۱۵
+                  </Typography>
+                </div>
+              </div>
+              <div>
+                <span className="w-full flex items-center justify-between">
+                  <Typography variant="caption">میزان تسویه حساب</Typography>
+                  <Typography variant="subtitle1" className="font-bold!">
+                    62%
+                  </Typography>
+                </span>
+                <LinearProgress variant="determinate" value={62} />
+              </div>
+              <Button variant="contained">ورود به فروشگاه</Button>
+            </Card>
           </div>
         </div>
       </SlideUpAnimation>
