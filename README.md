@@ -284,4 +284,4 @@ This project is open-source and available under the MIT License.
 
 ## 📄 مجوز
 
-این پروژه به صورت متن‌باز (Open Source) منتشر شده و تحت مجوز MIT قابل استفاده و توسعه است.
+این پروژه به صورت متن‌باز (Open Source) منتشر نشده است.
