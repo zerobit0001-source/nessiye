@@ -12,7 +12,7 @@ from sales.models import Sale
 from sales.serializers import SaleSerializer
 from debts.models import Debt
 from debts.serializers import DebtSerializer
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Max
 from .models import User, OtpCode
 from .serializers import (
     RegisterSerializer,
@@ -364,38 +364,93 @@ class MyShopHistoryView(APIView):
             'debts': DebtSerializer(debts, many=True).data
         })
     
+# class MeView(APIView):
+#     permission_classes = [IsAuthenticated]
+# 
+#     def get(self, request):
+#         if request.user.is_shop:
+#             return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+# 
+#         customer_shops = CustomerShop.objects.filter(
+#             customer=request.user
+#         ).select_related('shop').annotate(
+#             total_amount=Sum('debts__amount'),
+#             total_paid=Sum('debts__payments__amount'),
+#             number_of_debts=Count('debts')
+#         )
+# 
+#         shops = [
+#             {
+#                 'shop_id': cs.shop.id,
+#                 'shop_name': cs.shop.shop_name,
+#                 'shop_address': cs.shop.shop_address,
+#                 'total_amount': (cs.total_amount or 0) - (cs.total_paid or 0),
+#                 'number_of_debts': cs.number_of_debts or 0
+#             }
+#             for cs in customer_shops
+#         ]
+# 
+#         total_amount = sum(s['total_amount'] for s in shops)
+#         total_debts = sum(s['number_of_debts'] for s in shops)
+# 
+#         return Response({
+#             'ok': True,
+#             'total_amount': total_amount,
+#             'number_of_debts': total_debts,
+#             'shops': shops
+#         })
+
 class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         if request.user.is_shop:
-            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'ok': False, 'error': 'این  برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
 
         customer_shops = CustomerShop.objects.filter(
             customer=request.user
         ).select_related('shop').annotate(
             total_amount=Sum('debts__amount'),
             total_paid=Sum('debts__payments__amount'),
-            number_of_debts=Count('debts')
+            open_debts=Count('debts'),
+            last_purchase=Max('debts__sale__created_at')
         )
 
-        shops = [
-            {
+        shops = []
+        total_paid_all = 0
+        total_remaining_all = 0
+        open_debts_all = 0
+
+        for cs in customer_shops:
+            total_amount = cs.total_amount or 0
+            total_paid = cs.total_paid or 0
+            remaining = total_amount - total_paid
+            open_debts = cs.open_debts or 0
+            settlement = int((total_paid / total_amount * 100)) if total_amount > 0 else 0
+
+            total_paid_all += total_paid
+            total_remaining_all += remaining
+            open_debts_all += open_debts
+
+            shops.append({
                 'shop_id': cs.shop.id,
                 'shop_name': cs.shop.shop_name,
                 'shop_address': cs.shop.shop_address,
-                'total_amount': (cs.total_amount or 0) - (cs.total_paid or 0),
-                'number_of_debts': cs.number_of_debts or 0
-            }
-            for cs in customer_shops
-        ]
-
-        total_amount = sum(s['total_amount'] for s in shops)
-        total_debts = sum(s['number_of_debts'] for s in shops)
+                'last_purchase': cs.last_purchase,
+                'open_debts_count': open_debts,
+                'total_paid': total_paid,
+                'total_remaining': remaining,
+                'settlement_percentage': settlement
+            })
 
         return Response({
             'ok': True,
-            'total_amount': total_amount,
-            'number_of_debts': total_debts,
+            'full_name': request.user.full_name,
+            'summary': {
+                'open_debts_count': open_debts_all,
+                'number_of_shops': len(shops),
+                'total_paid': total_paid_all,
+                'total_remaining': total_remaining_all
+            },
             'shops': shops
         })
