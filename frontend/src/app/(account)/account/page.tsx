@@ -2,6 +2,7 @@
 import Container from "@/components/dash/Container";
 import SlideUpAnimation from "@/components/SlideUpAnimation";
 import { useGetMeQuery } from "@/features/account/api/ApiAccount";
+import LogoutBtn from "@/features/account/components/LogoutBtn";
 import ShopsCard from "@/features/account/components/ShopsCard";
 import { useAppSelector } from "@/lib/redux/hooks";
 import ToggleThemeBtn from "@/theme/ToggleThemeBtn";
@@ -25,12 +26,15 @@ import {
   CircularProgress,
   IconButton,
   LinearProgress,
+  Modal,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import { useState } from "react";
 
 const page = () => {
   const user = useAppSelector((s) => s.userInfo);
+
   const { data, isLoading, error, isSuccess } = useGetMeQuery();
 
   if (isLoading) {
@@ -60,7 +64,7 @@ const page = () => {
             <span>
               <ToggleThemeBtn />
               <IconButton>
-                <LogoutRounded />
+                <LogoutBtn />
               </IconButton>
             </span>
           </div>
