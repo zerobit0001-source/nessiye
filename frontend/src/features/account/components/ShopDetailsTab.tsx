@@ -4,6 +4,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import ShopDetailsDebtCard from "./ShopDetailsDebtCard";
+import ShopDetailsSaleCard from "./ShopDetailsSaleCard";
+import ShopDetailsPaymentCard from "./ShopDetailsPaymentCard";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -91,10 +93,34 @@ export default function ShopDetailsTab() {
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <div className="flex flex-col gap-4">
+          <ShopDetailsSaleCard
+            id="8842"
+            createdAt="۱۴۰۳/۰۲/۱۵"
+            total={2000000}
+            itemsCount={10}
+          />
+          <ShopDetailsSaleCard
+            id="8842"
+            createdAt="۱۴۰۳/۰۲/۱۵"
+            total={2000000}
+            itemsCount={10}
+          />
+        </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        <div className="flex flex-col gap-4">
+          <ShopDetailsPaymentCard
+            id="8842"
+            amount={2000000}
+            createdAt="۱۴۰۳/۰۲/۱۵"
+          />
+          <ShopDetailsPaymentCard
+            id="8842"
+            amount={2000000}
+            createdAt="۱۴۰۳/۰۲/۱۵"
+          />
+        </div>
       </CustomTabPanel>
     </Box>
   );

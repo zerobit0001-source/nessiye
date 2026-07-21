@@ -1,45 +1,26 @@
-import { formatPrice } from "@/utils/formatters";
-import { Box, Button, Card, Chip, Stack, Typography } from "@mui/material";
-import Link from "next/link";
+import { Box, Button, Card, Stack, Typography } from "@mui/material";
+import { ReceiptLongRounded } from "@mui/icons-material";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
-interface DebtCardProps {
+interface SaleCardProps {
   id: string;
-  status: "active" | "settled" | "overdue";
-  total: number;
-  paid: number;
-  remaining: number;
   createdAt: string;
+  total: number;
+  itemsCount: number;
 }
 
-const statusConfig = {
-  active: {
-    label: "فعال",
-    color: "warning",
-  },
-  settled: {
-    label: "تسویه شده",
-    color: "success",
-  },
-  overdue: {
-    label: "سررسید شده",
-    color: "error",
-  },
-} as const;
-
-export default function ShopDetailsDebtCard({
+export default function ShopDetailsSaleCard({
   id,
-  status,
-  total,
-  paid,
-  remaining,
   createdAt,
-}: DebtCardProps) {
+  total,
+  itemsCount,
+}: SaleCardProps) {
   const pathname = usePathname();
 
   return (
     <Card
-      elevation={1}
+      elevation={0}
       sx={{
         p: 3,
         borderRadius: 4,
@@ -53,14 +34,10 @@ export default function ShopDetailsDebtCard({
         justifyContent="space-between"
         alignItems="flex-start"
       >
-        <Chip
-          label={statusConfig[status].label}
-          color={statusConfig[status].color}
-          size="small"
-        />
+        <ReceiptLongRounded color="primary" />
 
         <Box textAlign="right">
-          <Typography fontWeight={700}>شناسه بدهی: #{id}</Typography>
+          <Typography fontWeight={700}>شناسه فاکتور: #{id}</Typography>
 
           <Typography variant="caption" color="text.secondary" mt={0.5}>
             تاریخ ثبت: {createdAt}
@@ -77,6 +54,7 @@ export default function ShopDetailsDebtCard({
           px: 4,
           py: 3,
         }}
+
         className="bg-gray-100/50"
       >
         <Stack
@@ -86,37 +64,26 @@ export default function ShopDetailsDebtCard({
         >
           <Box textAlign="center" flex={1}>
             <Typography variant="caption" color="text.secondary">
-              مبلغ کل
+              مبلغ فاکتور
+            </Typography>
+
+            <Typography fontWeight={700} mt={0.5} color="primary.main">
+              {total.toLocaleString()} تومان
+            </Typography>
+          </Box>
+
+          <Box textAlign="center" flex={1}>
+            <Typography variant="caption" color="text.secondary">
+              تعداد کالا
             </Typography>
 
             <Typography fontWeight={700} mt={0.5}>
-              {formatPrice(total)}
-            </Typography>
-          </Box>
-
-          <Box textAlign="center" flex={1}>
-            <Typography variant="caption" color="text.secondary">
-              پرداخت شده
-            </Typography>
-
-            <Typography fontWeight={700} mt={0.5} color="success.main">
-              {formatPrice(paid)}
-            </Typography>
-          </Box>
-
-          <Box textAlign="center" flex={1}>
-            <Typography variant="caption" color="text.secondary">
-              باقیمانده
-            </Typography>
-
-            <Typography fontWeight={700} mt={0.5} color="error.main">
-              {formatPrice(remaining)}
+              {itemsCount} کالا
             </Typography>
           </Box>
         </Stack>
       </Box>
-
-      <Link href={`${pathname}/debt/${id}`}>
+      <Link href={`${pathname}/sale/${id}`}>
         <Button
           fullWidth
           variant="outlined"
@@ -126,7 +93,7 @@ export default function ShopDetailsDebtCard({
             fontWeight: 700,
           }}
         >
-          مشاهده جزئیات بدهی
+          مشاهده فاکتور
         </Button>
       </Link>
     </Card>
