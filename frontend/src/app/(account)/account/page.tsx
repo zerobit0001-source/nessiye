@@ -4,9 +4,12 @@ import SlideUpAnimation from "@/components/SlideUpAnimation";
 import { useGetMeQuery } from "@/features/account/api/ApiAccount";
 import ShopsCard from "@/features/account/components/ShopsCard";
 import { useAppSelector } from "@/lib/redux/hooks";
+import ToggleThemeBtn from "@/theme/ToggleThemeBtn";
 import {
   AccountBalanceWallet,
   CheckCircleOutlineRounded,
+  ChevronLeftRounded,
+  ChevronRightRounded,
   LocationOnRounded,
   LogoutRounded,
   ReceiptLongRounded,
@@ -20,11 +23,11 @@ import {
   Button,
   Card,
   CircularProgress,
-  Divider,
   IconButton,
   LinearProgress,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 
 const page = () => {
   const user = useAppSelector((s) => s.userInfo);
@@ -44,7 +47,7 @@ const page = () => {
   return (
     <Container>
       <SlideUpAnimation>
-        <div className="max-w-5xl m-auto p-4 md:p-0 flex flex-col gap-5">
+        <div className="max-w-4xl m-auto p-4 md:p-0 flex flex-col gap-5 mt-5">
           <div className="flex justify-between items-center">
             <span>
               <Typography variant="h5" className="font-bold!">
@@ -54,14 +57,17 @@ const page = () => {
                 خلاصه وضعیت حساب و بدهی‌های شما در پورتال نسیه
               </Typography>
             </span>
-            <IconButton>
-              <LogoutRounded />
-            </IconButton>
+            <span>
+              <ToggleThemeBtn />
+              <IconButton>
+                <LogoutRounded />
+              </IconButton>
+            </span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <Card
               elevation={1}
-              className="border border-red-500 bg-red-500/30! flex flex-col gap-2 rounded-xl! p-4 "
+              className="border border-red-300 bg-red-200/30! flex flex-col gap-2 rounded-xl! p-4 "
             >
               <AccountBalanceWallet color="error" />
               <span>
@@ -77,7 +83,7 @@ const page = () => {
             </Card>
             <Card
               elevation={1}
-              className="border border-green-500 bg-green-500/30! flex flex-col gap-2 rounded-xl! p-4 "
+              className="border border-green-300 bg-green-200/30! flex flex-col gap-2 rounded-xl! p-4 "
             >
               <CheckCircleOutlineRounded color="success" />
               <span>
@@ -131,8 +137,8 @@ const page = () => {
 
           <div className="flex flex-col gap-6">
             <Card
-              elevation={2}
-              className="flex flex-col p-6 gap-6 rounded-xl! border transition-all! border-gray-300 hover:border-blue-400 "
+              elevation={1}
+              className="flex flex-col p-6 gap-6 rounded-xl! border transition-all! border-gray-200 hover:border-blue-400 "
             >
               <div className="flex items-center gap-2">
                 <StorefrontRounded color="primary" />
@@ -146,8 +152,8 @@ const page = () => {
                   </Typography>
                 </span>
               </div>
-              <div className="flex items-center justify-between gap-2">
-                <div>
+              <div className="grid grid-cols-2 md:grid-cols-4 items-center justify-between gap-2 bg-gray-100/50 py-4 px-6 rounded-full ">
+                <div className="text-center">
                   <Typography variant="caption">بدهی باقیمانده</Typography>
                   <Typography
                     variant="subtitle1"
@@ -157,7 +163,7 @@ const page = () => {
                     3,200,000 تومان
                   </Typography>
                 </div>
-                <div>
+                <div className="text-center">
                   <Typography variant="caption">کل پرداختی</Typography>
                   <Typography
                     variant="subtitle1"
@@ -167,13 +173,13 @@ const page = () => {
                     8,500,000 تومان
                   </Typography>
                 </div>
-                <div>
+                <div className="text-center">
                   <Typography variant="caption">بدهی‌های باز</Typography>
                   <Typography variant="subtitle1" className="font-bold!">
                     3 فقره
                   </Typography>
                 </div>
-                <div>
+                <div className="text-center">
                   <Typography variant="caption">آخرین خرید</Typography>
                   <Typography variant="subtitle1" className="font-bold!">
                     ۱۴۰۳/۰۲/۱۵
@@ -187,9 +193,21 @@ const page = () => {
                     62%
                   </Typography>
                 </span>
-                <LinearProgress variant="determinate" value={62} />
+                <LinearProgress
+                  variant="determinate"
+                  value={62}
+                  sx={{ height: 10, borderRadius: 999 }}
+                />
               </div>
-              <Button variant="contained">ورود به فروشگاه</Button>
+              <Link href={"account/1"} className="self-end">
+                <Button
+                  variant="contained"
+                  className="rounded-lg!"
+                  endIcon={<ChevronLeftRounded />}
+                >
+                  ورود به فروشگاه
+                </Button>
+              </Link>
             </Card>
             <Card
               elevation={2}
