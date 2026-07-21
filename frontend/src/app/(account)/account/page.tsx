@@ -103,13 +103,13 @@ const page = () => {
             >
               <StorefrontRounded color="primary" />
               <span>
-                <Typography variant="caption">کل بدهی باقیمانده</Typography>
+                <Typography variant="caption">تعداد فروشگاه‌ها</Typography>
                 <Typography
                   variant="subtitle1"
                   className="font-bold!"
                   color="primary"
                 >
-                  4,850,000 تومان
+                  2
                 </Typography>
               </span>
             </Card>
@@ -119,13 +119,13 @@ const page = () => {
             >
               <ReceiptLongRounded color="warning" />
               <span>
-                <Typography variant="caption">کل بدهی باقیمانده</Typography>
+                <Typography variant="caption">بدهی‌های باز</Typography>
                 <Typography
                   variant="subtitle1"
                   className="font-bold!"
                   color="warning"
                 >
-                  4,850,000 تومان
+                  5 فقره
                 </Typography>
               </span>
             </Card>
