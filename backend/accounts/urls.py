@@ -11,6 +11,10 @@ from .views import (
     MyShopsView,
     MyShopHistoryView,
     MeView,
+    MyShopDebtsView,
+    MyShopSalesView,
+    MyShopDetailView,
+    MyShopPaymentsView
 )
 
 urlpatterns = [
