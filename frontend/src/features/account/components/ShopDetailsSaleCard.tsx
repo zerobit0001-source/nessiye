@@ -2,20 +2,14 @@ import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import { ReceiptLongRounded } from "@mui/icons-material";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { SaleType } from "@/types/types";
+import { formatDate, formatPrice } from "@/utils/formatters";
 
 interface SaleCardProps {
-  id: string;
-  createdAt: string;
-  total: number;
-  itemsCount: number;
+  sale: SaleType;
 }
 
-export default function ShopDetailsSaleCard({
-  id,
-  createdAt,
-  total,
-  itemsCount,
-}: SaleCardProps) {
+export default function ShopDetailsSaleCard({ sale }: SaleCardProps) {
   const pathname = usePathname();
 
   return (
@@ -37,10 +31,10 @@ export default function ShopDetailsSaleCard({
         <ReceiptLongRounded color="primary" />
 
         <Box textAlign="right">
-          <Typography fontWeight={700}>شناسه فاکتور: #{id}</Typography>
+          <Typography fontWeight={700}>شناسه فاکتور: #{sale.id}</Typography>
 
           <Typography variant="caption" color="text.secondary" mt={0.5}>
-            تاریخ ثبت: {createdAt}
+            تاریخ ثبت: {formatDate(sale.created_at)}
           </Typography>
         </Box>
       </Stack>
@@ -68,7 +62,7 @@ export default function ShopDetailsSaleCard({
             </Typography>
 
             <Typography fontWeight={700} mt={0.5} color="primary.main">
-              {total.toLocaleString()} تومان
+              {formatPrice(sale.total)} تومان
             </Typography>
           </Box>
 
@@ -78,12 +72,12 @@ export default function ShopDetailsSaleCard({
             </Typography>
 
             <Typography fontWeight={700} mt={0.5}>
-              {itemsCount} کالا
+              {sale.items.length} کالا
             </Typography>
           </Box>
         </Stack>
       </Box>
-      <Link href={`${pathname}/sale/${id}`}>
+      <Link href={`${pathname}/sale/${sale.id}`}>
         <Button
           fullWidth
           variant="outlined"

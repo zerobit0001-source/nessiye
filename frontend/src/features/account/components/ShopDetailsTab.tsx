@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import ShopDetailsDebtCard from "./ShopDetailsDebtCard";
 import ShopDetailsSaleCard from "./ShopDetailsSaleCard";
 import ShopDetailsPaymentCard from "./ShopDetailsPaymentCard";
+import { DebtType, SaleType } from "@/types/types";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -36,7 +37,12 @@ function a11yProps(index: number) {
   };
 }
 
-export default function ShopDetailsTab() {
+interface ShopDetailsProps {
+  debts: DebtType[];
+  sales: SaleType[];
+}
+
+export default function ShopDetailsTab({ debts, sales }: ShopDetailsProps) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -58,54 +64,16 @@ export default function ShopDetailsTab() {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <div className="flex flex-col gap-4">
-          <ShopDetailsDebtCard
-            id="8842"
-            status="overdue"
-            total={2000000}
-            paid={500000}
-            remaining={1500000}
-            createdAt="۱۴۰۳/۰۲/۱۵"
-          />
-          <ShopDetailsDebtCard
-            id="8842"
-            status="overdue"
-            total={2000000}
-            paid={500000}
-            remaining={1500000}
-            createdAt="۱۴۰۳/۰۲/۱۵"
-          />
-          <ShopDetailsDebtCard
-            id="8842"
-            status="overdue"
-            total={2000000}
-            paid={500000}
-            remaining={1500000}
-            createdAt="۱۴۰۳/۰۲/۱۵"
-          />
-          <ShopDetailsDebtCard
-            id="8842"
-            status="overdue"
-            total={2000000}
-            paid={500000}
-            remaining={1500000}
-            createdAt="۱۴۰۳/۰۲/۱۵"
-          />
+          {debts.map((debt) => (
+            <ShopDetailsDebtCard key={debt.id} debt={debt} />
+          ))}
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <div className="flex flex-col gap-4">
-          <ShopDetailsSaleCard
-            id="8842"
-            createdAt="۱۴۰۳/۰۲/۱۵"
-            total={2000000}
-            itemsCount={10}
-          />
-          <ShopDetailsSaleCard
-            id="8842"
-            createdAt="۱۴۰۳/۰۲/۱۵"
-            total={2000000}
-            itemsCount={10}
-          />
+          {sales.map((sale) => (
+            <ShopDetailsSaleCard key={sale.id} sale={sale} />
+          ))}
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>

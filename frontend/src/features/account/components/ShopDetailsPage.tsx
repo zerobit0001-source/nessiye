@@ -92,7 +92,7 @@ const ShopDetailsPage = ({
           <ShopStatusFilter />
 
           {/* Tabs */}
-          <ShopDetailsTab />
+          <ShopDetailsTab debts={debts} sales={sales} />
         </div>
       </SlideUpAnimation>
     </Container>

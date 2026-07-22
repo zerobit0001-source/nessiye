@@ -1,15 +1,11 @@
-import { formatPrice } from "@/utils/formatters";
+import { DebtType } from "@/types/types";
+import { formatDate, formatPrice } from "@/utils/formatters";
 import { Box, Button, Card, Chip, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface DebtCardProps {
-  id: string;
-  status: "active" | "settled" | "overdue";
-  total: number;
-  paid: number;
-  remaining: number;
-  createdAt: string;
+  debt: DebtType;
 }
 
 const statusConfig = {
@@ -27,14 +23,7 @@ const statusConfig = {
   },
 } as const;
 
-export default function ShopDetailsDebtCard({
-  id,
-  status,
-  total,
-  paid,
-  remaining,
-  createdAt,
-}: DebtCardProps) {
+export default function ShopDetailsDebtCard({ debt }: DebtCardProps) {
   const pathname = usePathname();
 
   return (
@@ -54,16 +43,16 @@ export default function ShopDetailsDebtCard({
         alignItems="flex-start"
       >
         <Chip
-          label={statusConfig[status].label}
-          color={statusConfig[status].color}
+          label={debt.is_paid ? "پرداخت شده" : "پرداخت نشده"}
+          color={debt.is_paid ? "success" : "error"}
           size="small"
         />
 
         <Box textAlign="right">
-          <Typography fontWeight={700}>شناسه بدهی: #{id}</Typography>
+          <Typography fontWeight={700}>شناسه بدهی: #{debt.debt_id}</Typography>
 
           <Typography variant="caption" color="text.secondary" mt={0.5}>
-            تاریخ ثبت: {createdAt}
+            تاریخ ثبت: {formatDate(debt.created_at)}
           </Typography>
         </Box>
       </Stack>
@@ -90,7 +79,7 @@ export default function ShopDetailsDebtCard({
             </Typography>
 
             <Typography fontWeight={700} mt={0.5}>
-              {formatPrice(total)}
+              {formatPrice(debt.amount)}
             </Typography>
           </Box>
 
@@ -100,7 +89,7 @@ export default function ShopDetailsDebtCard({
             </Typography>
 
             <Typography fontWeight={700} mt={0.5} color="success.main">
-              {formatPrice(paid)}
+              {formatPrice(debt.paid_amount)}
             </Typography>
           </Box>
 
@@ -110,13 +99,13 @@ export default function ShopDetailsDebtCard({
             </Typography>
 
             <Typography fontWeight={700} mt={0.5} color="error.main">
-              {formatPrice(remaining)}
+              {formatPrice(debt.remaining)}
             </Typography>
           </Box>
         </Stack>
       </Box>
 
-      <Link href={`${pathname}/debt/${id}`}>
+      <Link href={`${pathname}/debt/${debt.id}`}>
         <Button
           fullWidth
           variant="outlined"
