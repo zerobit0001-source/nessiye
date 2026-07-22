@@ -28,4 +28,8 @@ urlpatterns = [
     path('my_shops/', MyShopsView.as_view()),
     path('my_shops/<int:shop_id>/history/', MyShopHistoryView.as_view()),
     path('me/', MeView.as_view()),
+    path('me/shops/<int:shop_id>/', MyShopDetailView.as_view()),
+    path('me/shops/<int:shop_id>/debts/', MyShopDebtsView.as_view()),
+    path('me/shops/<int:shop_id>/sales/', MyShopSalesView.as_view()),
+    path('me/shops/<int:shop_id>/payments/', MyShopPaymentsView.as_view()),
 ]
