@@ -12,8 +12,9 @@ from sales.models import Sale
 from sales.serializers import SaleSerializer
 from debts.models import Debt
 from debts.serializers import DebtSerializer
-from django.db.models import Sum, Count, Max
+from django.db.models import Sum, Count, Max, F, IntegerField, ExpressionWrapper
 from .models import User, OtpCode
+from config.pagination import StandardPagination
 from .serializers import (
     RegisterSerializer,
     RegisterVerifyCodeSerializer,
@@ -454,3 +455,143 @@ class MeView(APIView):
             },
             'shops': shops
         })
+
+class MyShopDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, shop_id):
+        if request.user.is_shop:
+            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            cs = CustomerShop.objects.select_related('shop').annotate(
+                total_amount=Sum('debts__amount'),
+                total_paid=Sum('debts__payments__amount'),
+                open_debts=Count('debts'),
+                last_purchase=Max('debts__sale__created_at')
+            ).get(shop_id=shop_id, customer=request.user)
+        except CustomerShop.DoesNotExist:
+            return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        total_amount = cs.total_amount or 0
+        total_paid = cs.total_paid or 0
+        remaining = total_amount - total_paid
+        settlement = int((total_paid / total_amount * 100)) if total_amount > 0 else 0
+
+        return Response({
+            'ok': True,
+            'shop': {
+                'shop_id': cs.shop.id,
+                'shop_name': cs.shop.shop_name,
+                'shop_address': cs.shop.shop_address,
+                'last_purchase': cs.last_purchase,
+                'open_debts_count': cs.open_debts or 0,
+                'total_paid': total_paid,
+                'total_remaining': remaining,
+                'settlement_percentage': settlement
+            }
+        })
+
+
+class MyShopDebtsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, shop_id):
+        if request.user.is_shop:
+            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            cs = CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
+        except CustomerShop.DoesNotExist:
+            return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        debts = Debt.objects.filter(customer=cs).prefetch_related('payments')
+
+        result = [
+            {
+                'id': d.id,
+                'debt_id': d.debt_id,
+                'total_amount': d.amount,
+                'paid_amount': d.paid_amount,
+                'remaining': d.remaining,
+                'is_paid': d.is_paid,
+                'created_at': d.created_at
+            }
+            for d in debts
+        ]
+
+        paginator = StandardPagination()
+        page = paginator.paginate_queryset(result, request)
+        return paginator.get_paginated_response(page)
+
+
+class MyShopSalesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, shop_id):
+        if request.user.is_shop:
+            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
+        except CustomerShop.DoesNotExist:
+            return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        sales = Sale.objects.filter(
+            shop_id=shop_id,
+            customer=request.user
+        ).annotate(
+            total=Sum(
+                ExpressionWrapper(
+                    F('items__price') * F('items__quantity'),
+                    output_field=IntegerField()
+                )
+            )
+        )
+
+        result = [
+            {
+                'id': s.id,
+                'total': s.total or 0,
+                'is_debt': s.is_debt,
+                'created_at': s.created_at
+            }
+            for s in sales
+        ]
+
+        paginator = StandardPagination()
+        page = paginator.paginate_queryset(result, request)
+        return paginator.get_paginated_response(page)
+
+
+class MyShopPaymentsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, shop_id):
+        if request.user.is_shop:
+            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            cs = CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
+        except CustomerShop.DoesNotExist:
+            return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        from debts.models import Payment
+        payments = Payment.objects.filter(
+            debt__customer=cs
+        ).select_related('debt')
+
+        result = [
+            {
+                'id': p.id,
+                'payment_id': p.payment_id,
+                'debt_id': p.debt.debt_id,
+                'amount': p.amount,
+                'created_at': p.created_at
+            }
+            for p in payments
+        ]
+
+        paginator = StandardPagination()
+        page = paginator.paginate_queryset(result, request)
+        return paginator.get_paginated_response(page)
