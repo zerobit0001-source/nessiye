@@ -1,31 +1,56 @@
-import { GetMeResponse, GetShopDetailResponse } from "@/types/ApiResponesesType";
+import {
+  GetDebtsResponeseType,
+  GetMeResponse,
+  GetSalesResponesType,
+  GetShopDetailResponse,
+} from "@/types/ApiResponesesType";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const ApiAccount = createApi({
-    reducerPath: "ApiAccount",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "/api/",
-        credentials: "include",
+  reducerPath: "ApiAccount",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "/api/",
+    credentials: "include",
+  }),
+  tagTypes: ["Shops", "Shop", "Shop/Debts", "Shop/Sales"],
+  endpoints: (builder) => ({
+    getProfile: builder.query<
+      {
+        ok: boolean;
+        phone_number: string;
+        full_name: string;
+        is_shop: boolean;
+        shop_name: string;
+        shop_address: string;
+      },
+      void
+    >({
+      query: () => "account/profile/",
+      providesTags: ["Shops"],
     }),
-    tagTypes: ["Shops", "Shop"],
-    endpoints: (builder) => ({
-        getProfile: builder.query<{ ok: boolean, phone_number: string, full_name: string, is_shop: boolean, shop_name: string, shop_address: string }, void>({
-            query: () => "account/profile/",
-            providesTags: ["Shops"]
-        }),
-        getMe: builder.query<GetMeResponse, void>({
-            query: () => "account/me",
-            providesTags: ["Shops"]
-        }),
-        getShop: builder.query<GetShopDetailResponse, string>({
-            query: (id) => `account/my_shops/${id}/history`,
-            providesTags: ["Shop"]
-        })
-    })
+    getMe: builder.query<GetMeResponse, void>({
+      query: () => "account/me",
+      providesTags: ["Shops"],
+    }),
+    getShop: builder.query<GetShopDetailResponse, string>({
+      query: (id) => `account/me/shops/${id}`,
+      providesTags: ["Shop"],
+    }),
+    getShopDebts: builder.query<GetDebtsResponeseType, number>({
+      query: (id) => `account/me/shops/${id}/debts`,
+      providesTags: ["Shop/Debts"],
+    }),
+    getShopSales: builder.query<GetSalesResponesType, number>({
+      query: (id) => `account/me/shops/${id}/sales`,
+      providesTags: ["Shop/Sales"],
+    }),
+  }),
 });
 
 export const {
-    useLazyGetProfileQuery,
-    useGetMeQuery,
-    useGetShopQuery
+  useLazyGetProfileQuery,
+  useGetMeQuery,
+  useGetShopQuery,
+  useGetShopDebtsQuery,
+  useGetShopSalesQuery,
 } = ApiAccount;

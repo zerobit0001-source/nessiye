@@ -119,6 +119,16 @@ export interface ShopType {
   last_purchase: string;
   settlement_percentage: number;
 }
+export interface ShopDetailType {
+  shop_id: number;
+  shop_name: string;
+  shop_address: string;
+  open_debts_count: number;
+  total_paid: number;
+  total_remaining: number;
+  last_purchase: string;
+  settlement_percentage: number;
+}
 
 // modals
 export interface ModalCustomersType {

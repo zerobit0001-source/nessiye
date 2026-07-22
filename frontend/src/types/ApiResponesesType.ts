@@ -12,6 +12,7 @@ import {
   ProductType,
   SalesListType,
   SaleType,
+  ShopDetailType,
   ShopType,
 } from "./types";
 
@@ -107,14 +108,7 @@ export interface GetMeResponse {
 }
 export interface GetShopDetailResponse {
   ok: boolean;
-  sales: SaleType[];
-  debts: DebtType[];
-  summary: {
-    total_purchase: number;
-    total_debt: number;
-    total_paid: number;
-    total_remaining: number;
-  };
+  shop: ShopDetailType;
 }
 
 // payment

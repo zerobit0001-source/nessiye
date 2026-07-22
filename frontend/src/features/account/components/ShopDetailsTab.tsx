@@ -7,6 +7,7 @@ import ShopDetailsDebtCard from "./ShopDetailsDebtCard";
 import ShopDetailsSaleCard from "./ShopDetailsSaleCard";
 import ShopDetailsPaymentCard from "./ShopDetailsPaymentCard";
 import { DebtType, SaleType } from "@/types/types";
+import { useGetShopDebtsQuery, useGetShopSalesQuery } from "../api/ApiAccount";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -38,12 +39,22 @@ function a11yProps(index: number) {
 }
 
 interface ShopDetailsProps {
-  debts: DebtType[];
-  sales: SaleType[];
+  shopId: number;
 }
 
-export default function ShopDetailsTab({ debts, sales }: ShopDetailsProps) {
+export default function ShopDetailsTab({ shopId }: ShopDetailsProps) {
   const [value, setValue] = React.useState(0);
+
+  const {
+    data: debts,
+    isLoading: loadingDebts,
+    error: errorDebts,
+  } = useGetShopDebtsQuery(shopId);
+  const {
+    data: sales,
+    isLoading: loadingSales,
+    error: errorSales,
+  } = useGetShopSalesQuery(shopId);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -64,14 +75,14 @@ export default function ShopDetailsTab({ debts, sales }: ShopDetailsProps) {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <div className="flex flex-col gap-4">
-          {debts.map((debt) => (
+          {debts?.results.map((debt) => (
             <ShopDetailsDebtCard key={debt.id} debt={debt} />
           ))}
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <div className="flex flex-col gap-4">
-          {sales.map((sale) => (
+          {sales?.results.map((sale) => (
             <ShopDetailsSaleCard key={sale.id} sale={sale} />
           ))}
         </div>

@@ -43,10 +43,15 @@ const ShopDetailsPage = ({
     return <p>something went wrong</p>;
   }
 
-  const debts = isSuccess ? data.debts : [];
-  const sales = isSuccess ? data.sales : [];
+  // const debts = isSuccess ? data.debts : [];
+  // const sales = isSuccess ? data.sales : [];
   const summary = isSuccess
-    ? data.summary
+    ? {
+        total_purchase: data.shop.total_purchase,
+        total_debt: data.shop.total_debt,
+        total_paid: data.shop.total_paid,
+        total_remaining: data.shop.total_remaining,
+      }
     : {
         total_purchase: 0,
         total_debt: 0,
@@ -75,11 +80,11 @@ const ShopDetailsPage = ({
             className="rounded-xl! p-6 border border-gray-200"
           >
             <Typography variant="h6" className="font-bold!">
-              سوپرمارکت آنلاین کوروش (شعبه سعادت‌آباد)
+              {data?.shop.shop_name}
             </Typography>
             <Typography variant="caption">
-              <LocationOnRounded color="disabled" fontSize="small" /> تهران،
-              سعادت‌آباد، بلوار پاکنژاد، پلاک ۱۲
+              <LocationOnRounded color="disabled" fontSize="small" />
+              {data?.shop.shop_address}
             </Typography>
           </Card>
 
@@ -92,7 +97,7 @@ const ShopDetailsPage = ({
           <ShopStatusFilter />
 
           {/* Tabs */}
-          <ShopDetailsTab debts={debts} sales={sales} />
+          <ShopDetailsTab shopId={shopId} />
         </div>
       </SlideUpAnimation>
     </Container>

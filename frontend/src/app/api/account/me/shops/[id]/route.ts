@@ -1,9 +1,14 @@
 import { authenticatedFetch } from "@/lib/authenticatedFetch";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
-    const result = await authenticatedFetch("accounts/me/");
+    const { id } = await params;
+
+    const result = await authenticatedFetch(`accounts/me/shops/${id}/`);
 
     if (!result || result.response.status == 401) {
       return NextResponse.json(
