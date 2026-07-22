@@ -96,15 +96,25 @@ export interface GetCustomerDetailsResponse {
 // account
 export interface GetMeResponse {
   ok: boolean;
-  total_amount: number;
-  number_of_debts: number;
-
+  full_name: string;
   shops: ShopType[];
+  summary: {
+    total_paid: number;
+    total_remaining: number;
+    open_debts_count: number;
+    number_of_shops: number;
+  };
 }
 export interface GetShopDetailResponse {
   ok: boolean;
   sales: SaleType[];
   debts: DebtType[];
+  summary: {
+    total_purchase: number;
+    total_debt: number;
+    total_paid: number;
+    total_remaining: number;
+  };
 }
 
 // payment

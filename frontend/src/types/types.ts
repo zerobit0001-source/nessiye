@@ -113,7 +113,11 @@ export interface ShopType {
   shop_name: string;
   shop_address: string;
   total_amount: number;
-  number_of_debts: number;
+  open_debts_count: number;
+  total_paid: number;
+  total_remaining: number;
+  last_purchase: string;
+  settlement_percentage: number;
 }
 
 // modals
@@ -174,7 +178,6 @@ export interface ActivityType {
   action: "create" | "update" | "delete";
   created_at: string;
   entity: "customer" | "product" | "debt" | "sale" | "payment";
-  title: string,
+  title: string;
   object_id: number;
-  
 }

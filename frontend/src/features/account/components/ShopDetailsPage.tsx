@@ -25,26 +25,36 @@ import {
 } from "@mui/icons-material";
 import ShopStatusFilter from "./ShopStatusFilter";
 import ShopDetailsTab from "./ShopDetailsTab";
+import ShopDetailsPageCards from "./ShopDetailsPageCards";
 
 const ShopDetailsPage = ({
-  id,
+  shopId,
   status,
 }: {
-  id: string;
+  shopId: string;
   status?: "active" | "settled" | "overdue";
 }) => {
-  // const user = useAppSelector((s) => s.userInfo);
-  // const { data, isLoading, error, isSuccess } = useGetShopQuery(id);
+  const { data, isLoading, error, isSuccess } = useGetShopQuery(shopId);
 
-  // if (isLoading) {
-  //     return <CircularProgress />;
-  // }
-  // if (error) {
-  //     return <p>something went wrong</p>;
-  // }
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+  if (error) {
+    return <p>something went wrong</p>;
+  }
 
-  // const debts = isSuccess ? data.debts : [];
-  // const sales = isSuccess ? data.sales : [];
+  const debts = isSuccess ? data.debts : [];
+  const sales = isSuccess ? data.sales : [];
+  const summary = isSuccess
+    ? data.summary
+    : {
+        total_purchase: 0,
+        total_debt: 0,
+        total_paid: 0,
+        total_remaining: 0,
+      };
+
+  console.log(data);
 
   return (
     <Container>
@@ -75,51 +85,7 @@ const ShopDetailsPage = ({
 
           {/* Customer Cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <Card
-              elevation={1}
-              className="border border-red-300 bg-red-200/30! flex flex-col gap-2 rounded-xl! p-4 "
-            >
-              <span>
-                <Typography variant="caption">کل بدهی باقیمانده</Typography>
-                <Typography
-                  variant="subtitle1"
-                  className="font-bold!"
-                  color="error"
-                >
-                  4,850,000 تومان
-                </Typography>
-              </span>
-            </Card>
-            <Card
-              elevation={1}
-              className="border border-green-300 bg-green-200/30! flex flex-col gap-2 rounded-xl! p-4 "
-            >
-              <span>
-                <Typography variant="caption">کل مبلغ پرداختی</Typography>
-                <Typography
-                  variant="subtitle1"
-                  className="font-bold!"
-                  color="success"
-                >
-                  12,400,000 تومان
-                </Typography>
-              </span>
-            </Card>
-            <Card
-              elevation={1}
-              className="flex flex-col gap-2 rounded-xl! p-4 col-span-full md:col-span-1 border border-gray-200 "
-            >
-              <span>
-                <Typography variant="caption">مجموع کل خریدها</Typography>
-                <Typography
-                  variant="subtitle1"
-                  className="font-bold!"
-                  color="primary"
-                >
-                  11,700,000 تومان
-                </Typography>
-              </span>
-            </Card>
+            <ShopDetailsPageCards summary={summary} />
           </div>
 
           {/* Filter boxs */}
@@ -127,9 +93,6 @@ const ShopDetailsPage = ({
 
           {/* Tabs */}
           <ShopDetailsTab />
-
-          
-          
         </div>
       </SlideUpAnimation>
     </Container>

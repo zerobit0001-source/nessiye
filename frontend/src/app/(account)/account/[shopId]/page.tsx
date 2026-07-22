@@ -6,15 +6,15 @@ const page = async ({
   params,
   searchParams,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ shopId: string }>;
   searchParams: Promise<{ status: "active" | "settled" | "overdue" }>;
 }) => {
-  const { id } = await params;
+  const { shopId } = await params;
   const { status } = await searchParams;
 
-  log(id, status);
+  log(shopId, status);
 
-  return <ShopDetailsPage id={id} status={status} />;
+  return <ShopDetailsPage shopId={shopId} status={status} />;
 };
 
 export default page;
