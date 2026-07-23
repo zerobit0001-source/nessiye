@@ -79,7 +79,7 @@ export default function ShopDetailsDebtCard({ debt }: DebtCardProps) {
             </Typography>
 
             <Typography fontWeight={700} mt={0.5}>
-              {formatPrice(debt.amount)}
+              {formatPrice(debt.total_amount)}
             </Typography>
           </Box>
 

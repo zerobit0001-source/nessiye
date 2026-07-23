@@ -1,6 +1,7 @@
 import {
   GetDebtsResponeseType,
   GetMeResponse,
+  GetPaymentsResponse,
   GetSalesResponesType,
   GetShopDetailResponse,
 } from "@/types/ApiResponesesType";
@@ -42,6 +43,10 @@ export const ApiAccount = createApi({
     }),
     getShopSales: builder.query<GetSalesResponesType, number>({
       query: (id) => `account/me/shops/${id}/sales`,
+      providesTags: ["Shop/Sales"],
+    }),
+    getShopPayments: builder.query<GetPaymentsResponse, number>({
+      query: (id) => `account/me/shops/${id}/payments`,
       providesTags: ["Shop/Sales"],
     }),
   }),

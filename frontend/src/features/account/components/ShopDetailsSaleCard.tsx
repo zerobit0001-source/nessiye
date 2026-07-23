@@ -72,7 +72,7 @@ export default function ShopDetailsSaleCard({ sale }: SaleCardProps) {
             </Typography>
 
             <Typography fontWeight={700} mt={0.5}>
-              {sale.items.length} کالا
+              {3} کالا
             </Typography>
           </Box>
         </Stack>

@@ -8,6 +8,7 @@ import ShopDetailsSaleCard from "./ShopDetailsSaleCard";
 import ShopDetailsPaymentCard from "./ShopDetailsPaymentCard";
 import { DebtType, SaleType } from "@/types/types";
 import { useGetShopDebtsQuery, useGetShopSalesQuery } from "../api/ApiAccount";
+import { useGetPaymentsQuery } from "@/features/dashboard/childs/payments/api/ApiPayment";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -55,10 +56,14 @@ export default function ShopDetailsTab({ shopId }: ShopDetailsProps) {
     isLoading: loadingSales,
     error: errorSales,
   } = useGetShopSalesQuery(shopId);
+  const { } = useGetPaymentsQuery(shopId)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  console.log("this is customers debts : ", debts);
+  console.log("this is customers sales : ", sales);
 
   return (
     <Box sx={{ width: "100%" }}>
