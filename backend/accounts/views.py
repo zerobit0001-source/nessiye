@@ -669,3 +669,32 @@ class MyShopSaleDetailView(APIView):
                 ]
             }
         })
+
+class MyShopPaymentDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, shop_id, payment_id):
+        if request.user.is_shop:
+            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            cs = CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
+        except CustomerShop.DoesNotExist:
+            return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        from debts.models import Payment
+        try:
+            payment = Payment.objects.select_related('debt').get(payment_id=payment_id, debt__customer=cs)
+        except Payment.DoesNotExist:
+            return Response({'ok': False, 'error': 'پرداخت یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({
+            'ok': True,
+            'payment': {
+                'id': payment.id,
+                'payment_id': payment.payment_id,
+                'debt_id': payment.debt.debt_id,
+                'amount': payment.amount,
+                'created_at': payment.created_at
+            }
+        })

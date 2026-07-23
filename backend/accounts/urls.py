@@ -17,6 +17,7 @@ from .views import (
     MyShopDetailView,
     MyShopPaymentsView,
     MyShopSaleDetailView,
+    MyShopPaymentDetailView,
 )
 
 urlpatterns = [
@@ -35,5 +36,6 @@ urlpatterns = [
     path('me/shops/<int:shop_id>/sales/', MyShopSalesView.as_view()),
     path('me/shops/<int:shop_id>/payments/', MyShopPaymentsView.as_view()),
     path('me/shops/<int:shop_id>/debts/<str:debt_id>/', MyShopDebtDetailView.as_view()),
-    path('me/shops/<int:shop_id>/debts/sales/<int:sale_id>/', MyShopSaleDetailView.as_view()),
+    path('me/shops/<int:shop_id>/sales/<int:sale_id>/', MyShopSaleDetailView.as_view()),
+    path('me/shops/<int:shop_id>/payments/<int:payment_id>/', MyShopPaymentDetailView.as_view()),
 ]
