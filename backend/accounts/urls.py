@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    MyShopDebtDetailView,
     RegisterView,
     RegisterVerifyCodeView,
     LoginView,
@@ -32,4 +33,5 @@ urlpatterns = [
     path('me/shops/<int:shop_id>/debts/', MyShopDebtsView.as_view()),
     path('me/shops/<int:shop_id>/sales/', MyShopSalesView.as_view()),
     path('me/shops/<int:shop_id>/payments/', MyShopPaymentsView.as_view()),
+    path('me/shops/<int:shop_id>/debts/<str:debt_id>/', MyShopDebtDetailView.as_view()),
 ]
