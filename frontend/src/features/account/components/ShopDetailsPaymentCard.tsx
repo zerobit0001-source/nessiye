@@ -1,26 +1,13 @@
-import {
-  Box,
-  Button,
-  Card,
-  Chip,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, Chip, Stack, Typography } from "@mui/material";
 import { PaymentsRounded } from "@mui/icons-material";
+import { PaymentType } from "@/types/types";
+import { formatDate, formatPrice } from "@/utils/formatters";
 
 interface PaymentCardProps {
-  id: string;
-  amount: number;
-  createdAt: string;
-  method?: string;
+  payment: PaymentType;
 }
 
-export default function ShopDetailsPaymentCard({
-  id,
-  amount,
-  createdAt,
-  method = "پرداخت نقدی",
-}: PaymentCardProps) {
+export default function ShopDetailsPaymentCard({ payment }: PaymentCardProps) {
   return (
     <Card
       elevation={0}
@@ -45,16 +32,10 @@ export default function ShopDetailsPaymentCard({
         />
 
         <Box textAlign="right">
-          <Typography fontWeight={700}>
-            شناسه پرداخت: #{id}
-          </Typography>
+          <Typography fontWeight={700}>شناسه پرداخت: #{payment.payment_id}</Typography>
 
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            mt={0.5}
-          >
-            تاریخ پرداخت: {createdAt}
+          <Typography variant="caption" color="text.secondary" mt={0.5}>
+            تاریخ پرداخت: {formatDate(payment.created_at)}
           </Typography>
         </Box>
       </Stack>
@@ -76,35 +57,22 @@ export default function ShopDetailsPaymentCard({
           justifyContent="space-between"
         >
           <Box textAlign="center" flex={1}>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-            >
+            <Typography variant="caption" color="text.secondary">
               مبلغ پرداخت
             </Typography>
 
-            <Typography
-              fontWeight={700}
-              mt={0.5}
-              color="success.main"
-            >
-              {amount.toLocaleString()} تومان
+            <Typography fontWeight={700} mt={0.5} color="success.main">
+              {formatPrice(payment.amount)} تومان
             </Typography>
           </Box>
 
           <Box textAlign="center" flex={1}>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-            >
+            <Typography variant="caption" color="text.secondary">
               روش پرداخت
             </Typography>
 
-            <Typography
-              fontWeight={700}
-              mt={0.5}
-            >
-              {method}
+            <Typography fontWeight={700} mt={0.5}>
+              {payment.method ? payment.method : "نامشخص"}
             </Typography>
           </Box>
         </Stack>

@@ -13,7 +13,7 @@ export const ApiAccount = createApi({
     baseUrl: "/api/",
     credentials: "include",
   }),
-  tagTypes: ["Shops", "Shop", "Shop/Debts", "Shop/Sales"],
+  tagTypes: ["Shops", "Shop", "Shop/Debts", "Shop/Sales", "Shop/Payments"],
   endpoints: (builder) => ({
     getProfile: builder.query<
       {
@@ -47,7 +47,7 @@ export const ApiAccount = createApi({
     }),
     getShopPayments: builder.query<GetPaymentsResponse, number>({
       query: (id) => `account/me/shops/${id}/payments`,
-      providesTags: ["Shop/Sales"],
+      providesTags: ["Shop/Payments"],
     }),
   }),
 });
@@ -58,4 +58,5 @@ export const {
   useGetShopQuery,
   useGetShopDebtsQuery,
   useGetShopSalesQuery,
+  useGetShopPaymentsQuery,
 } = ApiAccount;
