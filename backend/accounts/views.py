@@ -601,7 +601,7 @@ class MyShopDebtDetailView(APIView):
 
     def get(self, request, shop_id, debt_id):
         if request.user.is_shop:
-            return Response({'ok': False, 'error': 'این endpoint برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             cs = CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
@@ -631,6 +631,41 @@ class MyShopDebtDetailView(APIView):
                         'created_at': p.created_at
                     }
                     for p in debt.payments.all()
+                ]
+            }
+        })
+
+class MyShopSaleDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, shop_id, sale_id):
+        if request.user.is_shop:
+            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            cs = CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
+        except CustomerShop.DoesNotExist:
+            return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            sale = Sale.objects.prefetch_related('items__product').get(id=sale_id, customer=request.user, shop_id=shop_id)
+        except Sale.DoesNotExist:
+            return Response({'ok': False, 'error': 'فروش یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({
+            'ok': True,
+            'sale': {
+                'id': sale.id,
+                'total': sum(item.price * item.quantity for item in sale.items.all()),
+                'is_debt': sale.is_debt,
+                'created_at': sale.created_at,
+                'items': [
+                    {
+                        'product_name': item.product.name,
+                        'price': item.price,
+                        'quantity': item.quantity
+                    }
+                    for item in sale.items.all()
                 ]
             }
         })
