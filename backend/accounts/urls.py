@@ -15,7 +15,8 @@ from .views import (
     MyShopDebtsView,
     MyShopSalesView,
     MyShopDetailView,
-    MyShopPaymentsView
+    MyShopPaymentsView,
+    MyShopSaleDetailView,
 )
 
 urlpatterns = [
@@ -34,4 +35,5 @@ urlpatterns = [
     path('me/shops/<int:shop_id>/sales/', MyShopSalesView.as_view()),
     path('me/shops/<int:shop_id>/payments/', MyShopPaymentsView.as_view()),
     path('me/shops/<int:shop_id>/debts/<str:debt_id>/', MyShopDebtDetailView.as_view()),
+    path('me/shops/<int:shop_id>/debts/sales/<int:sale_id>/', MyShopSaleDetailView.as_view()),
 ]
