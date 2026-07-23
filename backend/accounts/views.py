@@ -595,3 +595,42 @@ class MyShopPaymentsView(APIView):
         paginator = StandardPagination()
         page = paginator.paginate_queryset(result, request)
         return paginator.get_paginated_response(page)
+
+class MyShopDebtDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, shop_id, debt_id):
+        if request.user.is_shop:
+            return Response({'ok': False, 'error': 'این endpoint برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            cs = CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
+        except CustomerShop.DoesNotExist:
+            return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            debt = Debt.objects.prefetch_related('payments').get(debt_id=debt_id, customer=cs)
+        except Debt.DoesNotExist:
+            return Response({'ok': False, 'error': 'بدهی یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({
+            'ok': True,
+            'debt': {
+                'id': debt.id,
+                'debt_id': debt.debt_id,
+                'total_amount': debt.amount,
+                'paid_amount': debt.paid_amount,
+                'remaining': debt.remaining,
+                'is_paid': debt.is_paid,
+                'created_at': debt.created_at,
+                'payments': [
+                    {
+                        'id': p.id,
+                        'payment_id': p.payment_id,
+                        'amount': p.amount,
+                        'created_at': p.created_at
+                    }
+                    for p in debt.payments.all()
+                ]
+            }
+        })
