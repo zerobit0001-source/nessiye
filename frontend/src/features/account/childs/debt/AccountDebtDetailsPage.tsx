@@ -6,25 +6,39 @@ import { useGetDebtByIdQuery } from "@/features/dashboard/childs/sales/api/ApiSa
 import {
   ChevronRightRounded,
   HistoryRounded,
-  Link,
   LocalMall,
 } from "@mui/icons-material";
 import { Card, Chip, Divider, Typography } from "@mui/material";
+import { useGetShopDebtDetailsQuery } from "../../api/ApiAccount";
+import { formatDate } from "@/utils/formatters";
+import Link from "next/link";
 
-export default function AccountDebtDetailsPage({ debtId }: { debtId: number }) {
+export default function AccountDebtDetailsPage({
+  debtId,
+  shopId,
+}: {
+  debtId: string;
+  shopId: number;
+}) {
   const id = debtId;
-  const { data: debt, isLoading, error } = useGetDebtByIdQuery(id);
+  const { data, isLoading, error, isSuccess } = useGetShopDebtDetailsQuery({
+    shopId,
+    debtId,
+  });
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
+  if (!isSuccess) return <div>No data</div>;
 
-  console.log(debt);
+  const debt = isSuccess ? data?.debt : null;
+
+  console.log(data);
   return (
     <Container>
       <SlideUpAnimation>
         <div className="max-w-4xl m-auto p-4 md:p-0 flex flex-col gap-5 mt-5">
           <Link
-            href="/account"
+            href={`/account/${shopId}`}
             className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors"
           >
             <ChevronRightRounded fontSize="small" />
@@ -39,22 +53,25 @@ export default function AccountDebtDetailsPage({ debtId }: { debtId: number }) {
           >
             <div className="w-full flex items-center justify-between">
               <Typography variant="h6" className="font-bold!">
-                جزئیات سند بدهی #DB-8842
+                جزئیات سند بدهی #{debt?.debt_id}
               </Typography>
-              <Chip label="پرداخت شده" color="success" />
+              <Chip
+                label={debt?.is_paid ? "پرداخت شده" : "در انتظار پرداخت"}
+                color={debt?.is_paid ? "success" : "warning"}
+              />
             </div>
             <div className="w-full flex items-center justify-between">
               <Typography variant="caption">تاریخ ثبت:</Typography>
               <Typography variant="subtitle1" className="font-bold!">
-                ۱۴۰۳/۰۲/۱۵
+                {formatDate(debt?.created_at)}
               </Typography>
             </div>
-            <div className="w-full flex items-center justify-between">
+            {/*<div className="w-full flex items-center justify-between">
               <Typography variant="caption">فروشگاه:</Typography>
               <Typography variant="subtitle1" className="font-bold!">
                 سوپرمارکت آنلاین کوروش (شعبه سعادت‌آباد)
               </Typography>
-            </div>
+            </div>*/}
           </Card>
 
           {/* Products */}
@@ -117,21 +134,28 @@ export default function AccountDebtDetailsPage({ debtId }: { debtId: number }) {
             </div>
             <Divider />
             <div className=" flex flex-col gap-2">
-              <div className="w-full flex items-center justify-between bg-gray-100/50 py-2 px-4 rounded-full">
-                <div className="flex flex-col gap-2">
-                  <Typography variant="caption" className="font-bold!">
-                    پرداخت حضوری (کارت‌خوان)
-                  </Typography>
-                  <Typography variant="caption">تاریخ: ۱۴۰۳/۰۲/۱۸</Typography>
-                </div>
-                <Typography
-                  variant="subtitle1"
-                  className="font-bold!"
-                  color="success"
+              {debt?.payments?.map((payment) => (
+                <div
+                  className="w-full flex items-center justify-between bg-gray-100/50 py-2 px-4 rounded-full"
+                  key={payment.id}
                 >
-                  500,000 تومان
-                </Typography>
-              </div>
+                  <div className="flex flex-col gap-2">
+                    <Typography variant="caption" className="font-bold!">
+                      پرداخت حضوری (کارت‌خوان)
+                    </Typography>
+                    <Typography variant="caption">
+                      تاریخ: {formatDate(payment.created_at)}
+                    </Typography>
+                  </div>
+                  <Typography
+                    variant="subtitle1"
+                    className="font-bold!"
+                    color="success"
+                  >
+                    {payment.amount} تومان
+                  </Typography>
+                </div>
+              ))}
             </div>
           </Card>
 
@@ -144,7 +168,7 @@ export default function AccountDebtDetailsPage({ debtId }: { debtId: number }) {
               <div className="flex items-center justify-between">
                 <Typography variant="caption">مبلغ کل بدهی:</Typography>
                 <Typography variant="subtitle1" className="font-bold!">
-                  2,000,000 تومان
+                  {debt?.total_amount} تومان
                 </Typography>
               </div>
               <div className="flex items-center justify-between">
@@ -154,7 +178,7 @@ export default function AccountDebtDetailsPage({ debtId }: { debtId: number }) {
                   className="font-bold!"
                   color="success"
                 >
-                  500,000 تومان
+                  {debt?.paid_amount} تومان
                 </Typography>
               </div>
               <Divider />
@@ -168,7 +192,7 @@ export default function AccountDebtDetailsPage({ debtId }: { debtId: number }) {
                   بدهی باقیمانده:
                 </Typography>
                 <Typography variant="h6" className="font-bold!" color="error">
-                  1,500,000 تومان
+                  {debt?.remaining} تومان
                 </Typography>
               </div>
             </div>

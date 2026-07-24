@@ -26,6 +26,11 @@ export interface GetSalesResponesType {
   results: SalesListType[];
 }
 
+export interface GetSaleByIdResponeseType {
+  ok: boolean;
+  sale: SaleType;
+}
+
 export interface PostSalesType {
   customer_id: number | null;
   items: { product_id: number; quantity: number }[];

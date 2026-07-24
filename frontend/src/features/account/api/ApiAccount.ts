@@ -1,7 +1,9 @@
 import {
+  GetDebtByIdResponeseType,
   GetDebtsResponeseType,
   GetMeResponse,
   GetPaymentsResponse,
+  GetSaleByIdResponeseType,
   GetSalesResponesType,
   GetShopDetailResponse,
 } from "@/types/ApiResponesesType";
@@ -49,6 +51,22 @@ export const ApiAccount = createApi({
       query: (id) => `account/me/shops/${id}/payments`,
       providesTags: ["Shop/Payments"],
     }),
+    getShopDebtDetails: builder.query<
+      GetDebtByIdResponeseType,
+      { shopId: number; debtId: string }
+    >({
+      query: ({ shopId, debtId }) =>
+        `account/me/shops/${shopId}/debts/${debtId}`,
+      providesTags: ["Shop/Debts"],
+    }),
+    getShopSaleDetails: builder.query<
+      GetSaleByIdResponeseType,
+      { shopId: number; saleId: number }
+    >({
+      query: ({ shopId, saleId }) =>
+        `account/me/shops/${shopId}/sales/${saleId}`,
+      providesTags: ["Shop/Sales"],
+    }),
   }),
 });
 
@@ -59,4 +77,6 @@ export const {
   useGetShopDebtsQuery,
   useGetShopSalesQuery,
   useGetShopPaymentsQuery,
+  useGetShopDebtDetailsQuery,
+  useGetShopSaleDetailsQuery,
 } = ApiAccount;

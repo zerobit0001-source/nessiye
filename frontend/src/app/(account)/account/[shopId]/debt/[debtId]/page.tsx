@@ -16,6 +16,7 @@ export default async function page({
   params: Promise<{ shopId: string; debtId: string }>;
 }) {
   const { shopId, debtId } = await params;
-  const debtIdNumber = Number(debtId);
-  return <AccountDebtDetailsPage debtId={debtIdNumber} />;
+  const shopIdNumber = Number(shopId);
+
+  return <AccountDebtDetailsPage shopId={shopIdNumber} debtId={debtId} />;
 }

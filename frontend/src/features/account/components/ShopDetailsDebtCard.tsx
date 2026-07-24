@@ -105,7 +105,7 @@ export default function ShopDetailsDebtCard({ debt }: DebtCardProps) {
         </Stack>
       </Box>
 
-      <Link href={`${pathname}/debt/${debt.id}`}>
+      <Link href={`${pathname}/debt/${debt.debt_id}`}>
         <Button
           fullWidth
           variant="outlined"
