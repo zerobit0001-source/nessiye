@@ -2,6 +2,7 @@ import { Box, Button, Card, Chip, Stack, Typography } from "@mui/material";
 import { PaymentsRounded } from "@mui/icons-material";
 import { PaymentType } from "@/types/types";
 import { formatDate, formatPrice } from "@/utils/formatters";
+import Link from "next/link";
 
 interface PaymentCardProps {
   payment: PaymentType;
@@ -78,18 +79,23 @@ export default function ShopDetailsPaymentCard({ payment }: PaymentCardProps) {
         </Stack>
       </Box>
 
-      <Button
-        fullWidth
-        variant="outlined"
-        color="success"
-        sx={{
-          borderRadius: 999,
-          py: 1,
-          fontWeight: 700,
-        }}
+      <Link
+        href={`/account/${payment.}/payments/${payment.id}`}
+        
       >
-        مشاهده جزئیات پرداخت
-      </Button>
+        <Button
+          fullWidth
+          variant="outlined"
+          color="success"
+          sx={{
+            borderRadius: 999,
+            py: 1,
+            fontWeight: 700,
+          }}
+        >
+          مشاهده جزئیات پرداخت
+        </Button>
+     </Link>
     </Card>
   );
 }

@@ -2,6 +2,7 @@ import {
   GetDebtByIdResponeseType,
   GetDebtsResponeseType,
   GetMeResponse,
+  GetPaymentByIdResponeseType,
   GetPaymentsResponse,
   GetSaleByIdResponeseType,
   GetSalesResponesType,
@@ -67,6 +68,14 @@ export const ApiAccount = createApi({
         `account/me/shops/${shopId}/sales/${saleId}`,
       providesTags: ["Shop/Sales"],
     }),
+    getShopPaymentDetails: builder.query<
+      GetPaymentByIdResponeseType,
+      { shopId: number; paymentId: number }
+    >({
+      query: ({ shopId, paymentId }) =>
+        `account/me/shops/${shopId}/payments/${paymentId}`,
+      providesTags: ["Shop/Payments"],
+    }),
   }),
 });
 
@@ -79,4 +88,5 @@ export const {
   useGetShopPaymentsQuery,
   useGetShopDebtDetailsQuery,
   useGetShopSaleDetailsQuery,
+  useGetShopPaymentDetailsQuery,
 } = ApiAccount;

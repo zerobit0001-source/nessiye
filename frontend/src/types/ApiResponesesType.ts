@@ -8,6 +8,7 @@ import {
   ModalCustomersType,
   ModalProductsType,
   PaymentsListType,
+  PaymentType,
   ProductsListType,
   ProductType,
   SalesListType,
@@ -138,6 +139,12 @@ export interface PostPaymentBody {
   amount: number;
   pay_full: boolean;
 }
+
+export interface GetPaymentByIdResponeseType {
+  ok: boolean;
+  payment: PaymentType;
+}
+
 
 // modal customers
 export interface GetModalsCustomersResponse {
