@@ -7,7 +7,7 @@ export default async function page({
 }) {
   const { shopId, paymentId } = await params;
   const shopIdNumber = Number(shopId);
-  const paymentIdNumber = Number(paymentId);
+  const paymentIdNumber = paymentId;
   console.log("shop ID : ", shopId);
   console.log("payment ID : ", paymentId);
   return (

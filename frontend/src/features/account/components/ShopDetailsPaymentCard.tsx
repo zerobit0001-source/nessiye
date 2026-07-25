@@ -85,7 +85,7 @@ export default function ShopDetailsPaymentCard({
         </Stack>
       </Box>
 
-      <Link href={`/account/${shopId}/payment/${payment.id}`}>
+      <Link href={`/account/${shopId}/payment/${payment.payment_id}/`}>
         <Button
           fullWidth
           variant="outlined"

@@ -44,7 +44,8 @@ export default async function RootLayout({
         <ToastContainer position="bottom-center" autoClose={1500} />
         <StoreProvider>
           <ThemeRegistry>
-            <NextTopLoader color="#1976d2" height={3} showSpinner={true} />
+            {/*<NextTopLoader color="#1976d2" height={3} showSpinner={true} />*/}
+            <NextTopLoader color="#ff9800" height={3} showSpinner={true} />
             {children}
           </ThemeRegistry>
         </StoreProvider>
