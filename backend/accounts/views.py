@@ -609,9 +609,24 @@ class MyShopDebtDetailView(APIView):
             return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            debt = Debt.objects.prefetch_related('payments').get(debt_id=debt_id, customer=cs)
+            debt = Debt.objects.prefetch_related(
+                'payments',
+                'sale__items'
+            ).get(debt_id=debt_id, customer=cs)
         except Debt.DoesNotExist:
             return Response({'ok': False, 'error': 'بدهی یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+
+        items = []
+        if debt.sale:
+            items = [
+                {
+                    'product_name': item.product_name,
+                    'quantity': item.quantity,
+                    'price': item.price,
+                    'total': item.price * item.quantity
+                }
+                for item in debt.sale.items.all()
+            ]
 
         return Response({
             'ok': True,
@@ -623,6 +638,7 @@ class MyShopDebtDetailView(APIView):
                 'remaining': debt.remaining,
                 'is_paid': debt.is_paid,
                 'created_at': debt.created_at,
+                'items': items,
                 'payments': [
                     {
                         'id': p.id,
