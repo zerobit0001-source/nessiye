@@ -18,7 +18,6 @@ export default function MainLayout({
             </aside>
 
             {/* Mobile */}
-            <MobileMenu />
 
             {/* Content */}
             <section className="flex flex-1 flex-col overflow-hidden">
