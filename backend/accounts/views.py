@@ -10,7 +10,7 @@ from utils import send_otp_code
 from customer_management.models import CustomerShop
 from sales.models import Sale
 from sales.serializers import SaleSerializer
-from debts.models import Debt
+from debts.models import Debt, Payment
 from debts.serializers import DebtSerializer
 from django.db.models import Sum, Count, Max, F, IntegerField, ExpressionWrapper
 from .models import User, OtpCode
@@ -675,16 +675,18 @@ class MyShopPaymentDetailView(APIView):
 
     def get(self, request, shop_id, payment_id):
         if request.user.is_shop:
-            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'ok': False, 'error': 'این endpoint برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             cs = CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
         except CustomerShop.DoesNotExist:
             return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
 
-        from debts.models import Payment
         try:
-            payment = Payment.objects.select_related('debt').get(payment_id=payment_id, debt__customer=cs)
+            payment = Payment.objects.select_related('debt').get(
+                payment_id=payment_id,
+                debt__customer=cs
+            )
         except Payment.DoesNotExist:
             return Response({'ok': False, 'error': 'پرداخت یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -693,8 +695,12 @@ class MyShopPaymentDetailView(APIView):
             'payment': {
                 'id': payment.id,
                 'payment_id': payment.payment_id,
-                'debt_id': payment.debt.debt_id,
                 'amount': payment.amount,
-                'created_at': payment.created_at
+                'created_at': payment.created_at,
+                'debt': {
+                    'debt_id': payment.debt.debt_id,
+                    'total_amount': payment.debt.amount,
+                    'remaining': payment.debt.remaining
+                }
             }
         })
