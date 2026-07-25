@@ -12,6 +12,7 @@ import {
   AccessTimeOutlined,
   CheckCircleOutlineOutlined,
 } from "@mui/icons-material";
+import SlideUpBoxAnimation from "@/components/SlideUpBoxAnimation";
 
 const stats = [
   {
@@ -47,52 +48,51 @@ const stats = [
 export default function CustomerCards() {
   return (
     <Grid container spacing={2}>
-      {stats.map((item) => (
+      {stats.map((item, index) => (
         <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item.title}>
-          <Card
-            elevation={1}
-            sx={{
-              borderRadius: 3,
-              border: "1px solid",
-              borderColor: "divider",
-              height: "100%",
-            }}
+          <SlideUpBoxAnimation
+            key={item.title}
+            delay={index / 15 + 0.1}
           >
-            <CardContent>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Stack spacing={0.5}>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    {item.title}
-                  </Typography>
-
-                  <Typography
-                    variant="h5"
-                    fontWeight={700}
-                  >
-                    {item.value}
-                  </Typography>
-                </Stack>
-
-                <Avatar
-                  sx={{
-                    bgcolor: item.bg,
-                    color: item.color,
-                    width: 48,
-                    height: 48,
-                  }}
+            <Card
+              elevation={1}
+              sx={{
+                borderRadius: 3,
+                border: "1px solid",
+                borderColor: "divider",
+                height: "100%",
+              }}
+            >
+              <CardContent>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
                 >
-                  {item.icon}
-                </Avatar>
-              </Stack>
-            </CardContent>
-          </Card>
+                  <Stack spacing={0.5}>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.title}
+                    </Typography>
+
+                    <Typography variant="h5" fontWeight={700}>
+                      {item.value}
+                    </Typography>
+                  </Stack>
+
+                  <Avatar
+                    sx={{
+                      bgcolor: item.bg,
+                      color: item.color,
+                      width: 48,
+                      height: 48,
+                    }}
+                  >
+                    {item.icon}
+                  </Avatar>
+                </Stack>
+              </CardContent>
+            </Card>
+          </SlideUpBoxAnimation>
         </Grid>
       ))}
     </Grid>
