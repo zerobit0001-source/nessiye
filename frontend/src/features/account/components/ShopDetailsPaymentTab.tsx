@@ -27,7 +27,7 @@ export default function ShopDetailsPaymentTab({ shopId }: { shopId: number }) {
         />
       )}
       {paymentsQuery.data.results.map((payment) => (
-        <ShopDetailsPaymentCard key={payment.id} payment={payment} />
+        <ShopDetailsPaymentCard key={payment.id} payment={payment} shopId={shopId} />
       ))}
     </div>
   );

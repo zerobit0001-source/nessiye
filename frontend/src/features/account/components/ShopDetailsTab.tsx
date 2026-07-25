@@ -96,9 +96,7 @@ export default function ShopDetailsTab({ shopId }: ShopDetailsProps) {
         <ShopDetailsSaleTab shopId={shopId} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <div className="flex flex-col gap-4">
-          <ShopDetailsPaymentTab shopId={shopId} />
-        </div>
+        <ShopDetailsPaymentTab shopId={shopId} />
       </CustomTabPanel>
     </Box>
   );

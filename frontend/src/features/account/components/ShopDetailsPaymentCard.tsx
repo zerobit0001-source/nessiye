@@ -6,9 +6,13 @@ import Link from "next/link";
 
 interface PaymentCardProps {
   payment: PaymentType;
+  shopId: number;
 }
 
-export default function ShopDetailsPaymentCard({ payment }: PaymentCardProps) {
+export default function ShopDetailsPaymentCard({
+  payment,
+  shopId,
+}: PaymentCardProps) {
   return (
     <Card
       elevation={0}
@@ -33,7 +37,9 @@ export default function ShopDetailsPaymentCard({ payment }: PaymentCardProps) {
         />
 
         <Box textAlign="right">
-          <Typography fontWeight={700}>شناسه پرداخت: #{payment.payment_id}</Typography>
+          <Typography fontWeight={700}>
+            شناسه پرداخت: #{payment.payment_id}
+          </Typography>
 
           <Typography variant="caption" color="text.secondary" mt={0.5}>
             تاریخ پرداخت: {formatDate(payment.created_at)}
@@ -79,10 +85,7 @@ export default function ShopDetailsPaymentCard({ payment }: PaymentCardProps) {
         </Stack>
       </Box>
 
-      <Link
-        href={`/account/${payment.}/payments/${payment.id}`}
-        
-      >
+      <Link href={`/account/${shopId}/payment/${payment.id}`}>
         <Button
           fullWidth
           variant="outlined"
@@ -95,7 +98,7 @@ export default function ShopDetailsPaymentCard({ payment }: PaymentCardProps) {
         >
           مشاهده جزئیات پرداخت
         </Button>
-     </Link>
+      </Link>
     </Card>
   );
 }
