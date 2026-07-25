@@ -611,7 +611,7 @@ class MyShopDebtDetailView(APIView):
         try:
             debt = Debt.objects.prefetch_related(
                 'payments',
-                'sale__items'
+                'sale__items__product'
             ).get(debt_id=debt_id, customer=cs)
         except Debt.DoesNotExist:
             return Response({'ok': False, 'error': 'بدهی یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
@@ -620,7 +620,7 @@ class MyShopDebtDetailView(APIView):
         if debt.sale:
             items = [
                 {
-                    'product_name': item.product_name,
+                    'product_name': item.product.name,
                     'quantity': item.quantity,
                     'price': item.price,
                     'total': item.price * item.quantity
