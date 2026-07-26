@@ -23,6 +23,8 @@ class DebtListView(APIView):
         debt_status = request.query_params.get('status', None)
         period = request.query_params.get('period', None)
 
+        thirty_days_ago = timezone.now() - timedelta(days=30)
+
         debts = Debt.objects.filter(
             shop=request.user
         ).select_related('customer__customer').prefetch_related('payments')
