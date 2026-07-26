@@ -6,6 +6,7 @@ import {
   Stack,
   Typography,
   Avatar,
+  Skeleton,
 } from "@mui/material";
 import {
   PeopleAltOutlined,
@@ -17,45 +18,57 @@ import {
 } from "@mui/icons-material";
 import SlideUpBoxAnimation from "@/components/SlideUpBoxAnimation";
 import { useGetSalesCardsQuery } from "../api/ApiSales";
+import { formatPrice } from "@/utils/formatters";
 
-const stats = [
-  {
+// today_total
+// today_count
+// this_month_cash
+// this_month_debt
+
+const SALES_STATS_CONFIG = {
+  today_total: {
     title: "فروش امروز",
     value: 26400000,
     icon: <PointOfSaleRounded />,
     color: "#2563EB",
     bg: "#EEF4FF",
+    unit: "تومان",
   },
-  {
+  today_count: {
     title: "تعداد فاکتور امروز",
     value: 168,
     icon: <ReceiptLongOutlined />,
     color: "#EF4444",
     bg: "#FEF2F2",
+    unit: "عدد",
   },
-  {
+  this_month_cash: {
     title: "فروش نقدی این ماه",
     value: 12,
     icon: <AttachMoneyRounded />,
     color: "#22C55E",
     bg: "#F0FDF4",
+    unit: "عدد",
   },
-  {
+  this_month_debt: {
     title: "فروش نسیه این ماه",
     value: 26400000,
     icon: <CheckCircleOutlineOutlined />,
     color: "#F59E0B",
     bg: "#FFF7ED",
+    unit: "تومان",
   },
-];
+};
 
 export default function SalesPageCards() {
   const { data, isLoading, error, isSuccess } = useGetSalesCardsQuery();
 
+  const summary = isSuccess ? data.summary : null;
+
   return (
     <Grid container spacing={2}>
-      {stats.map((item, index) => (
-        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item.title}>
+      {Object.entries(SALES_STATS_CONFIG).map(([key, config], index) => (
+        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={config.title}>
           <SlideUpBoxAnimation delay={index / 15 + 0.1}>
             <Card
               elevation={1}
@@ -74,23 +87,28 @@ export default function SalesPageCards() {
                 >
                   <Stack spacing={0.5}>
                     <Typography variant="body2" color="text.secondary">
-                      {item.title}
+                      {config.title}
                     </Typography>
 
-                    <Typography variant="h5" fontWeight={700}>
-                      {item.value}
+                    <Typography variant="h6" fontWeight={700}>
+                      {isLoading ? (
+                        <Skeleton variant="text" />
+                      ) : (
+                        formatPrice(summary[key])
+                      )}{" "}
+                      {config.unit}
                     </Typography>
                   </Stack>
 
                   <Avatar
                     sx={{
-                      bgcolor: item.bg,
-                      color: item.color,
+                      bgcolor: config.bg,
+                      color: config.color,
                       width: 48,
                       height: 48,
                     }}
                   >
-                    {item.icon}
+                    {config.icon}
                   </Avatar>
                 </Stack>
               </CardContent>
