@@ -82,7 +82,18 @@ export interface PostProductsType {
 // customers
 export interface GetCustomersResponse {
   ok: boolean;
-  customers: CustomersListType[];
+  count: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+  results: CustomersListType[];
+  summary: {
+    total: number;
+    new_this_month: number;
+    active: number;
+    settled: number;
+    overdue: number;
+  };
 }
 export interface GetCustomerResponse {
   ok: boolean;
@@ -144,7 +155,6 @@ export interface GetPaymentByIdResponeseType {
   ok: boolean;
   payment: PaymentType;
 }
-
 
 // modal customers
 export interface GetModalsCustomersResponse {

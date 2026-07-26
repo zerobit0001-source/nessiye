@@ -35,7 +35,7 @@ export default function AppTable<T>({
   const mode = useAppSelector((s) => s.theme.mode);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} className="rounded-xl! overflow-hidden!">
       <Table sx={{ minWidth: 800 }} className="rounded-xl! overflow-hidden">
         <TableHead>
           <TableRow
