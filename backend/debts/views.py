@@ -55,8 +55,14 @@ class DebtListView(APIView):
             for d in debts
         ]
 
-        #status filter 
+        # summary
+        total = len(result)
+        total_amount = sum(r['total_amount'] for r in result)
+        settled = len([r for r in result if r['is_paid']])
+        partial = len([r for r in result if not r['is_paid'] and r['paid_amount'] > 0])
+        overdue = len([r for r in result if not r['is_paid'] and r['created_at'] < thirty_days_ago])
 
+        #status filter 
         if debt_status == 'active':
             result = [r for r in result if r['remaining_amount'] > 0]
         elif debt_status == 'settled':
@@ -70,9 +76,21 @@ class DebtListView(APIView):
             reverse = ordering.startswith('-')
             result = sorted(result, key=lambda x: x['remaining_amount'], reverse=reverse)
 
-        pagination = StandardPagination()
-        paginated_result = pagination.paginate_queryset(result, request)
-        return pagination.get_paginated_response(paginated_result)
+        # pagination = StandardPagination()
+        # paginated_result = pagination.paginate_queryset(result, request)
+        # return pagination.get_paginated_response(paginated_result)
+
+        paginator = StandardPagination()
+        page = paginator.paginate_queryset(result, request)
+        response = paginator.get_paginated_response(page)
+        response.data['summary'] = {
+            'total': total,
+            'total_amount': total_amount,
+            'settled': settled,
+            'partial': partial,
+            'overdue': overdue
+        }
+        return response
 
         # return Response({'ok': True, 'debts': result})
 
