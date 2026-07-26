@@ -67,9 +67,47 @@ class SaleListCreateView(APIView):
             for s in sales
         ]
 
-        pagination = StandardPagination()
-        paginated_result = pagination.paginate_queryset(result, request)
-        return pagination.get_paginated_response(paginated_result)
+        # summary
+        all_sales = Sale.objects.filter(shop=request.user)
+
+        today_sales = all_sales.filter(created_at__date=today)
+        today_count = today_sales.filter(is_debt=False).count()
+        today_total = today_sales.filter(is_debt=False).annotate(
+            sale_total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
+        ).aggregate(total=Sum('sale_total'))['total'] or 0
+
+        this_month_cash = all_sales.filter(
+            is_debt=False, created_at__gte=this_month
+        ).annotate(
+            sale_total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
+        ).aggregate(total=Sum('sale_total'))['total'] or 0
+
+        this_month_debt = all_sales.filter(
+            is_debt=True, created_at__gte=this_month
+        ).annotate(
+            sale_total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
+        ).aggregate(total=Sum('sale_total'))['total'] or 0
+
+        total_amount = all_sales.annotate(
+            sale_total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
+        ).aggregate(total=Sum('sale_total'))['total'] or 0
+
+        paginator = StandardPagination()
+        page = paginator.paginate_queryset(result, request)
+        response = paginator.get_paginated_response(page)
+        response.data['summary'] = {
+            'total_count': all_sales.count(),
+            'total_amount': total_amount,
+            'today_count': today_count,
+            'today_total': today_total,
+            'this_month_cash': this_month_cash,
+            'this_month_debt': this_month_debt,
+        }
+        return response
+
+        # pagination = StandardPagination()
+        # paginated_result = pagination.paginate_queryset(result, request)
+        # return pagination.get_paginated_response(paginated_result)
 
         # return Response({'ok': True, 'sales': result})
 
