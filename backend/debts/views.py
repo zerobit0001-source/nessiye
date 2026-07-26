@@ -8,6 +8,7 @@ from config.pagination import StandardPagination
 from django.utils import timezone
 from datetime import timedelta
 from activity.services import log_activity
+from django.db.models import Sum
 
 
 class DebtListView(APIView):
@@ -55,8 +56,14 @@ class DebtListView(APIView):
             for d in debts
         ]
 
-        #status filter 
+        # summary
+        total = len(result)
+        total_amount = sum(r['total_amount'] for r in result)
+        settled = len([r for r in result if r['is_paid']])
+        partial = len([r for r in result if not r['is_paid'] and r['paid_amount'] > 0])
+        overdue = len([r for r in result if not r['is_paid'] and r['created_at'] < thirty_days_ago])
 
+        #status filter 
         if debt_status == 'active':
             result = [r for r in result if r['remaining_amount'] > 0]
         elif debt_status == 'settled':
@@ -70,9 +77,21 @@ class DebtListView(APIView):
             reverse = ordering.startswith('-')
             result = sorted(result, key=lambda x: x['remaining_amount'], reverse=reverse)
 
-        pagination = StandardPagination()
-        paginated_result = pagination.paginate_queryset(result, request)
-        return pagination.get_paginated_response(paginated_result)
+        # pagination = StandardPagination()
+        # paginated_result = pagination.paginate_queryset(result, request)
+        # return pagination.get_paginated_response(paginated_result)
+
+        paginator = StandardPagination()
+        page = paginator.paginate_queryset(result, request)
+        response = paginator.get_paginated_response(page)
+        response.data['summary'] = {
+            'total': total,
+            'total_amount': total_amount,
+            'settled': settled,
+            'partial': partial,
+            'overdue': overdue
+        }
+        return response
 
         # return Response({'ok': True, 'debts': result})
 
@@ -164,6 +183,9 @@ class PaymentListView(APIView):
             debt__shop=request.user
         ).select_related('debt__customer__customer')
 
+        now = timezone.now()
+        this_month = now - timedelta(days=30)
+
         # period filter
         now = timezone.now()
         if period == 'today':
@@ -194,6 +216,17 @@ class PaymentListView(APIView):
             for p in payments
         ]
 
+        # summary
+        all_payments = Payment.objects.filter(debt__shop=request.user)
+        all_debts = Debt.objects.filter(shop=request.user).prefetch_related('payments')
+    
+        total_debts = all_debts.count()
+        this_month_total = all_payments.filter(created_at__gte=this_month).aggregate(total=Sum('amount'))['total'] or 0
+    
+        settled = len([d for d in all_debts if d.is_paid])
+        partial = len([d for d in all_debts if not d.is_paid and d.paid_amount > 0])
+        overdue = len([d for d in all_debts if not d.is_paid and d.created_at < this_month])
+
         # if ordering == 'remaining_amount':
         #     result = sorted(result, key=lambda x: x['remaining_amount'])
         # elif ordering == '-remaining_amount':
@@ -203,9 +236,21 @@ class PaymentListView(APIView):
         # elif ordering == '-amount':
         #     result = sorted(result, key=lambda x: x['total_amount'], reverse=True)
 
-        pagination = StandardPagination()
-        paginated_result = pagination.paginate_queryset(result, request)
-        return pagination.get_paginated_response(paginated_result)
+        # pagination = StandardPagination()
+        # paginated_result = pagination.paginate_queryset(result, request)
+        # return pagination.get_paginated_response(paginated_result)
+
+        paginator = StandardPagination()
+        page = paginator.paginate_queryset(result, request)
+        response = paginator.get_paginated_response(page)
+        response.data['summary'] = {
+            'total_debts': total_debts,
+            'this_month_total': this_month_total,
+            'settled': settled,
+            'partial': partial,
+            'overdue': overdue
+        }
+        return response
 
         # return Response({'ok': True, 'payments': result})
     
