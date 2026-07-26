@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -5,6 +7,7 @@ import {
   Stack,
   Typography,
   Avatar,
+  Skeleton,
 } from "@mui/material";
 import {
   PeopleAltOutlined,
@@ -13,43 +16,75 @@ import {
   CheckCircleOutlineOutlined,
 } from "@mui/icons-material";
 import SlideUpBoxAnimation from "@/components/SlideUpBoxAnimation";
+import { useGetDebtsCardsQuery } from "../../sales/api/ApiSales";
 
-const stats = [
-  {
+// total
+// total_amount
+// settled
+// partial
+// overdue
+
+const DEBTS_STATS_CONFIG = {
+  total: {
     title: "کل بدهی‌ها",
-    value: 423,
     icon: <PeopleAltOutlined />,
     color: "#2563EB",
     bg: "#EEF4FF",
+    unit: "عدد",
   },
-  {
+  settled: {
     title: "تسویه‌شده",
-    value: 168,
-    icon: <ReceiptLongOutlined />,
-    color: "#EF4444",
-    bg: "#FEF2F2",
-  },
-  {
-    title: "پرداخت جزئی",
-    value: 12,
-    icon: <AccessTimeOutlined />,
-    color: "#F59E0B",
-    bg: "#FFF7ED",
-  },
-  {
-    title: "معوق",
-    value: 264,
     icon: <CheckCircleOutlineOutlined />,
     color: "#22C55E",
     bg: "#F0FDF4",
+    unit: "عدد",
   },
-];
+  partial: {
+    title: "پرداخت جزئی",
+    icon: <AccessTimeOutlined />,
+    color: "#F59E0B",
+    bg: "#FFF7ED",
+    unit: "عدد",
+  },
+  overdue: {
+    title: "معوق",
+    icon: <ReceiptLongOutlined />,
+    color: "#EF4444",
+    bg: "#FEF2F2",
+    unit: "عدد",
+  },
+} satisfies Record<
+  string,
+  {
+    title: string;
+    icon: React.ReactNode;
+    color: string;
+    bg: string;
+    unit: string;
+  }
+>;
 
 export default function DebtsCards() {
+  const { data, isLoading, error, isSuccess } = useGetDebtsCardsQuery();
+
+  const summary = isSuccess
+    ? data?.summary
+    : {
+        total: 0,
+        settled: 0,
+        partial: 0,
+        overdue: 0,
+      };
+
   return (
     <Grid container spacing={2}>
-      {stats.map((item, index) => (
-        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item.title}>
+      {(
+        Object.entries(DEBTS_STATS_CONFIG) as [
+          keyof typeof DEBTS_STATS_CONFIG,
+          (typeof DEBTS_STATS_CONFIG)[keyof typeof DEBTS_STATS_CONFIG],
+        ][]
+      ).map(([key, config], index) => (
+        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={config.title}>
           <SlideUpBoxAnimation delay={index / 15 + 0.1}>
             <Card
               elevation={1}
@@ -68,23 +103,24 @@ export default function DebtsCards() {
                 >
                   <Stack spacing={0.5}>
                     <Typography variant="body2" color="text.secondary">
-                      {item.title}
+                      {config.title}
                     </Typography>
 
-                    <Typography variant="h5" fontWeight={700}>
-                      {item.value}
+                    <Typography variant="h6" fontWeight={700}>
+                      {isLoading ? <Skeleton variant="text" /> : summary[key]}{" "}
+                      {config.unit}
                     </Typography>
                   </Stack>
 
                   <Avatar
                     sx={{
-                      bgcolor: item.bg,
-                      color: item.color,
+                      bgcolor: config.bg,
+                      color: config.color,
                       width: 48,
                       height: 48,
                     }}
                   >
-                    {item.icon}
+                    {config.icon}
                   </Avatar>
                 </Stack>
               </CardContent>

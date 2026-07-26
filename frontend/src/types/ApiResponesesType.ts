@@ -53,6 +53,13 @@ export interface GetDebtsResponeseType {
   page_size: number;
   total_pages: number;
   results: DebtsListType[];
+  summary: {
+    total: number;
+    total_amount: number;
+    settled: number;
+    partial: number;
+    overdue: number;
+  };
 }
 export interface GetDebtByIdResponeseType {
   ok: boolean;

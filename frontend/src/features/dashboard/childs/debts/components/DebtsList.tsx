@@ -1,4 +1,4 @@
-"use client";
+  "use client";
 
 import { Typography } from "@mui/material";
 import { useGetDebtsQuery } from "../../sales/api/ApiSales";
