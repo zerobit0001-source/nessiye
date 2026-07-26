@@ -29,6 +29,10 @@ class SaleListCreateView(APIView):
         ordering = request.query_params.get("ordering", "-created_at")
         period = request.query_params.get("period", None)
 
+        now = timezone.now()
+        today = now.date()
+        this_month = now - timedelta(days=30)
+
         sales = (
             Sale.objects.filter(shop=request.user, is_debt=False)
             .select_related("customer")
