@@ -25,6 +25,14 @@ export interface GetSalesResponesType {
   page_size: number;
   total_pages: number;
   results: SalesListType[];
+  summary: {
+    total_count: number;
+    total_amount: number;
+    today_count: number;
+    today_total: number;
+    this_month_cash: number;
+    this_month_debt: number;
+  };
 }
 
 export interface GetSaleByIdResponeseType {

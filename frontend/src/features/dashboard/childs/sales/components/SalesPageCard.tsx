@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -15,6 +16,7 @@ import {
   AttachMoneyRounded,
 } from "@mui/icons-material";
 import SlideUpBoxAnimation from "@/components/SlideUpBoxAnimation";
+import { useGetSalesCardsQuery } from "../api/ApiSales";
 
 const stats = [
   {
@@ -48,6 +50,8 @@ const stats = [
 ];
 
 export default function SalesPageCards() {
+  const { data, isLoading, error, isSuccess } = useGetSalesCardsQuery();
+
   return (
     <Grid container spacing={2}>
       {stats.map((item, index) => (
