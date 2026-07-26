@@ -108,6 +108,14 @@ class ProductListCreateView(APIView):
         if ordering in ordering_map:
             products = products.order_by(ordering_map[ordering])
 
+        # summary
+        all_products = Product.objects.filter(shop=request.user) if request.user.is_authenticated and request.user.is_shop else Product.objects.all()
+        total_count = all_products.count()
+        total_stock = all_products.aggregate(total=Sum('stock'))['total'] or 0
+        stocked_count = all_products.filter(stock__gt=10).count()
+        low_stock_count = all_products.filter(stock__gt=0, stock__lte=10).count()
+        out_of_stock_count = all_products.filter(stock=0).count()
+
         result = [
             {
                 'id': p.id,
@@ -120,9 +128,21 @@ class ProductListCreateView(APIView):
             for p in products
         ]
 
-        pagination = StandardPagination()
-        paginated_result = pagination.paginate_queryset(result, request)
-        return pagination.get_paginated_response(paginated_result)
+        paginator = StandardPagination()
+        page = paginator.paginate_queryset(result, request)
+        response = paginator.get_paginated_response(page)
+        response.data['summary'] = {
+            'total_count': total_count,
+            'total_stock': total_stock,
+            'stocked': stocked_count,
+            'low_stock': low_stock_count,
+            'out_of_stock': out_of_stock_count
+        }
+        return response
+
+        # pagination = StandardPagination()
+        # paginated_result = pagination.paginate_queryset(result, request)
+        # return pagination.get_paginated_response(paginated_result)
 
         # return Response({"ok": True, "products": result})
 
