@@ -17,7 +17,7 @@ export const ApiCustomer = createApi({
   endpoints: (builder) => ({
     getCustomers: builder.query<
       GetCustomersResponse,
-      { search: string; page: number; ordering?: string; filtering?: string }
+      { search?: string; page?: number; ordering?: string; filtering?: string }
     >({
       query: ({ search, page, ordering, filtering }) => ({
         url: "customers/",
@@ -30,6 +30,9 @@ export const ApiCustomer = createApi({
       }),
 
       providesTags: ["Customers"],
+    }),
+    getCustomersSummary: builder.query<GetCustomersResponse, void>({
+      query: () => "customers/",
     }),
     getCustomer: builder.query<GetCustomerResponse, string>({
       query: (id) => `customers/${id}/`,
@@ -66,6 +69,7 @@ export const ApiCustomer = createApi({
 
 export const {
   useGetCustomersQuery,
+  useGetCustomersSummaryQuery,
   useAddCustomerMutation,
   useGetCustomerCreditsQuery,
   useLazyGetCustomerCreditsQuery,

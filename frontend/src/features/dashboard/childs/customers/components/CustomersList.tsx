@@ -49,8 +49,8 @@ const CustomersList = ({
     return <p>Something went wrong.</p>;
   }
 
-  const customers = data?.customers ?? [];
-  console.log(customers);
+  const customers = data?.results ?? [];
+  console.log(data);
 
   return (
     <>
