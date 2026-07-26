@@ -7,6 +7,7 @@ import { Avatar, Card, Typography } from "@mui/material";
 import { useGetProductByIdQuery } from "../api/ApiProduct";
 import ProductDetailsPageDetails from "./ProductDetailsPageDetails";
 import ProductDetailsPageStats from "./ProductDetailsPageStats";
+import ProductRecentActivity from "./ProductRecentActivity";
 
 const ProductDetailsPage = ({ id }: { id: number }) => {
   const { data, isLoading, isSuccess, error } = useGetProductByIdQuery(id);
@@ -54,39 +55,11 @@ const ProductDetailsPage = ({ id }: { id: number }) => {
         category={product.category}
         productId={id}
       />
-      <ProductDetailsPageStats />
-      <Card className="p-4 flex items-center justify-center md:justify-between flex-wrap gap-4">
-        <div className="flex flex-col md:items-start items-center gap-2">
-          <div className="flex items-center gap-4">
-            <Typography variant="h6">{product.name}</Typography>
-            {product.barcode && <CopyButtonSku text={product.barcode} />}
-          </div>
-          <Typography variant="caption">{product.description}</Typography>
-          <div className="">
-            <Typography variant="h6">
-              قیمت خرید : {formatter.format(product.buy_price)}
-            </Typography>
-            <Typography variant="h6">
-              قیمت فروش : {formatter.format(product.sell_price)}
-            </Typography>
-          </div>
-          <div className="">
-            <Typography variant="body1">{product.exp_date}</Typography>
-          </div>
-          <div className="">
-            <Typography variant="body1">
-              دسته بندی :{" "}
-              {product.category_name ? product.category_name : "بدون دسته بندی"}
-            </Typography>
-          </div>
-          <div className="">
-            <Typography variant="h6">موجودی : {product.stock}</Typography>
-          </div>
-        </div>
-        <Avatar variant="rounded" className="w-70! h-90!" alt={product.name}>
-          {product.name[0]}
-        </Avatar>
-      </Card>
+      <ProductDetailsPageStats product={product} />
+
+      <div className="w-full grid grid-cols-6">
+        <ProductRecentActivity />
+      </div>
     </Container>
   );
 };

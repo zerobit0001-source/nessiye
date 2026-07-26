@@ -1,12 +1,13 @@
 "use client";
 
-import { formatPrice } from "@/utils/formatters";
+import { ProductType } from "@/types/types";
+import { formatDate, formatPrice } from "@/utils/formatters";
 import {
-  Inventory2Outlined,
-  LocalOfferOutlined,
-  ShoppingCartOutlined,
-  TrendingUpOutlined,
-  SellOutlined,
+  Inventory2Rounded,
+  LocalOfferRounded,
+  ShoppingCartRounded,
+  TrendingUpRounded,
+  SellRounded,
 } from "@mui/icons-material";
 
 import {
@@ -18,75 +19,80 @@ import {
   Typography,
 } from "@mui/material";
 
-const stats = [
-  {
-    id: "inventory",
+export const PRODUCT_STATS_CONFIG = {
+  stock: {
     title: "موجودی انبار",
-    value: 2,
-    unit: "عدد",
-    subtitle: "آستانه هشدار: 5 عدد",
-    icon: Inventory2Outlined,
+    icon: Inventory2Rounded,
     iconBg: "#FFF6E5",
     iconColor: "#D97706",
     valueColor: "#B45309",
     borderColor: "#F6C453",
+    unit: "عدد",
   },
-  {
-    id: "sale-price",
+
+  sell_price: {
     title: "قیمت فروش",
-    value: 110000,
-    unit: "تومان",
-    subtitle: "قیمت درج شده روی کالا",
-    icon: LocalOfferOutlined,
+    icon: LocalOfferRounded,
     iconBg: "#EEF4FF",
     iconColor: "#2563EB",
-  },
-  {
-    id: "buy-price",
-    title: "قیمت خرید (میانگین)",
-    value: 92000,
     unit: "تومان",
-    subtitle: "از آخرین خرید غنچه",
-    icon: ShoppingCartOutlined,
+  },
+
+  buy_price: {
+    title: "قیمت خرید",
+    icon: ShoppingCartRounded,
     iconBg: "#F4F4F5",
     iconColor: "#71717A",
-  },
-  {
-    id: "profit",
-    title: "سود تخمینی هر واحد",
-    value: 18000,
     unit: "تومان",
-    subtitle: "حاشیه سود: 16.2%",
-    icon: TrendingUpOutlined,
+  },
+
+  profit: {
+    title: "سود هر واحد",
+    icon: TrendingUpRounded,
     iconBg: "#ECFDF5",
     iconColor: "#059669",
     valueColor: "#059669",
+    unit: "تومان",
   },
-  {
-    id: "sales",
-    title: "فروش کل (ماه جاری)",
-    value: 48,
-    unit: "عدد",
-    subtitle: "ارزش کل: 8,850,000 تومان",
-    icon: SellOutlined,
+
+  created_at: {
+    title: "ثبت محصول",
+    icon: SellRounded,
     iconBg: "#F5F3FF",
     iconColor: "#7C3AED",
+    unit: "",
   },
-];
+} as const;
 
-export default function ProductDetailsPageStats() {
+export default function ProductDetailsPageStats({
+  product,
+}: {
+  product: ProductType;
+}) {
+  const statsData = {
+    stock: product.stock,
+
+    sell_price: product.sell_price,
+
+    buy_price: product.buy_price,
+
+    profit: product.sell_price - product.buy_price,
+
+    created_at: formatDate(product.created_at),
+  };
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-      {stats.map((item) => {
-        const Icon = item.icon;
+      {Object.entries(PRODUCT_STATS_CONFIG).map(([key, config]) => {
+        const Icon = config.icon;
 
         return (
           <Card
-            elevation={0}
+            key={key}
+            elevation={1}
             sx={{
               height: "100%",
               border: "1px solid",
-              borderColor: item.borderColor || "divider",
+              borderColor: config.borderColor || "divider",
               borderRadius: 4,
             }}
           >
@@ -105,16 +111,17 @@ export default function ProductDetailsPageStats() {
                 alignItems="center"
               >
                 <Typography variant="body2" color="text.secondary">
-                  {item.title}
+                  {config.title}
                 </Typography>
 
                 <Avatar
                   sx={{
-                    bgcolor: item.iconBg,
-                    color: item.iconColor,
+                    bgcolor: config.iconBg,
+                    color: config.iconColor,
                     width: 42,
                     height: 42,
                   }}
+                  variant="rounded"
                 >
                   <Icon fontSize="small" />
                 </Avatar>
@@ -125,19 +132,15 @@ export default function ProductDetailsPageStats() {
                   <Typography
                     variant="h6"
                     fontWeight={700}
-                    color={item.valueColor || "text.primary"}
+                    color={config.valueColor || "text.primary"}
                   >
-                    {formatPrice(item.value)}
+                    {formatPrice(statsData[key as keyof typeof statsData])}
                   </Typography>
 
                   <Typography variant="body2" color="text.secondary">
-                    {item.unit}
+                    {config.unit}
                   </Typography>
                 </Stack>
-
-                <Typography variant="body2" color="text.secondary">
-                  {item.subtitle}
-                </Typography>
               </Stack>
             </CardContent>
           </Card>
