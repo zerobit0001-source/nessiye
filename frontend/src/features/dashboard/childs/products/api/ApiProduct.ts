@@ -28,6 +28,10 @@ export const ApiProduct = createApi({
       }),
       providesTags: ["Products"],
     }),
+    getProductsCards: builder.query<GetProductsResponse, void>({
+      query: () => "products/",
+      providesTags: ["Products"],
+    }),
     getProductById: builder.query<GetProductResponse, string>({
       query: (id) => `products/${id}/`,
       providesTags: ["Products"],
@@ -66,6 +70,7 @@ export const ApiProduct = createApi({
 
 export const {
   useGetProductsQuery,
+  useGetProductsCardsQuery,
   useGetProductByIdQuery,
   useAddProductMutation,
   useDeleteProductMutation,

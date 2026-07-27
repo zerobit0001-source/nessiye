@@ -74,6 +74,13 @@ export interface GetProductsResponse {
   page_size: number;
   total_pages: number;
   results: ProductsListType[];
+  summary: {
+    total_count: number;
+    total_stock: number;
+    stocked: number;
+    low_stock: number;
+    out_of_stock: number;
+  };
 }
 export interface GetProductResponse {
   ok: boolean;
