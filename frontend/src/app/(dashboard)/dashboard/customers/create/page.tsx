@@ -1,0 +1,122 @@
+"use client";
+import Container from "@/components/dash/Container";
+import SlideUpAnimation from "@/components/SlideUpAnimation";
+import { useAddCustomerMutation } from "@/features/dashboard/childs/customers/api/ApiCustomer";
+import AddCustomerForm from "@/features/dashboard/childs/customers/components/AddCustomerForm";
+import { validateAddCustomerForm } from "@/utils/validations/CustomerValidation";
+import { Typography } from "@mui/material";
+import { useState } from "react";
+import { toast } from "react-toastify";
+
+export default function CreateCustomerPage() {
+  const [form, setForm] = useState({
+    phone_number: "",
+    code: "",
+  });
+
+  const [errors, setErrors] = useState({
+    phone_number: "",
+    code: "",
+  });
+  const [isCode, setIsCode] = useState(false);
+
+  const [sendCode, sendCodeQuery] = useAddCustomerMutation();
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSendCode = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(form);
+    const validation = validateAddCustomerForm.safeParse({
+      phone_number: form.phone_number,
+    });
+
+    if (!validation.success) {
+      const issue = validation.error.issues[0];
+
+      setErrors({
+        phone_number: issue.message,
+        code: "",
+      });
+
+      return;
+    }
+
+    setErrors({
+      phone_number: "",
+      code: "",
+    });
+
+    try {
+      const result = await sendCode(form).unwrap();
+
+      console.log("Add product result:", result);
+
+      if (result.ok) {
+        toast.success("کد برای مشتری ارسال شد");
+        setIsCode(true);
+      } else {
+        toast.error("خطا در ارسال کد مشتری");
+      }
+    } catch (error) {
+      console.log("Error adding product:", error);
+      toast.error(error.data.error || "خطا در ثبت مشتری");
+      return;
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const validation = validateAddCustomerForm.safeParse({
+      code: form.code,
+    });
+
+    if (!validation.success) {
+      const issue = validation.error.issues[0];
+
+      setErrors({
+        phone_number: "",
+        code: issue.message,
+      });
+
+      return;
+    }
+
+    setErrors({
+      phone_number: "",
+      code: "",
+    });
+    console.log(form);
+  };
+
+  const handleCancel = () => {
+    setForm({ phone_number: "", code: "" });
+    setIsCode(false);
+  };
+
+  return (
+    <Container>
+      <SlideUpAnimation>
+        <div className="">
+          <Typography variant="h6">ثبت مشتری جدید</Typography>
+          <Typography variant="caption">
+            اطلاعات خواسته شده را تکمیل کنید
+          </Typography>
+        </div>
+        <div className="w-full flex items-center justify-center">
+          <AddCustomerForm
+            form={form}
+            handleFormChange={handleFormChange}
+            isCode={isCode}
+            handleSendCode={handleSendCode}
+            handleSubmit={handleSubmit}
+            handleCancel={handleCancel}
+            errors={errors}
+          />
+        </div>
+      </SlideUpAnimation>
+    </Container>
+  );
+}
