@@ -1,7 +1,10 @@
 "use client";
 import Container from "@/components/dash/Container";
 import SlideUpAnimation from "@/components/SlideUpAnimation";
-import { useAddCustomerMutation } from "@/features/dashboard/childs/customers/api/ApiCustomer";
+import {
+  useAddCustomerMutation,
+  useVerifyCustomerMutation,
+} from "@/features/dashboard/childs/customers/api/ApiCustomer";
 import AddCustomerForm from "@/features/dashboard/childs/customers/components/AddCustomerForm";
 import { validateAddCustomerForm } from "@/utils/validations/CustomerValidation";
 import { Typography } from "@mui/material";
@@ -21,6 +24,7 @@ export default function CreateCustomerPage() {
   const [isCode, setIsCode] = useState(false);
 
   const [sendCode, sendCodeQuery] = useAddCustomerMutation();
+  const [verifyCustomer, verifyCustomerQuery] = useVerifyCustomerMutation();
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -67,7 +71,7 @@ export default function CreateCustomerPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validation = validateAddCustomerForm.safeParse({
       code: form.code,
@@ -88,7 +92,24 @@ export default function CreateCustomerPage() {
       phone_number: "",
       code: "",
     });
-    console.log(form);
+
+    try {
+      const result = await verifyCustomer(form).unwrap();
+
+      console.log("Add product result:", result);
+
+      if (result.ok) {
+        toast.success("مشتری اضافه شد");
+        setIsCode(false);
+      } else {
+        toast.error("خطا در اضافه کردن مشتری");
+      }
+    } catch (error) {
+      console.log("Error adding product:", error);
+      toast.error(error.data.error || "خطا در ثبت مشتری");
+      return;
+    }
+    setForm({ phone_number: "", code: "" });
   };
 
   const handleCancel = () => {
@@ -114,6 +135,7 @@ export default function CreateCustomerPage() {
             handleSubmit={handleSubmit}
             handleCancel={handleCancel}
             errors={errors}
+            isLoading={sendCodeQuery.isLoading || verifyCustomerQuery.isLoading}
           />
         </div>
       </SlideUpAnimation>

@@ -25,17 +25,18 @@ interface AddCustomerFormProps {
     phone_number: string;
     code: string;
   };
+  isLoading?: boolean;
 }
 
 export default function AddCustomerForm({
   isCode = false,
-  isLoading = false,
   form,
   handleFormChange,
   handleSendCode,
   handleSubmit,
   handleCancel,
   errors,
+  isLoading,
 }: AddCustomerFormProps) {
   return (
     <Card
@@ -108,6 +109,7 @@ export default function AddCustomerForm({
             loading={isLoading}
             startIcon={<PersonAddAlt1Rounded />}
             onClick={isCode ? handleSubmit : handleSendCode}
+            disabled={isLoading}
           >
             {isCode ? "ثبت مشتری" : "ارسال کد"}
           </Button>
