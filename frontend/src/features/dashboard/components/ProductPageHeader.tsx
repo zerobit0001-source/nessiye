@@ -5,74 +5,74 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import {
-    AddRounded,
-    ArrowForwardIosRounded,
-    DeleteRounded,
-    EditRounded,
+  AddRounded,
+  ArrowForwardIosRounded,
+  DeleteRounded,
+  EditRounded,
 } from "@mui/icons-material";
 
 import {
-    Box,
-    Button,
-    IconButton,
-    Modal,
-    Tooltip,
-    Typography,
+  Box,
+  Button,
+  IconButton,
+  Modal,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 
 import { toast } from "react-toastify";
 import { useDeleteProductMutation } from "../childs/products/api/ApiProduct";
 
 const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    boxShadow: 24,
-    p: 4,
-    borderRadius: "1rem",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  borderRadius: "1rem",
 };
 
 interface ProductPageHeaderProps {
-    id: string | number;
+  id: string | number;
 }
 
 const ProductPageHeader = ({ id }: ProductPageHeaderProps) => {
-    const router = useRouter();
+  const router = useRouter();
 
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const [deleteProduct, { isLoading }] = useDeleteProductMutation();
+  const [deleteProduct, { isLoading }] = useDeleteProductMutation();
 
-    const handleOpen = () => setOpen(true);
+  const handleOpen = () => setOpen(true);
 
-    const handleClose = () => {
-        if (!isLoading) {
-            setOpen(false);
-        }
-    };
+  const handleClose = () => {
+    if (!isLoading) {
+      setOpen(false);
+    }
+  };
 
-    const handleDelete = async () => {
-        try {
-            await deleteProduct(id).unwrap();
+  const handleDelete = async () => {
+    try {
+      await deleteProduct(id).unwrap();
 
-            toast.success("محصول با موفقیت حذف شد");
+      toast.success("محصول با موفقیت حذف شد");
 
-            handleClose();
+      handleClose();
 
-            router.push("/dashboard/products");
-        } catch (err) {
-            console.error(err);
+      router.push("/dashboard/products");
+    } catch (err) {
+      console.error(err);
 
-            toast.error("خطا در حذف محصول");
-        }
-    };
+      toast.error("خطا در حذف محصول");
+    }
+  };
 
-    return (
-        <>
-            <Modal
+  return (
+    <>
+      {/*<Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="delete-product-modal"
@@ -109,20 +109,20 @@ const ProductPageHeader = ({ id }: ProductPageHeaderProps) => {
                         </Button>
                     </Box>
                 </Box>
-            </Modal>
+            </Modal>*/}
 
-            <div className="flex items-center justify-between w-full">
-                <Button
-                    component={Link}
-                    href="/dashboard/products"
-                    size="small"
-                    startIcon={<ArrowForwardIosRounded fontSize="small" />}
-                    variant="outlined"
-                >
-                    برگشت
-                </Button>
+      <div className="flex items-center justify-between w-full">
+        <Button
+          component={Link}
+          href="/dashboard/products"
+          size="small"
+          startIcon={<ArrowForwardIosRounded fontSize="small" />}
+          variant="outlined"
+        >
+          برگشت
+        </Button>
 
-                <Box className="flex gap-2">
+        {/*<Box className="flex gap-2">
                     <Tooltip title="حذف محصول" arrow leaveDelay={500}>
                         <IconButton color="error" onClick={handleOpen}>
                             <DeleteRounded />
@@ -142,10 +142,10 @@ const ProductPageHeader = ({ id }: ProductPageHeaderProps) => {
                     <Button endIcon={<AddRounded />} variant="contained">
                         تعداد
                     </Button>
-                </Box>
-            </div>
-        </>
-    );
+                </Box>*/}
+      </div>
+    </>
+  );
 };
 
 export default ProductPageHeader;

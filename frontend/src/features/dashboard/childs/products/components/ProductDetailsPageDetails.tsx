@@ -17,6 +17,7 @@ import {
   CategoryOutlined,
 } from "@mui/icons-material";
 import { formatPrice } from "@/utils/formatters";
+import Link from "next/link";
 
 interface ProductDetailsPageDetailsProps {
   name: string;
@@ -113,9 +114,11 @@ export default function ProductDetailsPageDetails({
           </Button>
 
           <span>
-            <IconButton color="default">
-              <EditOutlined />
-            </IconButton>
+            <Link href={`/dashboard/products/${productId}/edit`}>
+              <IconButton color="default">
+                <EditOutlined />
+              </IconButton>
+            </Link>
 
             <IconButton color="error">
               <DeleteOutline />
