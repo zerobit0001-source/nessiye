@@ -31,11 +31,11 @@ export interface CustomerModalFormType {
 
 export interface ProductModalFormType {
     name: string,
-    barcode: string | number,
+    barcode?: string | number,
     buy_price: string | number,
     sell_price: string | number,
-    exp_date: string | number,
-    category: number | null,
+    exp_date?: string | number,
+    category?: number | null,
     description?: string
     stock?: number,
 }
