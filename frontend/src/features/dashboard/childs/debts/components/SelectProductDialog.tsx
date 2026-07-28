@@ -47,7 +47,11 @@ export default function SelectProductDialog({
 
   return (
     <React.Fragment>
-      <Button variant="outlined" className=" w-full " onClick={handleClickOpen}>
+      <Button
+        variant="outlined"
+        className=" w-full h-20"
+        onClick={handleClickOpen}
+      >
         انتخاب کالا
       </Button>
       <Dialog

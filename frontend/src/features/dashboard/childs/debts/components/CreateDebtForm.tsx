@@ -5,9 +5,11 @@ import {
   Autocomplete,
   Avatar,
   Box,
+  Button,
   Card,
   createFilterOptions,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAddSalesMutation } from "../../sales/api/ApiSales";
@@ -16,6 +18,7 @@ import { toast } from "react-toastify";
 import SelectCustomerDialog from "./SelectCustomerDialog";
 import SelectProductDialog from "./SelectProductDialog";
 import SelectedProductsList from "./SelectedProductsList";
+import { formatPrice } from "@/utils/formatters";
 
 export default function CreateDebtForm() {
   const [scannerOpen, setScannerOpen] = useState(false);
@@ -118,9 +121,13 @@ export default function CreateDebtForm() {
       prev.filter((item) => item.product.id !== productId),
     );
   };
+  const totalCost = selectedProducts.reduce(
+    (sum, item) => sum + item.product.sell_price * item.quantity,
+    0,
+  );
   return (
-    <div className="w-200 grid grid-cols-1 lg:grid-cols-6 gap-4">
-      <div className=" col-span-full lg:col-span-4">
+    <div className="w-250 grid grid-cols-1 lg:grid-cols-6 gap-4">
+      <div className=" col-span-full lg:col-span-4 flex flex-col gap-4">
         {/* Customer select dialog */}
         <SelectCustomerDialog
           selectedCustomer={selectedCustomer}
@@ -141,9 +148,41 @@ export default function CreateDebtForm() {
           onDelete={handleDelete}
         />
       </div>
-      <Card className="col-span-full lg:col-span-2 p-4">
-        <p>s</p>
-      </Card>
+      <div className="col-span-full lg:col-span-2">
+        <Card
+          elevation={1}
+          className="rounded-lg! py-4 px-4 flex flex-col gap-4"
+        >
+          <Typography variant="body1" className="font-bold!">
+            خلاصه بدهی
+          </Typography>
+          <span className="w-full flex items-center justify-between">
+            <Typography variant="caption">تعداد عناوین :</Typography>
+            <Typography variant="caption">
+              {selectedProducts.length} کالا
+            </Typography>
+          </span>
+          <span className="w-full flex items-center justify-between">
+            <Typography variant="caption">جمع کل :</Typography>
+            <Typography variant="caption">
+              {formatPrice(totalCost)} تومان
+            </Typography>
+          </span>
+          <Button variant={"contained"} color="primary" onClick={handleAddSale}>
+            ثبت بدهی
+          </Button>
+          <Button
+            variant={"outlined"}
+            color="error"
+            onClick={() => {
+              setSelectedCustomer(null);
+              setSelectedProducts([]);
+            }}
+          >
+            انصراف
+          </Button>
+        </Card>
+      </div>
     </div>
   );
 }

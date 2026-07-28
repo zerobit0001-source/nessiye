@@ -69,8 +69,8 @@ export default function SelectCustomerDialog({
         </Card>
       ) : (
         <Button
-          variant="outlined"
-          className=" w-full "
+          variant="contained"
+          className=" w-full h-20"
           onClick={handleClickOpen}
         >
           انتخاب مشتری

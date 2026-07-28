@@ -23,7 +23,7 @@ export default function SelectedProductsList({
   onIncrease,
 }: SelectedProductsListProps) {
   if (products.length === 0) {
-    return <Card className="p-8 text-center">هیچ کالایی انتخاب نشده است.</Card>;
+    return <Card className="p-4 text-center">هیچ کالایی انتخاب نشده است.</Card>;
   }
   return (
     <div className="flex flex-col gap-2">
