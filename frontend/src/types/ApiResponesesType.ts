@@ -41,8 +41,9 @@ export interface GetSaleByIdResponeseType {
 }
 
 export interface PostSalesType {
-  customer_id: number | null;
+  customer_id?: number | null;
   items: { product_id: number; quantity: number }[];
+  is_debt: boolean;
 }
 
 // debts
