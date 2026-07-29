@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from sales.models import Sale, SaleItem
 from django.db.models import Sum, Count, Avg, F, ExpressionWrapper, IntegerField
+from debts.models import Debt, CustomerShop
 
 
 def get_period_filter(period):
@@ -71,4 +72,62 @@ class SalesReportView(APIView):
             },
             'top_customers': list(top_customers),
             'top_products': list(top_products)
+        })
+
+
+class DebtsReportView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        period = request.query_params.get('period', 'month')
+        from_date = get_period_filter(period)
+
+        debts = Debt.objects.filter(shop=request.user, created_at__gte=from_date).prefetch_related('payments')
+
+        total_debt = sum(d.amount for d in debts)
+        settled = [d for d in debts if d.is_paid]
+        overdue = [d for d in debts if not d.is_paid and d.created_at < timezone.now() - timedelta(days=30)]
+
+        # top debtors
+        top_debtors = CustomerShop.objects.filter(
+            shop=request.user
+        ).select_related('customer').annotate(
+            total_debt=Sum('debts__amount'),
+            total_paid=Sum('debts__payments__amount')
+        ).order_by('-total_debt')[:5]
+
+        # overdue debts
+        overdue_list = [
+            {
+                'debt_id': d.debt_id,
+                'customer_name': d.customer.customer.full_name,
+                'amount': d.amount,
+                'remaining': d.remaining,
+                'created_at': d.created_at
+            }
+            for d in overdue[:5]
+        ]
+
+        return Response({
+            'ok': True,
+            'period': period,
+            'summary': {
+                'total_debt': total_debt,
+                'total_debtors': len(debts),
+                'settled_count': len(settled),
+                'overdue_count': len(overdue)
+            },
+            'top_debtors': [
+                {
+                    'customer_name': cs.customer.full_name,
+                    'phone_number': cs.customer.phone_number,
+                    'total_debt': cs.total_debt or 0,
+                    'remaining': (cs.total_debt or 0) - (cs.total_paid or 0)
+                }
+                for cs in top_debtors
+            ],
+            'overdue_debts': overdue_list
         })
