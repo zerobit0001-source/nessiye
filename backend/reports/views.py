@@ -730,22 +730,32 @@ class CustomersReportView(APIView):
         ).order_by('date')
 
         # top by amount
-        top_by_amount = customer_shops.select_related('customer').annotate(
+        top_by_amount = Sale.objects.filter(
+            shop=request.user,
+            created_at__gte=from_date,
+            customer__isnull=False
+        ).values(
+            'customer__full_name',
+            'customer__phone_number'
+        ).annotate(
             total=Sum(
                 ExpressionWrapper(
-                    F('customer__purchases__items__price') * F('customer__purchases__items__quantity'),
+                    F('items__price') * F('items__quantity'),
                     output_field=IntegerField()
-                ),
-                filter=Q(customer__purchases__created_at__gte=from_date)
+                )
             )
         ).order_by('-total')[:5]
 
         # top by count
-        top_by_count = customer_shops.select_related('customer').annotate(
-            count=Count(
-                'customer__purchases',
-                filter=Q(customer__purchases__created_at__gte=from_date)
-            )
+        top_by_count = Sale.objects.filter(
+            shop=request.user,
+            created_at__gte=from_date,
+            customer__isnull=False
+        ).values(
+            'customer__full_name',
+            'customer__phone_number'
+        ).annotate(
+            count=Count('id')
         ).order_by('-count')[:5]
 
         return Response({
@@ -767,22 +777,21 @@ class CustomersReportView(APIView):
             ],
             'top_by_amount': [
                 {
-                    'customer_name': cs.customer.full_name,
-                    'phone_number': cs.customer.phone_number,
-                    'total': cs.total or 0
+                    'customer_name': c['customer__full_name'],
+                    'phone_number': c['customer__phone_number'],
+                    'total': c['total'] or 0
                 }
-                for cs in top_by_amount
+                for c in top_by_amount
             ],
             'top_by_count': [
                 {
-                    'customer_name': cs.customer.full_name,
-                    'phone_number': cs.customer.phone_number,
-                    'count': cs.count or 0
+                    'customer_name': c['customer__full_name'],
+                    'phone_number': c['customer__phone_number'],
+                    'count': c['count'] or 0
                 }
-                for cs in top_by_count
+                for c in top_by_count
             ]
         })
-
 
 class ProductsReportView(APIView):
     permission_classes = [IsAuthenticated]
