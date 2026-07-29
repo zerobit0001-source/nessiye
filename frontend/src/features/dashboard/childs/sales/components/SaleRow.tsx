@@ -25,7 +25,7 @@ const SaleRow = ({ sale }: SaleRowPropType) => {
         </Link>
       </TableCell>
 
-      <TableCell align="center">{sale.customer_name}</TableCell>
+      <TableCell align="center">{sale.customer_name ?? "ناشناس"}</TableCell>
 
       <TableCell align="center">{formatPrice(sale.total)} تومان</TableCell>
 

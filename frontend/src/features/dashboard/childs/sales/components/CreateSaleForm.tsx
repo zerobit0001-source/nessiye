@@ -15,12 +15,13 @@ import { useEffect, useState } from "react";
 import { useAddSalesMutation } from "../../sales/api/ApiSales";
 import { useGetModalDataQuery } from "@/features/dashboard/api/ApiModalsData";
 import { toast } from "react-toastify";
-import SelectCustomerDialog from "./SelectCustomerDialog";
-import SelectProductDialog from "./SelectProductDialog";
-import SelectedProductsList from "./SelectedProductsList";
-import { formatPrice } from "@/utils/formatters";
 
-export default function CreateDebtForm() {
+import { formatPrice } from "@/utils/formatters";
+import SelectCustomerDialog from "./SelectCsutomerDialog";
+import SelectProductDialog from "../../debts/components/SelectProductDialog";
+import SelectedProductsList from "../../debts/components/SelectedProductsList";
+
+export default function CreateSaleForm() {
   const [scannerOpen, setScannerOpen] = useState(false);
 
   const [selectedCustomer, setSelectedCustomer] = useState<{
@@ -71,7 +72,6 @@ export default function CreateDebtForm() {
   async function handleAddSale() {
     const body = {
       customer_id: selectedCustomer?.id,
-      is_debt: true,
       items: selectedProducts.map((item) => ({
         product_id: item.product.id,
         quantity: item.quantity,
@@ -82,11 +82,11 @@ export default function CreateDebtForm() {
       const result = await addSale(body).unwrap();
 
       if (!result.ok) {
-        toast.error("خطا در ایجاد نسیه");
+        toast.error("خطا در ایجاد فروش");
         return;
       }
 
-      toast.success("نسیه ثبت شد");
+      toast.success("فروش ثبت شد");
       setSelectedCustomer(null);
       setSelectedProducts([]);
       return;
@@ -128,19 +128,22 @@ export default function CreateDebtForm() {
   return (
     <div className="w-250 grid grid-cols-1 lg:grid-cols-6 gap-4">
       <div className=" col-span-full lg:col-span-4 flex flex-col gap-4">
-        {/* Customer select dialog */}
+        {/* Select Customer */}
         <SelectCustomerDialog
-          selectedCustomer={selectedCustomer}
           customers={customers}
+          selectedCustomer={selectedCustomer}
           setSelectedCustomer={setSelectedCustomer}
         />
-        {/* Product select dialog */}
+        {/* Select product */}
+
         <SelectProductDialog
           products={products}
           selectedProducts={selectedProducts}
           setSelectedProducts={setSelectedProducts}
         />
-        {/* Selected products list */}
+
+        {/* products List */}
+
         <SelectedProductsList
           products={selectedProducts}
           onDecrease={handleDecrease}
@@ -151,10 +154,10 @@ export default function CreateDebtForm() {
       <div className="col-span-full lg:col-span-2">
         <Card
           elevation={1}
-          className="rounded-lg! py-4 px-4 flex flex-col gap-4 sticky top-0 "
+          className="rounded-lg! py-4 px-4 flex flex-col gap-4 sticky top-0"
         >
           <Typography variant="body1" className="font-bold!">
-            خلاصه بدهی
+            خلاصه فروش
           </Typography>
           <span className="w-full flex items-center justify-between">
             <Typography variant="caption">تعداد عناوین :</Typography>
@@ -169,7 +172,7 @@ export default function CreateDebtForm() {
             </Typography>
           </span>
           <Button variant={"contained"} color="primary" onClick={handleAddSale}>
-            ثبت بدهی
+            ثبت فروش
           </Button>
           <Button
             variant={"outlined"}
