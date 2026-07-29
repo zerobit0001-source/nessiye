@@ -7,6 +7,7 @@ from rest_framework import status
 from sales.models import Sale, SaleItem
 from django.db.models import Sum, Count, Avg, F, ExpressionWrapper, IntegerField
 from debts.models import Debt, CustomerShop
+from debts.models import Payment
 
 
 def get_period_filter(period):
@@ -131,3 +132,57 @@ class DebtsReportView(APIView):
             ],
             'overdue_debts': overdue_list
         })
+
+
+class PaymentsReportView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        period = request.query_params.get('period', 'month')
+        from_date = get_period_filter(period)
+
+        payments = Payment.objects.filter(debt__shop=request.user, created_at__gte=from_date)
+
+        total_paid = payments.aggregate(total=Sum('amount'))['total'] or 0
+        total_count = payments.count()
+        today_total = payments.filter(created_at__date=timezone.now().date()).aggregate(total=Sum('amount'))['total'] or 0
+
+        # largest payments
+        largest = payments.select_related('debt__customer__customer').order_by('-amount')[:5]
+
+        # recent payments
+        recent = payments.select_related('debt__customer__customer').order_by('-created_at')[:5]
+
+        return Response({
+            'ok': True,
+            'period': period,
+            'summary': {
+                'total_paid': total_paid,
+                'total_count': total_count,
+                'today_total': today_total
+            },
+            'largest_payments': [
+                {
+                    'payment_id': p.payment_id,
+                    'customer_name': p.debt.customer.customer.full_name,
+                    'amount': p.amount,
+                    'created_at': p.created_at
+                }
+                for p in largest
+            ],
+            'recent_payments': [
+                {
+                    'payment_id': p.payment_id,
+                    'customer_name': p.debt.customer.customer.full_name,
+                    'amount': p.amount,
+                    'created_at': p.created_at
+                }
+                for p in recent
+            ]
+        })
+
+
+
