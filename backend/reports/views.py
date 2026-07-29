@@ -8,6 +8,7 @@ from sales.models import Sale, SaleItem
 from django.db.models import Sum, Count, Avg, F, ExpressionWrapper, IntegerField
 from debts.models import Debt, CustomerShop
 from debts.models import Payment
+from products.models import Product
 
 
 def get_period_filter(period):
@@ -185,4 +186,126 @@ class PaymentsReportView(APIView):
         })
 
 
+class CustomersReportView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        period = request.query_params.get('period', 'month')
+        from_date = get_period_filter(period)
+
+        customer_shops = CustomerShop.objects.filter(shop=request.user).select_related('customer')
+        active_count = customer_shops.filter(customer__purchases__created_at__gte=from_date).distinct().count()
+
+        avg_purchase = Sale.objects.filter(
+            shop=request.user, created_at__gte=from_date
+        ).annotate(
+            total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
+        ).aggregate(avg=Avg('total'))['avg'] or 0
+
+        avg_purchase_count = Sale.objects.filter(
+            shop=request.user, created_at__gte=from_date
+        ).values('customer').annotate(count=Count('id')).aggregate(avg=Avg('count'))['avg'] or 0
+
+        # top customers by amount
+        top_by_amount = CustomerShop.objects.filter(
+            shop=request.user
+        ).select_related('customer').annotate(
+            total=Sum(ExpressionWrapper(
+                F('customer__purchases__items__price') * F('customer__purchases__items__quantity'),
+                output_field=IntegerField()
+            ))
+        ).order_by('-total')[:5]
+
+        # top customers by count
+        top_by_count = CustomerShop.objects.filter(
+            shop=request.user
+        ).select_related('customer').annotate(
+            count=Count('customer__purchases')
+        ).order_by('-count')[:5]
+
+        # new customers this period
+        new_customers = customer_shops.filter(created_at__gte=from_date).count()
+
+        return Response({
+            'ok': True,
+            'period': period,
+            'summary': {
+                'total_customers': customer_shops.count(),
+                'active_count': active_count,
+                'avg_purchase_amount': int(avg_purchase),
+                'avg_purchase_count': int(avg_purchase_count),
+                'new_this_period': new_customers
+            },
+            'top_by_amount': [
+                {
+                    'customer_name': cs.customer.full_name,
+                    'phone_number': cs.customer.phone_number,
+                    'total': cs.total or 0
+                }
+                for cs in top_by_amount
+            ],
+            'top_by_count': [
+                {
+                    'customer_name': cs.customer.full_name,
+                    'phone_number': cs.customer.phone_number,
+                    'count': cs.count or 0
+                }
+                for cs in top_by_count
+            ]
+        })
+
+
+class ProductsReportView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        period = request.query_params.get('period', 'month')
+        from_date = get_period_filter(period)
+
+        products = Product.objects.filter(shop=request.user)
+        total_count = products.count()
+        total_stock = products.aggregate(total=Sum('stock'))['total'] or 0
+        out_of_stock = products.filter(stock=0).count()
+        low_stock = products.filter(stock__gt=0, stock__lte=10).count()
+
+        # top selling products
+        top_selling = SaleItem.objects.filter(
+            sale__shop=request.user, sale__created_at__gte=from_date
+        ).values('product_name').annotate(
+            total_qty=Sum('quantity'),
+            total_amount=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField()))
+        ).order_by('-total_amount')[:5]
+
+        # no sales products
+        sold_product_names = SaleItem.objects.filter(
+            sale__shop=request.user, sale__created_at__gte=from_date
+        ).values_list('product_name', flat=True).distinct()
+
+        no_sales = products.exclude(name__in=sold_product_names)[:5]
+
+        return Response({
+            'ok': True,
+            'period': period,
+            'summary': {
+                'total_count': total_count,
+                'total_stock': total_stock,
+                'out_of_stock': out_of_stock,
+                'low_stock': low_stock
+            },
+            'top_selling': list(top_selling),
+            'no_sales_products': [
+                {
+                    'id': p.id,
+                    'name': p.name,
+                    'stock': p.stock,
+                    'sell_price': p.sell_price
+                }
+                for p in no_sales
+            ]
+        })
