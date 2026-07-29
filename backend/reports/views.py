@@ -9,6 +9,7 @@ from django.db.models import Sum, Count, Avg, F, ExpressionWrapper, IntegerField
 from debts.models import Debt, CustomerShop
 from debts.models import Payment
 from products.models import Product
+from django.db.models.functions import TruncDate, TruncWeek, TruncMonth
 
 
 def get_period_filter(period):
@@ -33,6 +34,13 @@ class SalesReportView(APIView):
         period = request.query_params.get('period', 'month')
         from_date = get_period_filter(period)
 
+        if period == 'week':
+            trunc = TruncDate
+        elif period in ['month', 'three_months']:
+            trunc = TruncDate
+        elif period == 'year':
+            trunc = TruncMonth
+
         sales = Sale.objects.filter(shop=request.user, created_at__gte=from_date)
 
         cash_sales = sales.filter(is_debt=False).annotate(
@@ -54,6 +62,45 @@ class SalesReportView(APIView):
             total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
         ).order_by('-total')[:5]
 
+
+        trend = Sale.objects.filter(
+            shop=request.user, created_at__gte=from_date
+        ).annotate(
+            date=trunc('created_at')
+        ).values('date').annotate(
+            cash=Sum(
+                ExpressionWrapper(
+                    F('items__price') * F('items__quantity'),
+                    output_field=IntegerField()
+                ),
+                filter=~F('is_debt')
+            ),
+            debt=Sum(
+                ExpressionWrapper(
+                    F('items__price') * F('items__quantity'),
+                    output_field=IntegerField()
+                ),
+                filter=F('is_debt')
+            ),
+            total=Sum(
+                ExpressionWrapper(
+                    F('items__price') * F('items__quantity'),
+                    output_field=IntegerField()
+                )
+            )
+        ).order_by('date')
+
+        trend_data = [
+            {
+                'date': str(t['date']),
+                'cash': t['cash'] or 0,
+                'debt': t['debt'] or 0,
+                'total': t['total'] or 0
+            }
+            for t in trend
+        ]
+
+
         # top products
         top_products = SaleItem.objects.filter(
             sale__shop=request.user, sale__created_at__gte=from_date
@@ -72,6 +119,7 @@ class SalesReportView(APIView):
                 'total_invoices': total_invoices,
                 'total_items_sold': total_items_sold
             },
+            'trend': trend_data,
             'top_customers': list(top_customers),
             'top_products': list(top_products)
         })
