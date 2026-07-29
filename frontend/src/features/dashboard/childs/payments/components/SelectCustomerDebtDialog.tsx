@@ -2,9 +2,16 @@
 
 import { DebtType } from "@/types/types";
 import { formatDate, formatPrice } from "@/utils/formatters";
-import { CloseRounded, DeleteRounded } from "@mui/icons-material";
+import {
+  CancelRounded,
+  Check,
+  CheckCircleRounded,
+  CloseRounded,
+  DeleteRounded,
+} from "@mui/icons-material";
 import {
   Avatar,
+  Box,
   Button,
   Card,
   Dialog,
@@ -57,16 +64,17 @@ export default function SelectCustomerDebtDialog({
             <Avatar />
             <span className="flex flex-col ">
               <Typography variant="body1" className="font-bold!">
-                {selectedDebt.full_name}
+                {selectedDebt.debt_id}#
               </Typography>
 
               <Typography variant="caption">
-                {selectedDebt.phone_number}
+                {formatDate(selectedDebt.created_at, { dateStyle: "long" })} -{" "}
+                {formatDate(selectedDebt.created_at)}
               </Typography>
             </span>
           </span>
           <Typography variant="body2" color="error">
-            بدهی فعال {formatPrice(2000000)} تومان
+            بدهی {formatPrice(selectedDebt.remaining)} تومان
           </Typography>
         </Card>
       ) : (*/}
@@ -99,15 +107,28 @@ export default function SelectCustomerDebtDialog({
                   setSelectedDebt(debt);
                   handleClose();
                 }}
+                className={`${debt.is_paid ? "bg-green-200/30!" : ""}`}
               >
                 <ListItemAvatar>
-                  <Avatar />
+                  {debt.is_paid ? (
+                    <CheckCircleRounded color="success" />
+                  ) : (
+                    <CancelRounded color="error" />
+                  )}
                 </ListItemAvatar>
 
-                <ListItemText
-                  primary={debt.debt_id}
-                  secondary={formatDate(debt.created_at)}
-                />
+                <Box flex={1}>
+                  <Typography fontWeight={700}>بدهی #{debt.debt_id}</Typography>
+
+                  <Typography variant="caption">
+                    {formatDate(debt.created_at, { dateStyle: "long" })} -{" "}
+                    {formatDate(debt.created_at)}
+                  </Typography>
+                </Box>
+
+                <Typography color={debt.is_paid ? "success" : "error"}>
+                  {formatPrice(debt.remaining)}
+                </Typography>
               </ListItemButton>
             ))}
           </List>
