@@ -1184,7 +1184,7 @@ class ReportProductsView(APIView):
             sale__shop=request.user,
             sale__created_at__date__gte=from_date,
             sale__created_at__date__lte=to_date
-        ).values('product_name').annotate(
+        ).values('product__name').annotate(
             total_qty=Sum('quantity'),
             total_amount=Sum(
                 ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField())
@@ -1195,7 +1195,7 @@ class ReportProductsView(APIView):
             sale__shop=request.user,
             sale__created_at__date__gte=from_date,
             sale__created_at__date__lte=to_date
-        ).values_list('product_name', flat=True).distinct()
+        ).values_list('product__name', flat=True).distinct()
 
         no_sales = Product.objects.filter(
             shop=request.user
