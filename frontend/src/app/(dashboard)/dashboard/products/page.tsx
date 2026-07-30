@@ -5,6 +5,7 @@ import ProductsSearch from "@/features/dashboard/childs/products/components/Prod
 import ProductsList from "@/features/dashboard/childs/products/components/ProductsList";
 import ProductsPageCards from "@/features/dashboard/childs/products/components/ProductsPageCards";
 import ProductsPageToolbar from "@/features/dashboard/childs/products/components/ProductsPageToolbar";
+import LinkButton from "@/features/dashboard/components/LinkButton";
 interface Props {
   searchParams: Promise<{
     search?: string;
@@ -20,7 +21,11 @@ const Products = async ({ searchParams }: Props) => {
   return (
     <Container>
       <DashboardsPageHeader title="حساب ها" caption="200 محصول">
-        <AddProductModal />
+        <LinkButton
+          link="/dashboard/products/create"
+          text="افزودن کالا"
+          variant="contained"
+        />
       </DashboardsPageHeader>
       <ProductsPageCards />
       <ProductsPageToolbar />

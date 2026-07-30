@@ -8,6 +8,7 @@ import CustomersList from "@/features/dashboard/childs/customers/components/Cust
 import CustomersSearch from "@/features/dashboard/childs/customers/components/CustomersSearch";
 import CustomerCards from "@/features/dashboard/childs/customers/components/CustomersCards";
 import CustomersPageToolbar from "@/features/dashboard/childs/customers/components/CustomersPageToolbar";
+import LinkButton from "@/features/dashboard/components/LinkButton";
 
 interface Props {
   searchParams: Promise<{
@@ -27,7 +28,11 @@ const DashboardCustomers = async ({ searchParams }: Props) => {
         title="مشتری ها"
         caption="247 مشتری ثبت نام کرده ، 6 نا مشتری این ماه"
       >
-        <AddCustomerModal />
+        <LinkButton
+          link="/dashboard/customers/create"
+          text="افزودن مشتری"
+          variant="contained"
+        />
       </DashboardsPageHeader>
       <CustomerCards />
       <CustomersPageToolbar />
