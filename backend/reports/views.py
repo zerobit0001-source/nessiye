@@ -855,8 +855,16 @@
 #             'stock_by_category': list(stock_by_category)
 #         })
 
-from datetime import timedelta
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from django.utils import timezone
+from datetime import timedelta
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Sum, Count, Avg, F, ExpressionWrapper, IntegerField, Q
+from sales.models import Sale
+from debts.models import Debt, Payment
+from customer_management.models import CustomerShop
 
 
 def get_date_range(request):
@@ -867,3 +875,83 @@ def get_date_range(request):
     if not to_date:
         to_date = timezone.now().date()
     return from_date, to_date
+
+class ReportSummaryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        from_date, to_date = get_date_range(request)
+        thirty_days_ago = timezone.now() - timedelta(days=30)
+
+        sales = Sale.objects.filter(
+            shop=request.user,
+            created_at__date__gte=from_date,
+            created_at__date__lte=to_date
+        )
+
+        sale_summary = sales.annotate(
+            sale_total=Sum(
+                ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField())
+            )
+        ).aggregate(
+            total_cash=Sum('sale_total', filter=Q(is_debt=False)),
+            total_debt=Sum('sale_total', filter=Q(is_debt=True)),
+            total_invoices=Count('id', distinct=True)
+        )
+
+        total_cash = sale_summary['total_cash'] or 0
+        total_debt_sales = sale_summary['total_debt'] or 0
+        total_invoices = sale_summary['total_invoices'] or 0
+        total = total_cash + total_debt_sales
+        avg_per_invoice = int(total / total_invoices) if total_invoices > 0 else 0
+
+        all_debts = Debt.objects.filter(shop=request.user)
+        total_paid = Payment.objects.filter(
+            debt__shop=request.user
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        total_debt_amount = all_debts.aggregate(total=Sum('amount'))['total'] or 0
+        remaining = total_debt_amount - total_paid
+        collection_rate = int((total_paid / total_debt_amount * 100)) if total_debt_amount > 0 else 0
+
+        open_debts = all_debts.annotate(
+            paid=Sum('payments__amount')
+        ).filter(
+            Q(paid__isnull=True) | Q(paid__lt=F('amount'))
+        ).count()
+
+        urgent_debts = all_debts.filter(
+            created_at__lt=thirty_days_ago
+        ).annotate(
+            paid=Sum('payments__amount')
+        ).filter(
+            Q(paid__isnull=True) | Q(paid__lt=F('amount'))
+        ).count()
+
+        
+        total_customers = CustomerShop.objects.filter(shop=request.user).count()
+        new_customers = CustomerShop.objects.filter(
+            shop=request.user,
+            created_at__date__gte=from_date,
+            created_at__date__lte=to_date
+        ).count()
+
+        return Response({
+            'ok': True,
+            'summary': {
+                'total_sales': total,
+                'total_debt_registered': total_debt_sales,
+                'total_collected': total_paid,
+                'remaining_debt': remaining,
+                'collection_rate': collection_rate,
+                'total_customers': total_customers,
+                'new_customers': new_customers,
+                'total_invoices': total_invoices,
+                'open_debts': open_debts,
+                'urgent_debts': urgent_debts,
+                'avg_per_invoice': avg_per_invoice
+            }
+        })
