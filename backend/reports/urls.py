@@ -13,7 +13,7 @@ from django.urls import path
 from .views import ReportSummaryView, ReportChartsView, ReportCustomersView, ReportProductsView
 
 urlpatterns = [
-    path('reports/summary/', ReportSummaryView.as_view()),
+    path('reports/cards/', ReportSummaryView.as_view()),
     path('reports/charts/', ReportChartsView.as_view()),
     path('reports/customers/', ReportCustomersView.as_view()),
     path('reports/products/', ReportProductsView.as_view()),
