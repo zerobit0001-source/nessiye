@@ -855,3 +855,15 @@
 #             'stock_by_category': list(stock_by_category)
 #         })
 
+from datetime import timedelta
+from django.utils import timezone
+
+
+def get_date_range(request):
+    from_date = request.query_params.get('from_date')
+    to_date = request.query_params.get('to_date')
+    if not from_date:
+        from_date = (timezone.now() - timedelta(days=30)).date()
+    if not to_date:
+        to_date = timezone.now().date()
+    return from_date, to_date
