@@ -127,7 +127,7 @@ export default function SelectCustomerDebtDialog({
                 </Box>
 
                 <Typography color={debt.is_paid ? "success" : "error"}>
-                  {formatPrice(debt.remaining)}
+                  {formatPrice(debt.remaining)} تومان
                 </Typography>
               </ListItemButton>
             ))}
