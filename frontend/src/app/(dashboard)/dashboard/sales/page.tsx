@@ -9,6 +9,7 @@ import AddSaleModal from "@/features/dashboard/components/AddSaleModal";
 import { Suspense } from "react";
 import SalesPageCards from "@/features/dashboard/childs/sales/components/SalesPageCard";
 import SalesToolbar from "@/features/dashboard/childs/sales/components/SalesPageToolbar";
+import LinkButton from "@/features/dashboard/components/LinkButton";
 interface Props {
   searchParams: Promise<{
     search?: string;
@@ -26,7 +27,11 @@ const Sales = async ({ searchParams }: Props) => {
         title="فروش ها"
         caption="128 حساب ، 180000000 ریال جمع حساب ها"
       >
-        <AddSaleModal />
+        <LinkButton
+          link="/dashboard/sales/create"
+          text="افزودن فروش"
+          variant="contained"
+        />
       </DashboardsPageHeader>
       <SalesPageCards />
       <SalesToolbar />

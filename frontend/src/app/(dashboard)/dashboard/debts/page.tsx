@@ -6,6 +6,7 @@ import AddDebtModal from "@/features/dashboard/components/AddDebtsModal";
 import { Suspense } from "react";
 import DebtsCards from "@/features/dashboard/childs/debts/components/DebtsPageCards";
 import DebtsPageToolbar from "@/features/dashboard/childs/debts/components/DebtsPageToolbar";
+import LinkButton from "@/features/dashboard/components/LinkButton";
 interface Props {
   searchParams: Promise<{
     search?: string;
@@ -22,7 +23,11 @@ const Debts = async ({ searchParams }: Props) => {
         title="حساب ها"
         caption="128 حساب ، 180000000 ریال جمع حساب ها"
       >
-        <AddDebtModal />
+        <LinkButton
+          link="/dashboard/debts/create"
+          text="افزودن بدهی"
+          variant="contained"
+        />
       </DashboardsPageHeader>
       <DebtsCards />
       <DebtsPageToolbar />

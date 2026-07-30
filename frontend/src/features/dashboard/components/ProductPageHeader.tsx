@@ -119,7 +119,7 @@ const ProductPageHeader = ({ id }: ProductPageHeaderProps) => {
           startIcon={<ArrowForwardIosRounded fontSize="small" />}
           variant="outlined"
         >
-          برگشت
+          بازگشت
         </Button>
 
         {/*<Box className="flex gap-2">
