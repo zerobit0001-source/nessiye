@@ -73,8 +73,11 @@ export default function AccountSaleDetailsPage({
               </Typography>
             </div>
             <Divider />
-            {sale?.items.map((item) => (
-              <div className="w-full flex items-center justify-between">
+            {sale?.items.map((item, index) => (
+              <div
+                className="w-full flex items-center justify-between"
+                key={index}
+              >
                 <div className="flex flex-col gap-2">
                   <Typography variant="subtitle1" className="font-bold!">
                     {item.product_name}

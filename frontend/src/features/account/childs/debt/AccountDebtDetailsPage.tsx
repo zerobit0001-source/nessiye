@@ -10,7 +10,7 @@ import {
 } from "@mui/icons-material";
 import { Card, Chip, Divider, Typography } from "@mui/material";
 import { useGetShopDebtDetailsQuery } from "../../api/ApiAccount";
-import { formatDate } from "@/utils/formatters";
+import { formatDate, formatPrice } from "@/utils/formatters";
 import Link from "next/link";
 
 export default function AccountDebtDetailsPage({
@@ -86,39 +86,25 @@ export default function AccountDebtDetailsPage({
               </Typography>
             </div>
             <Divider />
-            <div className="w-full flex items-center justify-between">
-              <div className="flex flex-col gap-2">
+            {debt?.items.map((item, index) => (
+              <div
+                className="w-full flex items-center justify-between"
+                key={index}
+              >
+                <div className="flex flex-col gap-2">
+                  <Typography variant="subtitle1" className="font-bold!">
+                    {item.product_name}
+                  </Typography>
+                  <Typography variant="caption">
+                    {formatPrice(item.quantity)} عدد × {formatPrice(item.price)}{" "}
+                    تومان
+                  </Typography>
+                </div>
                 <Typography variant="subtitle1" className="font-bold!">
-                  روغن سرخ‌کردنی بهار (۲ لیتری)
+                  {formatPrice(item.total)} تومان{" "}
                 </Typography>
-                <Typography variant="caption">۲ عدد × ۱۴۵,۰۰۰ تومان</Typography>
               </div>
-              <Typography variant="subtitle1" className="font-bold!">
-                ۲۹۰,۰۰۰ تومان{" "}
-              </Typography>
-            </div>
-            <div className="w-full flex items-center justify-between">
-              <div className="flex flex-col gap-2">
-                <Typography variant="subtitle1" className="font-bold!">
-                  روغن سرخ‌کردنی بهار (۲ لیتری)
-                </Typography>
-                <Typography variant="caption">۲ عدد × ۱۴۵,۰۰۰ تومان</Typography>
-              </div>
-              <Typography variant="subtitle1" className="font-bold!">
-                ۲۹۰,۰۰۰ تومان{" "}
-              </Typography>
-            </div>
-            <div className="w-full flex items-center justify-between">
-              <div className="flex flex-col gap-2">
-                <Typography variant="subtitle1" className="font-bold!">
-                  روغن سرخ‌کردنی بهار (۲ لیتری)
-                </Typography>
-                <Typography variant="caption">۲ عدد × ۱۴۵,۰۰۰ تومان</Typography>
-              </div>
-              <Typography variant="subtitle1" className="font-bold!">
-                ۲۹۰,۰۰۰ تومان{" "}
-              </Typography>
-            </div>
+            ))}
           </Card>
 
           {/* Payment history */}
@@ -152,7 +138,7 @@ export default function AccountDebtDetailsPage({
                     className="font-bold!"
                     color="success"
                   >
-                    {payment.amount} تومان
+                    {formatPrice(payment.amount)} تومان
                   </Typography>
                 </div>
               ))}
@@ -168,7 +154,7 @@ export default function AccountDebtDetailsPage({
               <div className="flex items-center justify-between">
                 <Typography variant="caption">مبلغ کل بدهی:</Typography>
                 <Typography variant="subtitle1" className="font-bold!">
-                  {debt?.total_amount} تومان
+                  {formatPrice(debt?.total_amount)} تومان
                 </Typography>
               </div>
               <div className="flex items-center justify-between">
@@ -178,7 +164,7 @@ export default function AccountDebtDetailsPage({
                   className="font-bold!"
                   color="success"
                 >
-                  {debt?.paid_amount} تومان
+                  {formatPrice(debt?.paid_amount)} تومان
                 </Typography>
               </div>
               <Divider />
@@ -192,7 +178,7 @@ export default function AccountDebtDetailsPage({
                   بدهی باقیمانده:
                 </Typography>
                 <Typography variant="h6" className="font-bold!" color="error">
-                  {debt?.remaining} تومان
+                  {formatPrice(debt?.remaining)} تومان
                 </Typography>
               </div>
             </div>

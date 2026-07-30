@@ -19,6 +19,7 @@ export interface DebtType {
     product_name: string;
     quantity: number;
     price: number;
+    total: number;
   }[];
   description: string;
   created_at: string;
