@@ -13,6 +13,7 @@ import { AddRounded, DeleteRounded, QrCodeRounded } from "@mui/icons-material";
 import { validateAddProductForm } from "@/utils/validations/ProductValidation";
 import { useAddProductMutation } from "../api/ApiProduct";
 import { toast } from "react-toastify";
+import AddProductScannerDilog from "./AddProductScannerDilog";
 
 interface Option {
   id: number;
@@ -44,6 +45,8 @@ const initialForm = {
 
 export default function CreateProductForm() {
   const [form, setForm] = useState(initialForm);
+
+  const [scannerOpen, setScannerOpen] = useState(false);
 
   const [errors, setErrors] = useState<
     Partial<Record<keyof typeof initialForm, string>>
@@ -111,10 +114,6 @@ export default function CreateProductForm() {
     handleReset();
   };
 
-  const handleBarcodeScanner = () => {
-    console.log("Open Barcode Scanner");
-  };
-
   return (
     <Card
       className="p-6 rounded-lg! w-full max-w-4xl mt-4 mx-auto"
@@ -144,7 +143,7 @@ export default function CreateProductForm() {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleBarcodeScanner}>
+                  <IconButton onClick={() => setScannerOpen(true)}>
                     <QrCodeRounded color="primary" />
                   </IconButton>
                 </InputAdornment>
@@ -154,6 +153,18 @@ export default function CreateProductForm() {
             helperText={errors.barcode}
           />
         </div>
+
+        <AddProductScannerDilog
+          open={scannerOpen}
+          onClose={() => setScannerOpen(false)}
+          onScan={(barcode) => {
+            setForm((prev) => ({
+              ...prev,
+              barcode,
+            }));
+            setScannerOpen(false);
+          }}
+        />
 
         {/* Category + Unit */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -198,7 +209,7 @@ export default function CreateProductForm() {
             fullWidth
             size="small"
             type="number"
-            label="قیمت خرید *"
+            label="قیمت خرید (تومان) *"
             value={form.buy_price}
             onChange={handleChange("buy_price")}
             error={!!errors.buy_price}
@@ -210,7 +221,7 @@ export default function CreateProductForm() {
             fullWidth
             size="small"
             type="number"
-            label="قیمت فروش *"
+            label="قیمت فروش (تومان) *"
             value={form.sell_price}
             onChange={handleChange("sell_price")}
             error={!!errors.sell_price}
