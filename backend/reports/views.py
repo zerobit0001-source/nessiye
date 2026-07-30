@@ -1085,3 +1085,87 @@ class ReportChartsView(APIView):
         })
 
 
+class ReportCustomersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        from_date, to_date = get_date_range(request)
+        thirty_days_ago = timezone.now() - timedelta(days=30)
+
+        top_customers = Sale.objects.filter(
+            shop=request.user,
+            created_at__date__gte=from_date,
+            created_at__date__lte=to_date,
+            customer__isnull=False
+        ).values(
+            'customer__full_name',
+            'customer__phone_number'
+        ).annotate(
+            total=Sum(
+                ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField())
+            ),
+            total_paid=Sum(
+                ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()),
+                filter=Q(is_debt=False)
+            ),
+            remaining=Sum(
+                ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()),
+                filter=Q(is_debt=True)
+            )
+        ).order_by('-total')[:10]
+
+        top_debtors = CustomerShop.objects.filter(
+            shop=request.user
+        ).select_related('customer').annotate(
+            total_debt=Sum('debts__amount'),
+            total_paid=Sum('debts__payments__amount')
+        ).filter(
+            total_debt__isnull=False
+        ).order_by('-total_debt')[:10]
+
+        overdue_debtors = Debt.objects.filter(
+            shop=request.user,
+            created_at__lt=thirty_days_ago
+        ).select_related('customer__customer').annotate(
+            paid=Sum('payments__amount')
+        ).filter(
+            Q(paid__isnull=True) | Q(paid__lt=F('amount'))
+        ).order_by('created_at')[:10]
+
+        return Response({
+            'ok': True,
+            'top_customers': [
+                {
+                    'customer_name': c['customer__full_name'],
+                    'phone_number': c['customer__phone_number'],
+                    'total': c['total'] or 0,
+                    'total_paid': c['total_paid'] or 0,
+                    'remaining': c['remaining'] or 0
+                }
+                for c in top_customers
+            ],
+            'top_debtors': [
+                {
+                    'customer_name': cs.customer.full_name,
+                    'phone_number': cs.customer.phone_number,
+                    'total_debt': cs.total_debt or 0,
+                    'total_paid': cs.total_paid or 0,
+                    'remaining': (cs.total_debt or 0) - (cs.total_paid or 0)
+                }
+                for cs in top_debtors
+            ],
+            'overdue_debtors': [
+                {
+                    'debt_id': d.debt_id,
+                    'customer_name': d.customer.customer.full_name,
+                    'phone_number': d.customer.customer.phone_number,
+                    'amount': d.amount,
+                    'remaining': d.amount - (d.paid or 0),
+                    'created_at': d.created_at
+                }
+                for d in overdue_debtors
+            ]
+        })
