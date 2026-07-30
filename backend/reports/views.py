@@ -863,9 +863,10 @@ from datetime import timedelta
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Sum, Count, Avg, F, ExpressionWrapper, IntegerField, Q
 from django.db.models.functions import TruncDate, TruncMonth
-from sales.models import Sale
+from sales.models import Sale, SaleItem
 from debts.models import Debt, Payment
 from customer_management.models import CustomerShop
+from products.models import Product
 
 
 def get_date_range(request):
@@ -1168,4 +1169,42 @@ class ReportCustomersView(APIView):
                 }
                 for d in overdue_debtors
             ]
+        })
+
+class ReportProductsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        from_date, to_date = get_date_range(request)
+
+        top_selling = SaleItem.objects.filter(
+            sale__shop=request.user,
+            sale__created_at__date__gte=from_date,
+            sale__created_at__date__lte=to_date
+        ).values('product_name').annotate(
+            total_qty=Sum('quantity'),
+            total_amount=Sum(
+                ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField())
+            )
+        ).order_by('-total_qty')[:10]
+
+        sold_names = SaleItem.objects.filter(
+            sale__shop=request.user,
+            sale__created_at__date__gte=from_date,
+            sale__created_at__date__lte=to_date
+        ).values_list('product_name', flat=True).distinct()
+
+        no_sales = Product.objects.filter(
+            shop=request.user
+        ).exclude(name__in=sold_names).values(
+            'id', 'name', 'stock', 'sell_price'
+        ).order_by('stock')[:10]
+
+        return Response({
+            'ok': True,
+            'top_selling': list(top_selling),
+            'no_sales_products': list(no_sales)
         })
