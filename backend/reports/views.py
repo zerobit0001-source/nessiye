@@ -967,51 +967,57 @@ class ReportChartsView(APIView):
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
 
         from_date, to_date = get_date_range(request)
+        six_months_ago = timezone.now() - timedelta(days=180)
 
-        sales = Sale.objects.filter(
-            shop=request.user,
-            created_at__date__gte=from_date,
-            created_at__date__lte=to_date
-        )
+        sales_items_trend = SaleItem.objects.filter(
+            sale__shop=request.user,
+            sale__created_at__date__gte=from_date,
+            sale__created_at__date__lte=to_date
+        ).annotate(
+            date=TruncDate('sale__created_at')
+        ).values('date', 'sale__is_debt').annotate(
+            total=Sum(
+                ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField())
+            )
+        ).order_by('date')
 
-        payments = Payment.objects.filter(
+        trend_by_date = {}
+        for t in sales_items_trend:
+            date = str(t['date'])
+            if date not in trend_by_date:
+                trend_by_date[date] = {'date': date, 'cash': 0, 'debt': 0, 'total': 0}
+            amount = t['total'] or 0
+            if t['sale__is_debt']:
+                trend_by_date[date]['debt'] += amount
+            else:
+                trend_by_date[date]['cash'] += amount
+            trend_by_date[date]['total'] += amount
+
+        sales_trend_data = sorted(trend_by_date.values(), key=lambda x: x['date'])
+
+        payments_trend = Payment.objects.filter(
             debt__shop=request.user,
             created_at__date__gte=from_date,
             created_at__date__lte=to_date
-        )
+        ).annotate(
+            date=TruncDate('created_at')
+        ).values('date').annotate(
+            total=Sum('amount'),
+            count=Count('id')
+        ).order_by('date')
 
-        debts = Debt.objects.filter(
+        debts_trend = Debt.objects.filter(
             shop=request.user,
             created_at__date__gte=from_date,
             created_at__date__lte=to_date
-        )
-
-        sales_trend = sales.annotate(
-            date=TruncDate('created_at'),
-            sale_total=Sum(
-                ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField())
-            )
-        ).values('date').annotate(
-            cash=Sum('sale_total', filter=Q(is_debt=False)),
-            debt=Sum('sale_total', filter=Q(is_debt=True)),
-            total=Sum('sale_total')
-        ).order_by('date')
-
-        payments_trend = payments.annotate(
+        ).annotate(
             date=TruncDate('created_at')
         ).values('date').annotate(
             total=Sum('amount'),
             count=Count('id')
         ).order_by('date')
 
-        debts_trend = debts.annotate(
-            date=TruncDate('created_at')
-        ).values('date').annotate(
-            total=Sum('amount'),
-            count=Count('id')
-        ).order_by('date')
-
-        sales_by_date = {str(t['date']): t['total'] or 0 for t in sales_trend}
+        sales_by_date = {t['date']: t['total'] for t in sales_trend_data}
         payments_by_date = {str(t['date']): t['total'] or 0 for t in payments_trend}
         all_dates = sorted(set(list(sales_by_date.keys()) + list(payments_by_date.keys())))
         composed_trend = [
@@ -1023,37 +1029,26 @@ class ReportChartsView(APIView):
             for d in all_dates
         ]
 
-        total_cash = sales.filter(is_debt=False).annotate(
-            sale_total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
-        ).aggregate(total=Sum('sale_total'))['total'] or 0
+        pie_data = {'cash': 0, 'debt': 0}
+        for t in sales_trend_data:
+            pie_data['cash'] += t['cash']
+            pie_data['debt'] += t['debt']
 
-        total_debt = sales.filter(is_debt=True).annotate(
-            sale_total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
-        ).aggregate(total=Sum('sale_total'))['total'] or 0
-
-        six_months_ago = timezone.now() - timedelta(days=180)
-        monthly = Sale.objects.filter(
-            shop=request.user,
-            created_at__gte=six_months_ago
+        monthly_items = SaleItem.objects.filter(
+            sale__shop=request.user,
+            sale__created_at__gte=six_months_ago
         ).annotate(
-            month=TruncMonth('created_at'),
-            sale_total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
+            month=TruncMonth('sale__created_at')
         ).values('month').annotate(
-            total=Sum('sale_total')
+            total=Sum(
+                ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField())
+            )
         ).order_by('month')
 
         return Response({
             'ok': True,
             'charts': {
-                'sales_trend': [
-                    {
-                        'date': str(t['date']),
-                        'cash': t['cash'] or 0,
-                        'debt': t['debt'] or 0,
-                        'total': t['total'] or 0
-                    }
-                    for t in sales_trend
-                ],
+                'sales_trend': sales_trend_data,
                 'payments_trend': [
                     {
                         'date': str(t['date']),
@@ -1071,16 +1066,13 @@ class ReportChartsView(APIView):
                     for t in debts_trend
                 ],
                 'composed_trend': composed_trend,
-                'payment_distribution': {
-                    'cash': total_cash,
-                    'debt': total_debt
-                },
+                'payment_distribution': pie_data,
                 'monthly_revenue': [
                     {
                         'month': str(t['month'])[:7],
                         'total': t['total'] or 0
                     }
-                    for t in monthly
+                    for t in monthly_items
                 ]
             }
         })
