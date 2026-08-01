@@ -12,61 +12,7 @@ import DateRangePicker from "./DateRangePicker";
 const SaleReportPage = () => {
   return (
     <Container>
-      <Card className="w-full flex items-center justify-center p-4 rounded-lg!">
-        <DateRangePicker />
-      </Card>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-        <StatsCard
-          title="مجموع فروش"
-          value="29000000"
-          unit="تومان"
-          icon={<PointOfSaleRounded />}
-          iconBg="primary.light"
-          iconColor="primary.dark"
-        />
-        <StatsCard
-          title="فروش نسیه"
-          value="43000000"
-          unit="تومان"
-          icon={<AssignmentTurnedInRounded />}
-          iconBg="warning.light"
-          iconColor="warning.dark"
-        />
-        <StatsCard
-          title="تعداد فاکتورها"
-          value="280"
-          unit="عدد"
-          icon={<ReceiptRounded />}
-          iconBg="success.light"
-          iconColor="success.dark"
-        />
-        <StatsCard
-          title="تعداد اقلام فروخته شده"
-          value={120}
-          unit="عدد"
-          icon={<AttachMoneyRounded />}
-          iconBg="secondary.light"
-          iconColor="secondary.dark"
-        />
-      </div>
-      <div className="grid grid-cols-6 gap-2">
-        <Card className="col-span-full lg:col-span-4 bg-black shadow">
-          <Typography variant="subtitle2">روند فروش</Typography>
-          <Typography variant="caption">نمودار فروش</Typography>
-        </Card>
-        <Card className="col-span-full lg:col-span-2 bg-black shadow">
-          <Typography variant="subtitle2">فروش نقدی vs نسیه</Typography>
-          <Typography variant="caption">روند فروش</Typography>
-        </Card>
-        <Card className="col-span-full lg:col-span-2 bg-black shadow">
-          <Typography variant="subtitle2">مشتریان برتر</Typography>
-          <Typography variant="caption">بر اساس مبلغ فروش این دوره</Typography>
-        </Card>
-        <Card className="col-span-full lg:col-span-4 bg-black shadow">
-          <Typography variant="subtitle2">پرفروش‌ترین محصولات</Typography>
-          <Typography variant="caption">بر اساس مبلغ خرید این دوره</Typography>
-        </Card>
-      </div>
+      <p>hi</p>
     </Container>
   );
 };
