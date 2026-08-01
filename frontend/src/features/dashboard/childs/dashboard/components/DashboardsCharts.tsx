@@ -11,7 +11,11 @@ const DashboardsCharts = () => {
   return (
     <>
       <div className="col-span-full lg:col-span-4 overflow-auto">
-        <ChartCard title="hi" caption="goodby" icon={<TrendingUpRounded />}>
+        <ChartCard
+          title="فروش در برابر پرداخت"
+          caption="نمایش مقدار بدهی داده شده در برابر مبلغ تسویه شده"
+          icon={<TrendingUpRounded color="success" />}
+        >
           <SalesChart
             data={[
               { date: "2026-07-01T17:25:12.365549Z", total: 4200000 },

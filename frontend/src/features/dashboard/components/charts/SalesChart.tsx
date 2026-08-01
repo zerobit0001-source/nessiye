@@ -4,7 +4,7 @@ import {
   formatDate,
   formatPrice,
 } from "@/utils/formatters";
-import { Card, Stack, Typography } from "@mui/material";
+import { Card, Stack, Typography, useTheme } from "@mui/material";
 import {
   CartesianGrid,
   Line,
@@ -25,6 +25,8 @@ type SalesChartProps = {
 };
 
 export default function SalesChart({ data }: SalesChartProps) {
+  const theme = useTheme();
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart
@@ -46,10 +48,11 @@ export default function SalesChart({ data }: SalesChartProps) {
         <YAxis
           dataKey="total"
           tickFormatter={(value) => formatCompactPrice(value)}
+          fontSize={"14px"}
         />
         <Tooltip
           cursor={{
-            stroke: "#ff9800",
+            stroke: theme.palette.primary.main,
             strokeWidth: 1,
             strokeDasharray: "5 5",
             fill: "rgba(255,152,0,0.05)",
@@ -60,7 +63,7 @@ export default function SalesChart({ data }: SalesChartProps) {
         <Line
           type="monotone"
           dataKey="total"
-          stroke="#ff9800"
+          stroke={theme.palette.primary.main}
           strokeWidth={3}
           dot={{ r: 3 }}
           activeDot={{ r: 6 }}

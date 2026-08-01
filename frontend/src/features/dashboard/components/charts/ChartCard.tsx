@@ -15,7 +15,7 @@ export function ChartCard({ title, caption, icon, children }: ChartCardProps) {
           direction="row"
           justifyContent="space-between"
           alignItems="center"
-          className="w-full"
+          className="w-full mb-4"
         >
           <span>
             <Typography variant="body1" className="font-bold!">
