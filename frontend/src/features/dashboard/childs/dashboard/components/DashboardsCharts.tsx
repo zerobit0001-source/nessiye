@@ -2,15 +2,21 @@ import { Box, Card, Typography } from "@mui/material";
 import React from "react";
 import SaleVsPaymentChart from "./SaleVsPaymentChart";
 import DebtsStatusChart from "./DebtsStatusChart";
-import RevenueChart from "./RevenueChart";
 import { ChartCard } from "@/features/dashboard/components/charts/ChartCard";
 import SalesChart from "@/features/dashboard/components/charts/SalesChart";
-import { TrendingUpRounded } from "@mui/icons-material";
+import {
+  AttachMoneyRounded,
+  PieChartRounded,
+  TrendingUpRounded,
+} from "@mui/icons-material";
+import PaymentDistributionChart from "@/features/dashboard/components/charts/PaymentDistributionChart";
+import ChartLegend from "@/features/dashboard/components/charts/ChartLegend";
+import RevenueChart from "@/features/dashboard/components/charts/RevenueChart";
 
 const DashboardsCharts = () => {
   return (
     <>
-      <div className="col-span-full lg:col-span-4 overflow-auto">
+      <div className="col-span-full lg:col-span-4 h-full">
         <ChartCard
           title="فروش در برابر پرداخت"
           caption="نمایش مقدار بدهی داده شده در برابر مبلغ تسویه شده"
@@ -18,34 +24,70 @@ const DashboardsCharts = () => {
         >
           <SalesChart
             data={[
-              { date: "2026-07-01T17:25:12.365549Z", total: 4200000 },
-              { date: "2026-07-02T17:25:12.365549Z", total: 5800000 },
-              { date: "2026-07-03T17:25:12.365549Z", total: 3500000 },
-              { date: "2026-07-04T17:25:12.365549Z", total: 7100000 },
-              { date: "2026-07-05T17:25:12.365549Z", total: 9200000 },
-              { date: "2026-07-06T17:25:12.365549Z", total: 6800000 },
-              { date: "2026-07-07T17:25:12.365549Z", total: 10500000 },
-              { date: "2026-07-08T17:25:12.365549Z", total: 8700000 },
-              { date: "2026-07-09T17:25:12.365549Z", total: 7600000 },
-              { date: "2026-07-10T17:25:12.365549Z", total: 13100000 },
-              { date: "2026-07-11T17:25:12.365549Z", total: 9800000 },
-              { date: "2026-07-12T17:25:12.365549Z", total: 12400000 },
-              { date: "2026-07-13T17:25:12.365549Z", total: 11200000 },
-              { date: "2026-07-14T17:25:12.365549Z", total: 14500000 },
+              { date: "شنبه", total: 4200000 },
+              { date: "یکشنبه", total: 5800000 },
+              { date: "دوشنبه", total: 3500000 },
+              { date: "سه‌شنبه", total: 7100000 },
+              { date: "چهارشنبه", total: 9200000 },
+              { date: "پنجشنبه", total: 6800000 },
+              { date: "جمعه", total: 10500000 },
             ]}
           />
         </ChartCard>
       </div>
-      <Card className="col-span-full lg:col-span-2 bg-gray-100! rounded-lg ">
-        <Box className="border-b border-gray-300 p-2">
-          <DebtsStatusChart />
-        </Box>
-      </Card>
-      <Card className="col-span-full bg-gray-100! rounded-lg ">
-        <Box className="border-b border-gray-300 p-2">
-          <RevenueChart />
-        </Box>
-      </Card>
+      <div className="col-span-full lg:col-span-2 h-full">
+        <ChartCard
+          title="وضعیت بدهی و پرداختی ها"
+          caption="نمایش مقدار کل بدهی هفته در براره پرداخت"
+          icon={<PieChartRounded color="secondary" />}
+        >
+          <PaymentDistributionChart
+            data={[
+              {
+                name: "نقدی",
+                value: 10000000,
+              },
+              {
+                name: "نسیه",
+                value: 3000000,
+              },
+            ]}
+          />
+          <ChartLegend
+            items={[
+              {
+                color: "#FF9800",
+                label: "نقدی",
+                value: 10000000,
+              },
+              {
+                color: "#42A5F5",
+                label: "نسیه",
+                value: 3000000,
+              },
+            ]}
+          />
+        </ChartCard>
+      </div>
+      <div className="col-span-full ">
+        <ChartCard
+          title="درآمده هفته"
+          caption="جمع تمام مبالغ فروش و بدهی "
+          icon={<AttachMoneyRounded color="success" />}
+        >
+          <RevenueChart
+            data={[
+              { date: "شنبه", total: 4200000 },
+              { date: "یکشنبه", total: 5800000 },
+              { date: "دوشنبه", total: 3500000 },
+              { date: "سه‌شنبه", total: 7100000 },
+              { date: "چهارشنبه", total: 9200000 },
+              { date: "پنجشنبه", total: 6800000 },
+              { date: "جمعه", total: 10500000 },
+            ]}
+          />
+        </ChartCard>
+      </div>
     </>
   );
 };

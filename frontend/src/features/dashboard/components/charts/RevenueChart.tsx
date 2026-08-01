@@ -6,6 +6,8 @@ import {
 } from "@/utils/formatters";
 import { Card, Stack, Typography, useTheme } from "@mui/material";
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
   Line,
   LineChart,
@@ -20,16 +22,16 @@ type SalesTrend = {
   total: number;
 };
 
-type SalesChartProps = {
+type RevenueChartProps = {
   data: SalesTrend[];
 };
 
-export default function SalesChart({ data }: SalesChartProps) {
+export default function RevenueChart({ data }: RevenueChartProps) {
   const theme = useTheme();
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <LineChart
+      <BarChart
         data={data}
         style={{
           fontFamily: "Vazirmatn",
@@ -51,7 +53,7 @@ export default function SalesChart({ data }: SalesChartProps) {
         />
         <Tooltip
           cursor={{
-            stroke: theme.palette.primary.main,
+            stroke: theme.palette.success.main,
             strokeWidth: 1,
             strokeDasharray: "5 5",
             fill: "rgba(255,152,0,0.05)",
@@ -59,15 +61,12 @@ export default function SalesChart({ data }: SalesChartProps) {
           content={<ChartTooltip />}
         />
 
-        <Line
-          type="monotone"
+        <Bar
           dataKey="total"
-          stroke={theme.palette.primary.main}
-          strokeWidth={3}
-          dot={{ r: 3 }}
-          activeDot={{ r: 6 }}
+          fill={theme.palette.success.main}
+          radius={[8, 8, 0, 0]}
         />
-      </LineChart>
+      </BarChart>
     </ResponsiveContainer>
   );
 }
@@ -97,7 +96,7 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
           {label}
         </Typography>
 
-        <Typography variant="body1" fontWeight={700} color="primary.main">
+        <Typography variant="body1" fontWeight={700} color="success.main">
           {formatPrice(payload[0].value)} تومان
         </Typography>
       </Stack>
