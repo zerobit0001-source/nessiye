@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -14,6 +15,8 @@ from sales.models import Sale
 from config.pagination import StandardPagination
 from activity.services import log_activity
 from activity.models import Activity
+from django.db.models.functions import TruncDate
+from sales.models import SaleItem
 
 class IsShop:
     @staticmethod
@@ -372,6 +375,8 @@ class DashboardView(APIView):
         ]
 
         today = timezone.now().date()
+        seven_days_ago = timezone.now() - timedelta(days=7)
+
         today_sales = Sale.objects.filter(
             shop=request.user,
             created_at__date=today,
@@ -395,6 +400,36 @@ class DashboardView(APIView):
         ).aggregate(total=Sum('amount'))['total'] or 0
 
         activity = Activity.objects.filter(shop=request.user).order_by('-created_at')[:5]
+
+        # charts
+        sales_chart = SaleItem.objects.filter(
+            sale__shop=request.user,
+            sale__created_at__date__gte=seven_days_ago,
+            sale__is_debt=False
+        ).annotate(
+            date=TruncDate('sale__created_at')
+        ).values('date').annotate(
+            total=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField()))
+        ).order_by('date')
+
+        payments_chart = Payment.objects.filter(
+            debt__shop=request.user,
+            created_at__date__gte=seven_days_ago
+        ).annotate(
+            date=TruncDate('created_at')
+        ).values('date').annotate(
+            total=Sum('amount')
+        ).order_by('date')
+
+        debt_chart = Debt.objects.filter(
+            shop=request.user
+        ).aggregate(
+            total_debt=Sum('amount'),
+            total_paid=Sum('payments__amount')
+        )
+        total_debt_amount = debt_chart['total_debt'] or 0
+        total_paid_amount = debt_chart['total_paid'] or 0
+
 
         activity_data = [
             {
@@ -421,6 +456,27 @@ class DashboardView(APIView):
                 'today_sales': today_sales,
                 'today_debts': today_debts,
                 'today_paid': today_paid,
-                'recent_activities': activity_data
+                'recent_activities': activity_data,
+                'charts': {
+                    'sales_trend': [
+                        {
+                            'date': str(t['date']),
+                            'total': t['total'] or 0
+                        }
+                        for t in sales_chart
+                    ],
+                    'payments_trend': [
+                        {
+                            'date': str(t['date']),
+                            'total': t['total'] or 0
+                        }
+                        for t in payments_chart
+                    ],
+                    'debt_distribution': {
+                        'total_debt': total_debt_amount,
+                        'total_paid': total_paid_amount,
+                        'remaining': total_debt_amount - total_paid_amount
+                    }
+                }
             }
         })
