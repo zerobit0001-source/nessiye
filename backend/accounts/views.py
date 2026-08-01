@@ -645,7 +645,7 @@ class MyShopDebtsView(APIView):
 #         return paginator.get_paginated_response(page)
 # under
 
-class MyShopSaleDetailView(APIView):
+class MyShopSalesView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, shop_id, sale_id):

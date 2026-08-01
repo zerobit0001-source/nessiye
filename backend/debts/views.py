@@ -8,7 +8,7 @@ from config.pagination import StandardPagination
 from django.utils import timezone
 from datetime import timedelta
 from activity.services import log_activity
-from django.db.models import Sum
+from django.db.models import Sum, Count, Q, F
 
 
 class DebtListView(APIView):
@@ -171,6 +171,92 @@ class DebtPayView(APIView):
         })
 
 
+# class PaymentListView(APIView):
+#     permission_classes = [IsAuthenticated]
+# 
+#     def get(self, request):
+#         if not request.user.is_shop:
+#             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+#         
+#         ordering = request.query_params.get('ordering', '-created_at')
+#         period = request.query_params.get('period', None)
+# 
+#         payments = Payment.objects.filter(
+#             debt__shop=request.user
+#         ).select_related('debt__customer__customer')
+# 
+#         now = timezone.now()
+#         this_month = now - timedelta(days=30)
+# 
+#         # period filter
+#         now = timezone.now()
+#         if period == 'today':
+#             payments = payments.filter(created_at__date=now.date())
+#         elif period == 'this_week':
+#             payments = payments.filter(created_at__gte=now - timedelta(days=7))
+#         elif period == 'this_month':
+#             payments = payments.filter(created_at__gte=now - timedelta(days=30))
+# 
+#         # ordering
+#         if ordering in ['created_at', '-created_at', 'amount', '-amount']:
+#             payments = payments.order_by(ordering)
+#         # elif ordering == 'amount':
+#         #     payments = payments.order_by('amount')
+#         # elif ordering == '-amount':
+#         #     payments = payments.order_by('-amount')
+# 
+#         result = [
+#             {
+#                 'id': p.id,
+#                 'payment_id': p.payment_id,
+#                 'debt_id': p.debt.id,
+#                 'customer_name': p.debt.customer.customer.full_name,
+#                 'customer_phone': p.debt.customer.customer.phone_number,
+#                 'amount': p.amount,
+#                 'created_at': p.created_at
+#             }
+#             for p in payments
+#         ]
+# 
+#         # summary
+#         all_payments = Payment.objects.filter(debt__shop=request.user)
+#         all_debts = Debt.objects.filter(shop=request.user).prefetch_related('payments')
+#     
+#         total_debts = all_debts.count()
+#         this_month_total = all_payments.filter(created_at__gte=this_month).aggregate(total=Sum('amount'))['total'] or 0
+#     
+#         settled = len([d for d in all_debts if d.is_paid])
+#         partial = len([d for d in all_debts if not d.is_paid and d.paid_amount > 0])
+#         overdue = len([d for d in all_debts if not d.is_paid and d.created_at < this_month])
+# 
+#         # if ordering == 'remaining_amount':
+#         #     result = sorted(result, key=lambda x: x['remaining_amount'])
+#         # elif ordering == '-remaining_amount':
+#         #     result = sorted(result, key=lambda x: x['remaining_amount'], reverse=True)
+#         # elif ordering == 'amount':
+#         #     result = sorted(result, key=lambda x: x['total_amount'])
+#         # elif ordering == '-amount':
+#         #     result = sorted(result, key=lambda x: x['total_amount'], reverse=True)
+# 
+#         # pagination = StandardPagination()
+#         # paginated_result = pagination.paginate_queryset(result, request)
+#         # return pagination.get_paginated_response(paginated_result)
+# 
+#         paginator = StandardPagination()
+#         page = paginator.paginate_queryset(result, request)
+#         response = paginator.get_paginated_response(page)
+#         response.data['summary'] = {
+#             'total_debts': total_debts,
+#             'this_month_total': this_month_total,
+#             'settled': settled,
+#             'partial': partial,
+#             'overdue': overdue
+#         }
+#         return response
+# 
+#         # return Response({'ok': True, 'payments': result})
+
+
 class PaymentListView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -220,14 +306,26 @@ class PaymentListView(APIView):
 
         # summary
         all_payments = Payment.objects.filter(debt__shop=request.user)
-        all_debts = Debt.objects.filter(shop=request.user).prefetch_related('payments')
-    
-        total_debts = all_debts.count()
         this_month_total = all_payments.filter(created_at__gte=this_month).aggregate(total=Sum('amount'))['total'] or 0
     
-        settled = len([d for d in all_debts if d.is_paid])
-        partial = len([d for d in all_debts if not d.is_paid and d.paid_amount > 0])
-        overdue = len([d for d in all_debts if not d.is_paid and d.created_at < this_month])
+        debt_summary = Debt.objects.filter(
+            shop=request.user
+        ).annotate(
+            paid=Sum('payments__amount')
+        ).aggregate(
+            total=Count('id'),
+            settled=Count('id', filter=Q(paid__gte=F('amount'))),
+            partial=Count('id', filter=Q(paid__gt=0, paid__lt=F('amount')))
+        )
+
+        overdue_count = Debt.objects.filter(
+            shop=request.user,
+            created_at__lt=this_month
+        ).annotate(
+            paid=Sum('payments__amount')
+        ).filter(
+            Q(paid__isnull=True) | Q(paid__lt=F('amount'))
+        ).count()
 
         # if ordering == 'remaining_amount':
         #     result = sorted(result, key=lambda x: x['remaining_amount'])
@@ -246,16 +344,17 @@ class PaymentListView(APIView):
         page = paginator.paginate_queryset(result, request)
         response = paginator.get_paginated_response(page)
         response.data['summary'] = {
-            'total_debts': total_debts,
+            'total_debts': debt_summary['total'] or 0,
             'this_month_total': this_month_total,
-            'settled': settled,
-            'partial': partial,
-            'overdue': overdue
+            'settled': debt_summary['settled'] or 0,
+            'partial': debt_summary['partial'] or 0,
+            'overdue': overdue_count
         }
         return response
 
         # return Response({'ok': True, 'payments': result})
-    
+
+
 class CustomerDebtPayView(APIView):
     permission_classes = [IsAuthenticated]
 
