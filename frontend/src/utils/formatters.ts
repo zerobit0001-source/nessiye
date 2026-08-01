@@ -6,6 +6,21 @@ export const formatDate = (
 ): string => {
   return new Date(date).toLocaleString("fa-IR", options);
 };
+export const formatCompactPrice = (value: number) => {
+  if (value >= 1_000_000_000) {
+    return `${(value / 1_000_000_000).toFixed(1)}B`;
+  }
+
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(1)}M`;
+  }
+
+  if (value >= 1_000) {
+    return `${(value / 1_000).toFixed(1)}K`;
+  }
+
+  return value.toString();
+};
 
 export function timeAgo(dateString: string): string {
   const now = new Date().getTime();
