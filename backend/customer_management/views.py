@@ -288,6 +288,37 @@ class CustomerDeleteView(APIView):
 #         })
     
 
+# class CustomerHistoryView(APIView):
+#     permission_classes = [IsAuthenticated]
+# 
+#     def get(self, request, pk):
+#         if not request.user.is_shop:
+#             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+# 
+#         try:
+#             customer_shop = CustomerShop.objects.get(shop=request.user, customer_id=pk)
+#         except CustomerShop.DoesNotExist:
+#             return Response({'ok': False, 'error': 'این مشتری در لیست شما نیست'}, status=status.HTTP_404_NOT_FOUND)
+# 
+#         sales = Sale.objects.filter(shop=request.user, customer_id=pk).prefetch_related('items__product')
+#         debts = Debt.objects.filter(shop=request.user, customer=customer_shop).prefetch_related('payments')
+# 
+#         total_debt = sum(d.amount for d in debts)
+#         total_paid = sum(d.paid_amount for d in debts)
+# 
+#         return Response({
+#             'ok': True,
+#             'customer': CustomerSerializer(customer_shop.customer).data,
+#             'summary': {
+#                 'total_debt': total_debt,
+#                 'total_paid': total_paid,
+#                 'total_remaining': total_debt - total_paid
+#             },
+#             'sales': SaleSerializer(sales, many=True).data,
+#             'debts': DebtSerializer(debts, many=True).data
+#         })
+# under 
+
 class CustomerHistoryView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -300,11 +331,22 @@ class CustomerHistoryView(APIView):
         except CustomerShop.DoesNotExist:
             return Response({'ok': False, 'error': 'این مشتری در لیست شما نیست'}, status=status.HTTP_404_NOT_FOUND)
 
-        sales = Sale.objects.filter(shop=request.user, customer_id=pk).prefetch_related('items__product')
-        debts = Debt.objects.filter(shop=request.user, customer=customer_shop).prefetch_related('payments')
+        summary = Debt.objects.filter(
+            shop=request.user, customer=customer_shop
+        ).aggregate(
+            total_debt=Sum('amount'),
+            total_paid=Sum('payments__amount')
+        )
+        total_debt = summary['total_debt'] or 0
+        total_paid = summary['total_paid'] or 0
 
-        total_debt = sum(d.amount for d in debts)
-        total_paid = sum(d.paid_amount for d in debts)
+        sales = Sale.objects.filter(
+            shop=request.user, customer_id=pk
+        ).prefetch_related('items__product')
+
+        debts = Debt.objects.filter(
+            shop=request.user, customer=customer_shop
+        ).prefetch_related('payments')
 
         return Response({
             'ok': True,
