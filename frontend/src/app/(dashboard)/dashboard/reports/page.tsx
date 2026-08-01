@@ -13,19 +13,18 @@ import Container from "@/components/dash/Container";
 import { InstallDesktopRounded } from "@mui/icons-material";
 import ReportTabs from "@/features/dashboard/childs/report/components/ReportPageTabs";
 import SaleReportPage from "@/features/dashboard/childs/report/components/SaleReportPage";
+import ReportPageHeader from "@/features/dashboard/childs/report/components/ReportPageHeader";
+import ReportFilters from "@/features/dashboard/childs/report/components/ReportFilters";
+import ReportCards from "@/features/dashboard/childs/report/components/ReportCards";
+import ReportTopsContainer from "@/features/dashboard/childs/report/components/ReportTopsContainer";
 
 const Report = () => {
   return (
     <Container>
-      <DashboardsPageHeader
-        title="گزارش ها"
-        caption="اردیبهشت 1404 ، فروشگاه نگین"
-      >
-        <Button variant="outlined" endIcon={<InstallDesktopRounded />}>
-          پرینت PDF
-        </Button>
-      </DashboardsPageHeader>
-      <ReportTabs />
+      <ReportPageHeader />
+      <ReportFilters />
+      <ReportCards />
+      <ReportTopsContainer />
       <SaleReportPage />
     </Container>
   );
