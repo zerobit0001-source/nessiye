@@ -1,5 +1,6 @@
+"use client";
 import { Box, Card, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import SaleVsPaymentChart from "./SaleVsPaymentChart";
 import DebtsStatusChart from "./DebtsStatusChart";
 import { ChartCard } from "@/features/dashboard/components/charts/ChartCard";
@@ -12,8 +13,19 @@ import {
 import PaymentDistributionChart from "@/features/dashboard/components/charts/PaymentDistributionChart";
 import ChartLegend from "@/features/dashboard/components/charts/ChartLegend";
 import RevenueChart from "@/features/dashboard/components/charts/RevenueChart";
+import { useGetDashboardCardsQuery } from "../api/ApiDashboard";
 
 const DashboardsCharts = () => {
+  const { data, isLoading, error } = useGetDashboardCardsQuery();
+
+  useEffect(() => {
+    if (data) {
+      console.log("Dashboard Cards Charts:", data.data.charts);
+    }
+  }, [data]);
+
+  const dashboardCharts = data?.data.charts;
+
   return (
     <>
       <div className="col-span-full lg:col-span-4 h-full">
@@ -22,17 +34,7 @@ const DashboardsCharts = () => {
           caption="نمایش مقدار بدهی داده شده در برابر مبلغ تسویه شده"
           icon={<TrendingUpRounded color="success" />}
         >
-          <SalesChart
-            data={[
-              { date: "شنبه", total: 4200000 },
-              { date: "یکشنبه", total: 5800000 },
-              { date: "دوشنبه", total: 3500000 },
-              { date: "سه‌شنبه", total: 7100000 },
-              { date: "چهارشنبه", total: 9200000 },
-              { date: "پنجشنبه", total: 6800000 },
-              { date: "جمعه", total: 10500000 },
-            ]}
-          />
+          <SalesChart data={dashboardCharts?.sales_trend} />
         </ChartCard>
       </div>
       <div className="col-span-full lg:col-span-2 h-full">

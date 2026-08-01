@@ -40,10 +40,12 @@ export default function SalesChart({ data }: SalesChartProps) {
 
         <XAxis
           dataKey="date"
-          // minTickGap={25}
-          // interval={1}
+          tickFormatter={(value) =>
+            formatDate(value, {
+              weekday: "short",
+            })
+          }
         />
-
         <YAxis
           dataKey="total"
           tickFormatter={(value) => formatCompactPrice(value)}
@@ -94,7 +96,7 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
     >
       <Stack spacing={0.5}>
         <Typography variant="body2" color="text.secondary">
-          {label}
+          {formatDate(label, { dateStyle: "long" })}
         </Typography>
 
         <Typography variant="body1" fontWeight={700} color="primary.main">
