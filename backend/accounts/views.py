@@ -22,6 +22,7 @@ from .serializers import (
     SendOTPSerializer,
     OTPLoginSerializer,
 )
+from sales.models import SaleItem
 
 
 class RefreshTokenView(APIView):
@@ -364,28 +365,74 @@ class MyShopsView(APIView):
 
 
 
+# class MyShopHistoryView(APIView):
+#     permission_classes = [IsAuthenticated]
+# 
+#     def get(self, request, shop_id):
+#         if request.user.is_shop:
+#             return Response({'ok': False, 'error': 'این  برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+# 
+#         try:
+#             customer_shop = CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
+#         except CustomerShop.DoesNotExist:
+#             return Response({'ok': False, 'error': 'شما در این فروشگاه ثبت نیستید'}, status=status.HTTP_404_NOT_FOUND)
+# 
+#         sales = Sale.objects.filter(shop_id=shop_id, customer=request.user).prefetch_related('items__product')
+#         debts = Debt.objects.filter(shop_id=shop_id, customer=customer_shop)
+# 
+#         total_purchase = sum(
+#             sum(item.price * item.quantity for item in sale.items.all())
+#             for sale in sales
+#         )
+#         total_debt = sum(d.amount for d in debts)
+#         total_paid = sum(d.paid_amount for d in debts)
+#         total_remaining = total_debt - total_paid
+# 
+#         return Response({
+#             'ok': True,
+#             'summary': {
+#                 'total_purchase': total_purchase,
+#                 'total_debt': total_debt,
+#                 'total_paid': total_paid,
+#                 'total_remaining': total_remaining
+#             },
+#             'sales': SaleSerializer(sales, many=True).data,
+#             'debts': DebtSerializer(debts, many=True).data
+#         })
+
+# under 
+
 class MyShopHistoryView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, shop_id):
         if request.user.is_shop:
-            return Response({'ok': False, 'error': 'این  برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
 
         try:
             customer_shop = CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
         except CustomerShop.DoesNotExist:
             return Response({'ok': False, 'error': 'شما در این فروشگاه ثبت نیستید'}, status=status.HTTP_404_NOT_FOUND)
 
-        sales = Sale.objects.filter(shop_id=shop_id, customer=request.user).prefetch_related('items__product')
-        debts = Debt.objects.filter(shop_id=shop_id, customer=customer_shop)
+        total_purchase = SaleItem.objects.filter(
+            sale__shop_id=shop_id,
+            sale__customer=request.user
+        ).aggregate(
+            total=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField()))
+        )['total'] or 0
 
-        total_purchase = sum(
-            sum(item.price * item.quantity for item in sale.items.all())
-            for sale in sales
+        debt_summary = Debt.objects.filter(
+            shop_id=shop_id,
+            customer=customer_shop
+        ).aggregate(
+            total_debt=Sum('amount'),
+            total_paid=Sum('payments__amount')
         )
-        total_debt = sum(d.amount for d in debts)
-        total_paid = sum(d.paid_amount for d in debts)
-        total_remaining = total_debt - total_paid
+        total_debt = debt_summary['total_debt'] or 0
+        total_paid = debt_summary['total_paid'] or 0
+
+        sales = Sale.objects.filter(shop_id=shop_id, customer=request.user).prefetch_related('items__product')
+        debts = Debt.objects.filter(shop_id=shop_id, customer=customer_shop).prefetch_related('payments')
 
         return Response({
             'ok': True,
@@ -393,7 +440,7 @@ class MyShopHistoryView(APIView):
                 'total_purchase': total_purchase,
                 'total_debt': total_debt,
                 'total_paid': total_paid,
-                'total_remaining': total_remaining
+                'total_remaining': total_debt - total_paid
             },
             'sales': SaleSerializer(sales, many=True).data,
             'debts': DebtSerializer(debts, many=True).data
