@@ -606,10 +606,49 @@ class MyShopDebtsView(APIView):
         return paginator.get_paginated_response(page)
 
 
-class MyShopSalesView(APIView):
+# class MyShopSalesView(APIView):
+#     permission_classes = [IsAuthenticated]
+# 
+#     def get(self, request, shop_id):
+#         if request.user.is_shop:
+#             return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
+# 
+#         try:
+#             CustomerShop.objects.get(shop_id=shop_id, customer=request.user)
+#         except CustomerShop.DoesNotExist:
+#             return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+# 
+#         sales = Sale.objects.filter(
+#             shop_id=shop_id,
+#             customer=request.user
+#         ).annotate(
+#             total=Sum(
+#                 ExpressionWrapper(
+#                     F('items__price') * F('items__quantity'),
+#                     output_field=IntegerField()
+#                 )
+#             )
+#         )
+# 
+#         result = [
+#             {
+#                 'id': s.id,
+#                 'total': s.total or 0,
+#                 'is_debt': s.is_debt,
+#                 'created_at': s.created_at
+#             }
+#             for s in sales
+#         ]
+# 
+#         paginator = StandardPagination()
+#         page = paginator.paginate_queryset(result, request)
+#         return paginator.get_paginated_response(page)
+# under
+
+class MyShopSaleDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, shop_id):
+    def get(self, request, shop_id, sale_id):
         if request.user.is_shop:
             return Response({'ok': False, 'error': 'این برای مشتریان است'}, status=status.HTTP_403_FORBIDDEN)
 
@@ -618,32 +657,34 @@ class MyShopSalesView(APIView):
         except CustomerShop.DoesNotExist:
             return Response({'ok': False, 'error': 'فروشگاه یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
 
-        sales = Sale.objects.filter(
-            shop_id=shop_id,
-            customer=request.user
-        ).annotate(
-            total=Sum(
-                ExpressionWrapper(
-                    F('items__price') * F('items__quantity'),
-                    output_field=IntegerField()
-                )
+        try:
+            sale = Sale.objects.prefetch_related('items').get(
+                id=sale_id, customer=request.user, shop_id=shop_id
             )
-        )
+        except Sale.DoesNotExist:
+            return Response({'ok': False, 'error': 'فروش یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
 
-        result = [
-            {
-                'id': s.id,
-                'total': s.total or 0,
-                'is_debt': s.is_debt,
-                'created_at': s.created_at
+        total = SaleItem.objects.filter(sale=sale).aggregate(
+            total=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField()))
+        )['total'] or 0
+
+        return Response({
+            'ok': True,
+            'sale': {
+                'id': sale.id,
+                'total': total,
+                'is_debt': sale.is_debt,
+                'created_at': sale.created_at,
+                'items': [
+                    {
+                        'product_name': item.product_name,
+                        'price': item.price,
+                        'quantity': item.quantity
+                    }
+                    for item in sale.items.all()
+                ]
             }
-            for s in sales
-        ]
-
-        paginator = StandardPagination()
-        page = paginator.paginate_queryset(result, request)
-        return paginator.get_paginated_response(page)
-
+        })
 
 class MyShopPaymentsView(APIView):
     permission_classes = [IsAuthenticated]
