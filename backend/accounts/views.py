@@ -69,23 +69,23 @@ class RegisterView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if serializer.is_valid():
-            random_code = random.randint(100000, 999999)
-            # send_otp_code(phone_number, random_code)
-            OtpCode.objects.create(
-                phone_number=phone_number,
-                code=random_code,
-                full_name=serializer.validated_data["full_name"],
-                password=serializer.validated_data["password"],
-                is_shop=serializer.validated_data["is_shop"],
-                shop_name=serializer.validated_data.get("shop_name", ""),
-                shop_address=serializer.validated_data.get("shop_address", "")
-            )
         
-            return Response({
-                "ok": True,
-                "message": "کد تایید به شماره شما ارسال شد"
-            })
+        random_code = random.randint(100000, 999999)
+        # send_otp_code(phone_number, random_code)
+        OtpCode.objects.create(
+            phone_number=phone_number,
+            code=random_code,
+            full_name=serializer.validated_data["full_name"],
+            password=serializer.validated_data["password"],
+            is_shop=serializer.validated_data["is_shop"],
+            shop_name=serializer.validated_data.get("shop_name", ""),
+            shop_address=serializer.validated_data.get("shop_address", "")
+        )
+        
+        return Response({
+            "ok": True,
+            "message": "کد تایید به شماره شما ارسال شد"
+        })
     
 class RegisterVerifyCodeView(APIView):
     """This view verifies the OTP code sent to the user's phone number during registration."""
