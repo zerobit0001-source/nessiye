@@ -192,3 +192,49 @@ export interface ActivityType {
   title: string;
   object_id: number;
 }
+
+//  reports
+
+export type SalesTrend = {
+  date: string;
+  cash: number;
+  debt: number;
+  total: number;
+};
+
+export type PaymentsTrend = {
+  date: string;
+  total: number;
+  count: number;
+};
+
+export type DebtsTrend = {
+  date: string;
+  total: number;
+  count: number;
+};
+
+export type ComposedTrend = {
+  date: string;
+  sales: number;
+  payments: number;
+};
+
+export type PaymentDistribution = {
+  cash: number;
+  debt: number;
+};
+
+export type MonthlyRevenue = {
+  month: string;
+  total: number;
+};
+
+export type ReportsChartsType = {
+  sales_trend: SalesTrend[];
+  payments_trend: PaymentsTrend[];
+  debts_trend: DebtsTrend[];
+  composed_trend: ComposedTrend[];
+  payment_distribution: PaymentDistribution;
+  monthly_revenue: MonthlyRevenue[];
+};

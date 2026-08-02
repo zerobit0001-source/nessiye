@@ -11,6 +11,7 @@ import {
   PaymentType,
   ProductsListType,
   ProductType,
+  ReportsChartsType,
   SalesListType,
   SaleType,
   ShopDetailType,
@@ -221,3 +222,12 @@ export interface GetDashboardCardsResponse {
     }[];
   };
 }
+
+
+// reports 
+
+
+export type GetReportsChartsResponse = {
+  ok: boolean;
+  charts: ReportsChartsType;
+};
