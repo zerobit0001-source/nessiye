@@ -454,7 +454,7 @@ class DashboardView(APIView):
             for a in activity
         ]
 
-        return Response({
+        result = {
             'ok': True,
             'data': {
                 'total_sales_price': total_sales,
@@ -490,4 +490,46 @@ class DashboardView(APIView):
                     }
                 }
             }
-        })
+        }
+
+        cache.set(key, result, timeout=DASHBOARD_TIMEOUT)
+
+        return Response(result)
+
+#         return Response({
+#             'ok': True,
+#             'data': {
+#                 'total_sales_price': total_sales,
+#                 'total_debts_price': total_debts,
+#                 'total_price': total_sales + total_debts,
+#                 'total_payed_amount': total_paid,
+#                 'number_of_customers': number_of_customers,
+#                 'top_debtors': top_debtors_data,
+#                 'low_stock_products' : low_stock_data,
+#                 'today_sales': today_sales,
+#                 'today_debts': today_debts,
+#                 'today_paid': today_paid,
+#                 'recent_activities': activity_data,
+#                 'charts': {
+#                     'sales_trend': [
+#                         {
+#                             'date': str(t['date']),
+#                             'total': t['total'] or 0
+#                         }
+#                         for t in sales_chart
+#                     ],
+#                     'payments_trend': [
+#                         {
+#                             'date': str(t['date']),
+#                             'total': t['total'] or 0
+#                         }
+#                         for t in payments_chart
+#                     ],
+#                     'debt_distribution': {
+#                         'total_debt': total_debt_amount,
+#                         'total_paid': total_paid_amount,
+#                         'remaining': total_debt_amount - total_paid_amount
+#                     }
+#                 }
+#             }
+#         })
