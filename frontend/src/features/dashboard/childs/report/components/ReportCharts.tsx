@@ -29,7 +29,7 @@ export default function ReportsCharts({
       >
         <ReportPaymentTrendChart data={charts.payments_trend} />
       </ChartCard>
-      {/*<ChartCard
+      <ChartCard
         title="ثبت نسیه‌های جدید"
         caption="حجم نسیه‌های ایجادشده به تفکیک هفته"
         icon={<TrendingUpRounded color="error" />}
@@ -56,7 +56,7 @@ export default function ReportsCharts({
         icon={<TrendingUpRounded color="secondary" />}
       >
         <ReportMonthlyRevenueChart data={charts.monthly_revenue} />
-      </ChartCard>*/}
+      </ChartCard>
     </div>
   );
 }
