@@ -18,9 +18,11 @@ import {
   AccountBalanceWalletRounded,
   PaidRounded,
 } from "@mui/icons-material";
+import { ReportCardsType } from "@/types/types";
+import { formatPrice } from "@/utils/formatters";
 
-export const reportCards = [
-  {
+export const REPORT_CARDS_CONFIG = {
+  total_sales: {
     title: "کل فروش کل دوره",
     value: "۴۲,۸۵۰,۰۰۰",
     unit: "تومان",
@@ -30,7 +32,7 @@ export const reportCards = [
     iconBg: "#E8F4FD",
     iconColor: "#0288D1",
   },
-  {
+  total_debt_registered: {
     title: "مجموع تسویه‌جات ثبت‌شده",
     value: "۴۸,۲۰۰,۰۰۰",
     unit: "تومان",
@@ -40,7 +42,7 @@ export const reportCards = [
     iconBg: "#FDECEC",
     iconColor: "#E53935",
   },
-  {
+  total_collected: {
     title: "مطالبات وصول‌شده",
     value: "۳۱,۴۵۰,۰۰۰",
     unit: "تومان",
@@ -50,7 +52,7 @@ export const reportCards = [
     iconBg: "#E8F8F1",
     iconColor: "#00A76F",
   },
-  {
+  remaining_debt: {
     title: "باقی‌مانده طلب بازار",
     value: "۱۶,۷۵۰,۰۰۰",
     unit: "تومان",
@@ -60,7 +62,7 @@ export const reportCards = [
     iconBg: "#FFF4E5",
     iconColor: "#EF6C00",
   },
-  {
+  avg_per_invoice: {
     title: "میانگین هر فاکتور",
     value: "۱۲۷,۰۰۰",
     unit: "تومان",
@@ -70,7 +72,7 @@ export const reportCards = [
     iconBg: "#F3E8FF",
     iconColor: "#7C3AED",
   },
-  {
+  open_debts: {
     title: "دفترچه‌های بدهی فعال",
     value: "۴۲",
     unit: "حساب باز",
@@ -80,7 +82,7 @@ export const reportCards = [
     iconBg: "#FDECEC",
     iconColor: "#D32F2F",
   },
-  {
+  total_invoices: {
     title: "تعداد تراکنش فروش",
     value: "۱,۱۲۴",
     unit: "فاکتور",
@@ -90,7 +92,7 @@ export const reportCards = [
     iconBg: "#E8F4FD",
     iconColor: "#0288D1",
   },
-  {
+  total_customers: {
     title: "تعداد کل مشتریان",
     value: "۲۴۸",
     unit: "نفر",
@@ -100,15 +102,24 @@ export const reportCards = [
     iconBg: "#F3E8FF",
     iconColor: "#7C3AED",
   },
-];
-export default function ReportCards() {
+};
+
+type SummaryKey = keyof typeof REPORT_CARDS_CONFIG;
+
+export default function ReportCards({
+  cards,
+  isLoading,
+}: {
+  cards: ReportCardsType;
+  isLoading: boolean;
+}) {
   return (
     <Grid container spacing={2}>
-      {reportCards.map((card) => {
-        const Icon = card.icon;
+      {Object.entries(REPORT_CARDS_CONFIG).map(([key, config]) => {
+        const Icon = config.icon;
 
         return (
-          <Grid key={card.title} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid key={config.title} size={{ xs: 12, sm: 6, lg: 3 }}>
             <Card
               elevation={0}
               sx={{
@@ -124,34 +135,31 @@ export default function ReportCards() {
                   alignItems="flex-start"
                 >
                   <Stack spacing={0.5} alignItems="flex-start">
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                    >
-                      {card.title}
+                    <Typography variant="body2" color="text.secondary">
+                      {config.title}
                     </Typography>
 
                     <Stack direction="row" spacing={0.5} alignItems="baseline">
                       <Typography variant="h6" className="font-bold!">
-                        {card.value}
+                        {formatPrice(cards[key as SummaryKey])}
                       </Typography>
 
                       <Typography variant="caption" color="text.secondary">
-                        {card.unit}
+                        {config.unit}
                       </Typography>
                     </Stack>
 
                     <Typography
                       variant="caption"
-                      sx={{ color: card.subtitleColor }}
+                      sx={{ color: config.subtitleColor }}
                     >
-                      {card.subtitle}
+                      {config.subtitle}
                     </Typography>
                   </Stack>
                   <Avatar
                     sx={{
-                      bgcolor: card.iconBg,
-                      color: card.iconColor,
+                      bgcolor: config.iconBg,
+                      color: config.iconColor,
                       width: 42,
                       height: 42,
                     }}

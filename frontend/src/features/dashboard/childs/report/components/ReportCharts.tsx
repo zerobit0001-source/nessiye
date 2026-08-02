@@ -10,8 +10,10 @@ import ReportMonthlyRevenueChart from "./charts/ReportMonthlyRevChart";
 
 export default function ReportsCharts({
   charts,
+  isLoading,
 }: {
   charts: ReportsChartsType;
+  isLoading: boolean;
 }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -29,7 +31,7 @@ export default function ReportsCharts({
       >
         <ReportPaymentTrendChart data={charts.payments_trend} />
       </ChartCard>
-      {/*<ChartCard
+      <ChartCard
         title="ثبت نسیه‌های جدید"
         caption="حجم نسیه‌های ایجادشده به تفکیک هفته"
         icon={<TrendingUpRounded color="error" />}
@@ -56,7 +58,7 @@ export default function ReportsCharts({
         icon={<TrendingUpRounded color="secondary" />}
       >
         <ReportMonthlyRevenueChart data={charts.monthly_revenue} />
-      </ChartCard>*/}
+      </ChartCard>
     </div>
   );
 }

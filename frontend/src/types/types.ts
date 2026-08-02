@@ -238,3 +238,17 @@ export type ReportsChartsType = {
   payment_distribution: PaymentDistribution;
   monthly_revenue: MonthlyRevenue[];
 };
+
+export type ReportCardsType = {
+  total_sales: number;
+  total_debt_registered: number;
+  total_collected: number;
+  remaining_debt: number;
+  collection_rate: number;
+  total_customers: number;
+  new_customers: number;
+  total_invoices: number;
+  open_debts: number;
+  urgent_debts: number;
+  avg_per_invoice: number;
+};

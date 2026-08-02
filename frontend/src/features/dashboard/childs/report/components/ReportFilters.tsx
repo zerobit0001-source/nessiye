@@ -25,7 +25,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 
 export default function ReportFilters() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [filters, setFilters] = useState({
     from_date: "",
     to_date: "",
@@ -47,6 +47,7 @@ export default function ReportFilters() {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
+        onClick={() => setOpen(!open)}
       >
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography fontWeight={700}>فیلترهای پیشرفته گزارش</Typography>
@@ -67,7 +68,6 @@ export default function ReportFilters() {
               }}
             />
           }
-          onClick={() => setOpen(!open)}
         >
           {open ? "بستن فیلترها" : "باز کردن فیلترها"}
         </Button>

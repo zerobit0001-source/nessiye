@@ -1,6 +1,6 @@
 "use client";
 import { CircularProgress } from "@mui/material";
-import { useGetChartsQuery } from "../api/ApiReport";
+import { useGetCardsQuery, useGetChartsQuery } from "../api/ApiReport";
 import ReportCards from "./ReportCards";
 import ReportFilters from "./ReportFilters";
 import ReportPageHeader from "./ReportPageHeader";
@@ -9,9 +9,10 @@ import SaleReportPage from "./SaleReportPage";
 import ReportsCharts from "./ReportCharts";
 
 export default function ReportPage() {
-  const reportQuery = useGetChartsQuery();
+  const chartQuery = useGetChartsQuery();
+  const cardQuery = useGetCardsQuery();
 
-  if (reportQuery.isLoading) {
+  if (chartQuery.isLoading || cardQuery.isLoading) {
     return (
       <div className="w-full py-10 flex items-center justify-center">
         <CircularProgress />
@@ -19,18 +20,24 @@ export default function ReportPage() {
     );
   }
 
-  if (!reportQuery.data?.charts) {
+  if (!chartQuery.data?.charts || !cardQuery.data?.summary) {
     return <div>hi</div>;
   }
 
-  console.log(reportQuery.data);
+  console.log(chartQuery.data);
 
   return (
     <>
       <ReportPageHeader />
       <ReportFilters />
-      <ReportsCharts charts={reportQuery.data.charts} />
-      <ReportCards />
+      <ReportCards
+        cards={cardQuery.data.summary}
+        isLoading={cardQuery.isLoading}
+      />
+      <ReportsCharts
+        charts={chartQuery.data.charts}
+        isLoading={chartQuery.isLoading}
+      />
       <ReportTopsContainer />
       <SaleReportPage />
     </>
