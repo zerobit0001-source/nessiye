@@ -2,9 +2,10 @@
 
 import { useTheme } from "@mui/material/styles";
 import {
+  Bar,
   CartesianGrid,
+  ComposedChart,
   Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -14,25 +15,24 @@ import {
 import { formatCompactPrice, formatDate } from "@/utils/formatters";
 import ChartTooltip from "./ChartTooltip";
 
-type SalesTrend = {
+type ComposedTrend = {
   date: string;
-  cash: number;
-  debt: number;
-  total: number;
+  sales: number;
+  payments: number;
 };
 
-type ReportSaleTrenChartProps = {
-  data: SalesTrend[];
+type ReportComposedTrendChartProps = {
+  data: ComposedTrend[];
 };
 
-export default function ReportSaleTrenChart({
+export default function ReportComposedTrendChart({
   data,
-}: ReportSaleTrenChartProps) {
+}: ReportComposedTrendChartProps) {
   const theme = useTheme();
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <LineChart
+      <ComposedChart
         data={data}
         style={{
           fontFamily: "Vazirmatn",
@@ -55,8 +55,8 @@ export default function ReportSaleTrenChart({
           dataKey="date"
           tickFormatter={(value) =>
             formatDate(value, {
-              month: "numeric",
               day: "numeric",
+              month: "short",
             })
           }
           tick={{ fill: theme.palette.text.secondary }}
@@ -69,38 +69,30 @@ export default function ReportSaleTrenChart({
 
         <Tooltip
           cursor={{
-            stroke: theme.palette.primary.main,
-            strokeWidth: 1,
+            stroke: theme.palette.info.main,
             strokeDasharray: "5 5",
           }}
           content={<ChartTooltip />}
         />
 
-        <Line
-          type="monotone"
-          dataKey="total"
-          stroke={theme.palette.primary.main}
-          strokeWidth={3}
-          dot={{ r: 3 }}
-          activeDot={{ r: 6 }}
+        <Bar
+          dataKey="sales"
+          name="فروش"
+          fill={theme.palette.warning.main}
+          radius={[8, 8, 0, 0]}
+          barSize={28}
         />
+
         <Line
           type="monotone"
-          dataKey="debt"
-          stroke={theme.palette.error.main}
-          strokeWidth={3}
-          dot={{ r: 3 }}
-          activeDot={{ r: 6 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="cash"
+          dataKey="payments"
+          name="دریافتی"
           stroke={theme.palette.success.main}
           strokeWidth={3}
           dot={{ r: 3 }}
           activeDot={{ r: 6 }}
         />
-      </LineChart>
+      </ComposedChart>
     </ResponsiveContainer>
   );
 }

@@ -2,9 +2,9 @@
 
 import { useTheme } from "@mui/material/styles";
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -14,25 +14,24 @@ import {
 import { formatCompactPrice, formatDate } from "@/utils/formatters";
 import ChartTooltip from "./ChartTooltip";
 
-type SalesTrend = {
+type DebtsTrend = {
   date: string;
-  cash: number;
-  debt: number;
   total: number;
+  count: number;
 };
 
-type ReportSaleTrenChartProps = {
-  data: SalesTrend[];
+type ReportDebtTrenChartProps = {
+  data: DebtsTrend[];
 };
 
-export default function ReportSaleTrenChart({
+export default function ReportDebtTrenChart({
   data,
-}: ReportSaleTrenChartProps) {
+}: ReportDebtTrenChartProps) {
   const theme = useTheme();
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <LineChart
+      <BarChart
         data={data}
         style={{
           fontFamily: "Vazirmatn",
@@ -55,8 +54,8 @@ export default function ReportSaleTrenChart({
           dataKey="date"
           tickFormatter={(value) =>
             formatDate(value, {
-              month: "numeric",
               day: "numeric",
+              month: "short",
             })
           }
           tick={{ fill: theme.palette.text.secondary }}
@@ -69,38 +68,19 @@ export default function ReportSaleTrenChart({
 
         <Tooltip
           cursor={{
-            stroke: theme.palette.primary.main,
-            strokeWidth: 1,
-            strokeDasharray: "5 5",
+            fill: `${theme.palette.error.main}15`,
           }}
           content={<ChartTooltip />}
         />
 
-        <Line
-          type="monotone"
+        <Bar
           dataKey="total"
-          stroke={theme.palette.primary.main}
-          strokeWidth={3}
-          dot={{ r: 3 }}
-          activeDot={{ r: 6 }}
+          name="نسیه ثبت‌شده"
+          fill={theme.palette.error.main}
+          radius={[8, 8, 0, 0]}
+          barSize={28}
         />
-        <Line
-          type="monotone"
-          dataKey="debt"
-          stroke={theme.palette.error.main}
-          strokeWidth={3}
-          dot={{ r: 3 }}
-          activeDot={{ r: 6 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="cash"
-          stroke={theme.palette.success.main}
-          strokeWidth={3}
-          dot={{ r: 3 }}
-          activeDot={{ r: 6 }}
-        />
-      </LineChart>
+      </BarChart>
     </ResponsiveContainer>
   );
 }

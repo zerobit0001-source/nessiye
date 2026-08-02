@@ -2,9 +2,9 @@
 
 import { useTheme } from "@mui/material/styles";
 import {
+  Area,
+  AreaChart,
   CartesianGrid,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -14,25 +14,24 @@ import {
 import { formatCompactPrice, formatDate } from "@/utils/formatters";
 import ChartTooltip from "./ChartTooltip";
 
-type SalesTrend = {
+type PaymentsTrend = {
   date: string;
-  cash: number;
-  debt: number;
   total: number;
+  count: number;
 };
 
-type ReportSaleTrenChartProps = {
-  data: SalesTrend[];
+type ReportPaymentTrendChartProps = {
+  data: PaymentsTrend[];
 };
 
-export default function ReportSaleTrenChart({
+export default function ReportPaymentTrendChart({
   data,
-}: ReportSaleTrenChartProps) {
+}: ReportPaymentTrendChartProps) {
   const theme = useTheme();
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <LineChart
+      <AreaChart
         data={data}
         style={{
           fontFamily: "Vazirmatn",
@@ -45,6 +44,21 @@ export default function ReportSaleTrenChart({
           bottom: 10,
         }}
       >
+        <defs>
+          <linearGradient id="paymentsGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop
+              offset="5%"
+              stopColor={theme.palette.success.main}
+              stopOpacity={0.35}
+            />
+            <stop
+              offset="95%"
+              stopColor={theme.palette.success.main}
+              stopOpacity={0}
+            />
+          </linearGradient>
+        </defs>
+
         <CartesianGrid
           vertical={false}
           stroke={theme.palette.divider}
@@ -69,38 +83,24 @@ export default function ReportSaleTrenChart({
 
         <Tooltip
           cursor={{
-            stroke: theme.palette.primary.main,
-            strokeWidth: 1,
+            stroke: theme.palette.success.main,
             strokeDasharray: "5 5",
           }}
           content={<ChartTooltip />}
         />
 
-        <Line
+        <Area
           type="monotone"
           dataKey="total"
-          stroke={theme.palette.primary.main}
-          strokeWidth={3}
-          dot={{ r: 3 }}
-          activeDot={{ r: 6 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="debt"
-          stroke={theme.palette.error.main}
-          strokeWidth={3}
-          dot={{ r: 3 }}
-          activeDot={{ r: 6 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="cash"
+          name="دریافتی"
           stroke={theme.palette.success.main}
           strokeWidth={3}
-          dot={{ r: 3 }}
-          activeDot={{ r: 6 }}
+          fill="url(#paymentsGradient)"
+          // dot={{ r: 3 }}
+          // activeDot={{ r: 6 }}
         />
-      </LineChart>
+        
+      </AreaChart>
     </ResponsiveContainer>
   );
 }
