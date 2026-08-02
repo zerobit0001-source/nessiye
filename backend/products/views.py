@@ -17,6 +17,12 @@ from activity.services import log_activity
 from activity.models import Activity
 from django.db.models.functions import TruncDate
 from sales.models import SaleItem
+from django.core.cache import cache
+from config.cache import (
+    dashboard_key,
+    DASHBOARD_TIMEOUT,
+    invalidate_dashboard
+)
 
 class IsShop:
     @staticmethod
@@ -319,6 +325,11 @@ class DashboardView(APIView):
     def get(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        key = dashboard_key(request.user.id)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
 
         total_sales = Sale.objects.filter(
             shop=request.user,
