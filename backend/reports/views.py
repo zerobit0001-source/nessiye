@@ -867,6 +867,12 @@ from sales.models import Sale, SaleItem
 from debts.models import Debt, Payment
 from customer_management.models import CustomerShop
 from products.models import Product
+from django.core.cache import cache
+from config.cache import (
+    report_summary_key, report_charts_key,
+    report_customers_key, report_products_key,
+    REPORT_TIMEOUT
+)
 
 
 def get_date_range(request):
@@ -887,6 +893,11 @@ class ReportSummaryView(APIView):
 
         from_date, to_date = get_date_range(request)
         thirty_days_ago = timezone.now() - timedelta(days=30)
+
+        key = report_summary_key(request.user.id, from_date, to_date)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
 
         sales = Sale.objects.filter(
             shop=request.user,
@@ -941,7 +952,7 @@ class ReportSummaryView(APIView):
             created_at__date__lte=to_date
         ).count()
 
-        return Response({
+        result = {
             'ok': True,
             'summary': {
                 'total_sales': total,
@@ -956,7 +967,27 @@ class ReportSummaryView(APIView):
                 'urgent_debts': urgent_debts,
                 'avg_per_invoice': avg_per_invoice
             }
-        })
+        }
+
+        cache.set(key, result, timeout=REPORT_TIMEOUT)
+        return Response(result)
+
+        # return Response({
+        #     'ok': True,
+        #     'summary': {
+        #         'total_sales': total,
+        #         'total_debt_registered': total_debt_sales,
+        #         'total_collected': total_paid,
+        #         'remaining_debt': remaining,
+        #         'collection_rate': collection_rate,
+        #         'total_customers': total_customers,
+        #         'new_customers': new_customers,
+        #         'total_invoices': total_invoices,
+        #         'open_debts': open_debts,
+        #         'urgent_debts': urgent_debts,
+        #         'avg_per_invoice': avg_per_invoice
+        #     }
+        # })
 
 
 class ReportChartsView(APIView):
