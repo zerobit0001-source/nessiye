@@ -9,7 +9,7 @@ from django.utils import timezone
 from datetime import timedelta
 from activity.services import log_activity
 from django.db.models import Sum, Count, Q, F
-
+from config.cache import invalidate_dashboard, invalidate_reports
 
 class DebtListView(APIView):
     """This class for debt list view for shop account"""
@@ -163,6 +163,9 @@ class DebtPayView(APIView):
             title=f'پرداخت شد {serializer.instance.customer.customer.full_name} بدهی',
             object_id=serializer.instance.id
         )
+
+        invalidate_dashboard(request.user.id)
+        invalidate_reports(request.user.id)
 
         return Response({
             'ok': True,
