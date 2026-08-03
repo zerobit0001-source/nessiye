@@ -55,3 +55,9 @@ export function timeAgo(dateString: string): string {
   const years = Math.floor(months / 12);
   return `${years} سال پیش`;
 }
+export function formatChartDate(date: string) {
+  return new Intl.DateTimeFormat("fa-IR", {
+    month: "short",
+    day: "numeric",
+  }).format(new Date(date));
+}

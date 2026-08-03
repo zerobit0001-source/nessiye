@@ -1,7 +1,8 @@
 "use client";
+
 import {
+  formatChartDate,
   formatCompactPrice,
-  formatDate,
   formatPrice,
 } from "@/utils/formatters";
 import { Card, Stack, Typography, useTheme } from "@mui/material";
@@ -9,8 +10,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -37,26 +36,40 @@ export default function RevenueChart({ data }: RevenueChartProps) {
           fontFamily: "Vazirmatn",
           direction: "ltr",
         }}
+        margin={{
+          top: 10,
+          right: 10,
+          left: 0,
+          bottom: 0,
+        }}
       >
-        <CartesianGrid />
+        <CartesianGrid
+          vertical={false}
+          strokeDasharray="3 3"
+          stroke={theme.palette.divider}
+        />
 
         <XAxis
           dataKey="date"
-          // minTickGap={25}
-          // interval={1}
+          tickFormatter={formatChartDate}
+          tick={{ fontSize: 13 }}
+          axisLine={false}
+          tickLine={false}
         />
 
         <YAxis
-          dataKey="total"
-          tickFormatter={(value) => formatCompactPrice(value)}
-          fontSize={"14px"}
+          tickFormatter={formatCompactPrice}
+          tick={{ fontSize: 13 }}
+          axisLine={false}
+          tickLine={false}
         />
+
         <Tooltip
           cursor={{
             stroke: theme.palette.success.main,
             strokeWidth: 1,
             strokeDasharray: "5 5",
-            fill: "rgba(255,152,0,0.05)",
+            fill: "rgba(76,175,80,0.08)",
           }}
           content={<ChartTooltip />}
         />
@@ -65,6 +78,7 @@ export default function RevenueChart({ data }: RevenueChartProps) {
           dataKey="total"
           fill={theme.palette.success.main}
           radius={[8, 8, 0, 0]}
+          maxBarSize={48}
         />
       </BarChart>
     </ResponsiveContainer>
@@ -82,18 +96,18 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
 
   return (
     <Card
-      elevation={1}
+      elevation={3}
       sx={{
         px: 2,
         py: 1.5,
-        minWidth: 170,
+        minWidth: 180,
         direction: "rtl",
+        borderRadius: 2,
       }}
-      className="rounded-lg!"
     >
       <Stack spacing={0.5}>
         <Typography variant="body2" color="text.secondary">
-          {label}
+          {label ? formatChartDate(label) : "-"}
         </Typography>
 
         <Typography variant="body1" fontWeight={700} color="success.main">

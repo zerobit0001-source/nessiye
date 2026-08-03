@@ -43,18 +43,7 @@ const DashboardsCharts = () => {
           caption="نمایش مقدار کل بدهی هفته در براره پرداخت"
           icon={<PieChartRounded color="secondary" />}
         >
-          <PaymentDistributionChart
-            data={[
-              {
-                name: "نقدی",
-                value: 10000000,
-              },
-              {
-                name: "نسیه",
-                value: 3000000,
-              },
-            ]}
-          />
+          <PaymentDistributionChart data={dashboardCharts?.debt_distribution} />
           <ChartLegend
             items={[
               {
@@ -77,17 +66,7 @@ const DashboardsCharts = () => {
           caption="جمع تمام مبالغ فروش و بدهی "
           icon={<AttachMoneyRounded color="success" />}
         >
-          <RevenueChart
-            data={[
-              { date: "شنبه", total: 4200000 },
-              { date: "یکشنبه", total: 5800000 },
-              { date: "دوشنبه", total: 3500000 },
-              { date: "سه‌شنبه", total: 7100000 },
-              { date: "چهارشنبه", total: 9200000 },
-              { date: "پنجشنبه", total: 6800000 },
-              { date: "جمعه", total: 10500000 },
-            ]}
-          />
+          <RevenueChart data={dashboardCharts?.payments_trend} />
         </ChartCard>
       </div>
     </>

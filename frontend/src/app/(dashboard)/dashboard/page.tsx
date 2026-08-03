@@ -8,26 +8,28 @@ import AddSaleModal from "@/features/dashboard/components/AddSaleModal";
 import DashboardPageHeader from "@/features/dashboard/childs/dashboard/components/DashboardPageHeader";
 import QuickActions from "@/features/dashboard/childs/dashboard/components/QuickActions";
 import DateSelector from "@/features/dashboard/childs/dashboard/components/DateSelector";
+import { Typography } from "@mui/material";
 
 // dasboard
 
 const Dashboard = async () => {
-    await CheckAuthServer();
+  await CheckAuthServer();
 
-    return (
-        <Container>
-            <DashboardPageHeader>
-                <DateSelector />
-            </DashboardPageHeader>
-            <DashboardsCards />
+  return (
+    <Container>
+      <DashboardPageHeader>
+        {/*<DateSelector />*/}
+        <div></div>
+      </DashboardPageHeader>
+      <DashboardsCards />
 
-            <div className="grid grid-cols-1 lg:grid-cols-6  gap-4">
-                <DashboardsCharts />
-                <DashboardsRecents />
-                <QuickActions />
-            </div>
-        </Container>
-    );
+      <div className="grid grid-cols-1 lg:grid-cols-6  gap-4">
+        <DashboardsCharts />
+        <DashboardsRecents />
+        <QuickActions />
+      </div>
+    </Container>
+  );
 };
 
 export default Dashboard;
