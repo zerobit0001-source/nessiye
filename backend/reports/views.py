@@ -1159,6 +1159,11 @@ class ReportCustomersView(APIView):
         from_date, to_date = get_date_range(request)
         thirty_days_ago = timezone.now() - timedelta(days=30)
 
+        key = report_customers_key(request.user.id, from_date, to_date)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
+
         top_customers = Sale.objects.filter(
             shop=request.user,
             created_at__date__gte=from_date,
@@ -1199,7 +1204,7 @@ class ReportCustomersView(APIView):
             Q(paid__isnull=True) | Q(paid__lt=F('amount'))
         ).order_by('created_at')[:10]
 
-        return Response({
+        result = {
             'ok': True,
             'top_customers': [
                 {
@@ -1232,7 +1237,45 @@ class ReportCustomersView(APIView):
                 }
                 for d in overdue_debtors
             ]
-        })
+        }
+
+        cache.set(key, result, timeout=REPORT_TIMEOUT)
+        return Response(result)
+
+        # return Response({
+        #     'ok': True,
+        #     'top_customers': [
+        #         {
+        #             'customer_name': c['customer__full_name'],
+        #             'phone_number': c['customer__phone_number'],
+        #             'total': c['total'] or 0,
+        #             'total_paid': c['total_paid'] or 0,
+        #             'remaining': c['remaining'] or 0
+        #         }
+        #         for c in top_customers
+        #     ],
+        #     'top_debtors': [
+        #         {
+        #             'customer_name': cs.customer.full_name,
+        #             'phone_number': cs.customer.phone_number,
+        #             'total_debt': cs.total_debt or 0,
+        #             'total_paid': cs.total_paid or 0,
+        #             'remaining': (cs.total_debt or 0) - (cs.total_paid or 0)
+        #         }
+        #         for cs in top_debtors
+        #     ],
+        #     'overdue_debtors': [
+        #         {
+        #             'debt_id': d.debt_id,
+        #             'customer_name': d.customer.customer.full_name,
+        #             'phone_number': d.customer.customer.phone_number,
+        #             'amount': d.amount,
+        #             'remaining': d.amount - (d.paid or 0),
+        #             'created_at': d.created_at
+        #         }
+        #         for d in overdue_debtors
+        #     ]
+        # })
 
 class ReportProductsView(APIView):
     permission_classes = [IsAuthenticated]
