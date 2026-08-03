@@ -1000,6 +1000,11 @@ class ReportChartsView(APIView):
         from_date, to_date = get_date_range(request)
         six_months_ago = timezone.now() - timedelta(days=180)
 
+        key = report_charts_key(request.user.id, from_date, to_date)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
+
         sales_items_trend = SaleItem.objects.filter(
             sale__shop=request.user,
             sale__created_at__date__gte=from_date,
@@ -1076,7 +1081,7 @@ class ReportChartsView(APIView):
             )
         ).order_by('month')
 
-        return Response({
+        result = {
             'ok': True,
             'charts': {
                 'sales_trend': sales_trend_data,
@@ -1106,7 +1111,42 @@ class ReportChartsView(APIView):
                     for t in monthly_items
                 ]
             }
-        })
+        }
+
+        cache.set(key, result, timeout=REPORT_TIMEOUT)
+        return Response(result)
+
+        # return Response({
+        #     'ok': True,
+        #     'charts': {
+        #         'sales_trend': sales_trend_data,
+        #         'payments_trend': [
+        #             {
+        #                 'date': str(t['date']),
+        #                 'total': t['total'] or 0,
+        #                 'count': t['count'] or 0
+        #             }
+        #             for t in payments_trend
+        #         ],
+        #         'debts_trend': [
+        #             {
+        #                 'date': str(t['date']),
+        #                 'total': t['total'] or 0,
+        #                 'count': t['count'] or 0
+        #             }
+        #             for t in debts_trend
+        #         ],
+        #         'composed_trend': composed_trend,
+        #         'payment_distribution': pie_data,
+        #         'monthly_revenue': [
+        #             {
+        #                 'month': str(t['month'])[:7],
+        #                 'total': t['total'] or 0
+        #             }
+        #             for t in monthly_items
+        #         ]
+        #     }
+        # })
 
 
 class ReportCustomersView(APIView):
