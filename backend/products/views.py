@@ -242,7 +242,13 @@ class CategoryListCreateView(APIView):
         
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
-        return Response({'ok': True, 'categories': serializer.data}, status=status.HTTP_200_OK)
+
+        result = {'ok': True, 'categories': serializer.data}
+        cache.set(key, result, timeout=CATEGORIES_TIMEOUT)
+
+        return Response(result, status=status.HTTP_200_OK)
+
+        # return Response({'ok': True, 'categories': serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request):
         if not IsShop.check(request.user):
