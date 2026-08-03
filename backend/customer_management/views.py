@@ -17,6 +17,7 @@ import random
 from django.utils import timezone
 from datetime import timedelta
 from config.pagination import StandardPagination
+from config.cache import invalidate_dashboard, invalidate_reports
 
 
 class CustomerListCreateView(APIView):
@@ -216,6 +217,9 @@ class CustomerVerifyView(APIView):
             title=f'اضافه شد {serializer.instance.full_name} مشتری',
             object_id=serializer.instance.id
         )
+
+        invalidate_dashboard(request.user.id)
+        invalidate_reports(request.user.id)
 
         return Response({'ok': True, 'message': 'مشتری با موفقیت اضافه شد', 'customer': serializer.data}, status=status.HTTP_201_CREATED)
 
