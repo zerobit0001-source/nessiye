@@ -270,9 +270,19 @@ class PaymentListView(APIView):
         ordering = request.query_params.get('ordering', '-created_at')
         period = request.query_params.get('period', None)
 
+        search = request.query_params.get('search', None)
+
         payments = Payment.objects.filter(
             debt__shop=request.user
         ).select_related('debt__customer__customer')
+
+        if search:
+            payments = payments.filter(
+                Q(payment_id__icontains=search) |
+                Q(debt__debt_id__icontains=search) |
+                Q(debt__customer__customer__full_name__icontains=search) |
+                Q(debt__customer__customer__phone_number__icontains=search)
+            )
 
         now = timezone.now()
         this_month = now - timedelta(days=30)
