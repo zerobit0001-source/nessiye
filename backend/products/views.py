@@ -18,11 +18,8 @@ from activity.models import Activity
 from django.db.models.functions import TruncDate
 from sales.models import SaleItem
 from django.core.cache import cache
-from config.cache import (
-    dashboard_key,
-    DASHBOARD_TIMEOUT,
-    invalidate_dashboard
-)
+from config.cache import dashboard_key, DASHBOARD_TIMEOUT, invalidate_dashboard
+from config.cache import categories_key, CATEGORIES_TIMEOUT
 
 class IsShop:
     @staticmethod
@@ -238,6 +235,11 @@ class CategoryListCreateView(APIView):
         return [IsAuthenticated()]
 
     def get(self, request):
+        key = categories_key()
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
+        
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response({'ok': True, 'categories': serializer.data}, status=status.HTTP_200_OK)
@@ -258,6 +260,8 @@ class CategoryListCreateView(APIView):
             object_id=serializer.instance.id
         )
 
+        cache.delete(categories_key())
+        
         return Response({'ok': True, 'message': 'دسته‌بندی با موفقیت اضافه شد', 'category': serializer.data}, status=status.HTTP_201_CREATED)
     
 
