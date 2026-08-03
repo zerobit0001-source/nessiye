@@ -23,11 +23,20 @@ class DebtListView(APIView):
         debt_status = request.query_params.get('status', None)
         period = request.query_params.get('period', None)
 
+        search = request.query_params.get('search', None)
+
         thirty_days_ago = timezone.now() - timedelta(days=30)
 
         debts = Debt.objects.filter(
             shop=request.user
         ).select_related('customer__customer').prefetch_related('payments')
+
+        if search:
+            debts = debts.filter(
+                Q(debt_id__icontains=search) |
+                Q(customer__customer__full_name__icontains=search) |
+                Q(customer__customer__phone_number__icontains=search)
+            )
 
         # period filtering
 
