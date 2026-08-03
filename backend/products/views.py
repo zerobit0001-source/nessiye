@@ -17,6 +17,10 @@ from activity.services import log_activity
 from activity.models import Activity
 from django.db.models.functions import TruncDate
 from sales.models import SaleItem
+from django.core.cache import cache
+from config.cache import dashboard_key, DASHBOARD_TIMEOUT, invalidate_dashboard
+from config.cache import categories_key, CATEGORIES_TIMEOUT
+from config.cache import invalidate_dashboard, invalidate_reports, invalidate_products
 
 class IsShop:
     @staticmethod
@@ -165,6 +169,9 @@ class ProductListCreateView(APIView):
             object_id=serializer.instance.id
         )
 
+        invalidate_dashboard(request.user.id)
+        invalidate_products(request.user.id)
+
         return Response({'ok': True, 'message': 'محصول با موفقیت اضافه شد', 'product': serializer.data}, status=status.HTTP_201_CREATED)
     
 
@@ -232,9 +239,20 @@ class CategoryListCreateView(APIView):
         return [IsAuthenticated()]
 
     def get(self, request):
+        key = categories_key()
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
+        
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
-        return Response({'ok': True, 'categories': serializer.data}, status=status.HTTP_200_OK)
+
+        result = {'ok': True, 'categories': serializer.data}
+        cache.set(key, result, timeout=CATEGORIES_TIMEOUT)
+
+        return Response(result, status=status.HTTP_200_OK)
+
+        # return Response({'ok': True, 'categories': serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request):
         if not IsShop.check(request.user):
@@ -252,6 +270,8 @@ class CategoryListCreateView(APIView):
             object_id=serializer.instance.id
         )
 
+        cache.delete(categories_key())
+        
         return Response({'ok': True, 'message': 'دسته‌بندی با موفقیت اضافه شد', 'category': serializer.data}, status=status.HTTP_201_CREATED)
     
 
@@ -319,6 +339,11 @@ class DashboardView(APIView):
     def get(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        key = dashboard_key(request.user.id)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
 
         total_sales = Sale.objects.filter(
             shop=request.user,
@@ -443,7 +468,7 @@ class DashboardView(APIView):
             for a in activity
         ]
 
-        return Response({
+        result = {
             'ok': True,
             'data': {
                 'total_sales_price': total_sales,
@@ -479,4 +504,46 @@ class DashboardView(APIView):
                     }
                 }
             }
-        })
+        }
+
+        cache.set(key, result, timeout=DASHBOARD_TIMEOUT)
+
+        return Response(result)
+
+#         return Response({
+#             'ok': True,
+#             'data': {
+#                 'total_sales_price': total_sales,
+#                 'total_debts_price': total_debts,
+#                 'total_price': total_sales + total_debts,
+#                 'total_payed_amount': total_paid,
+#                 'number_of_customers': number_of_customers,
+#                 'top_debtors': top_debtors_data,
+#                 'low_stock_products' : low_stock_data,
+#                 'today_sales': today_sales,
+#                 'today_debts': today_debts,
+#                 'today_paid': today_paid,
+#                 'recent_activities': activity_data,
+#                 'charts': {
+#                     'sales_trend': [
+#                         {
+#                             'date': str(t['date']),
+#                             'total': t['total'] or 0
+#                         }
+#                         for t in sales_chart
+#                     ],
+#                     'payments_trend': [
+#                         {
+#                             'date': str(t['date']),
+#                             'total': t['total'] or 0
+#                         }
+#                         for t in payments_chart
+#                     ],
+#                     'debt_distribution': {
+#                         'total_debt': total_debt_amount,
+#                         'total_paid': total_paid_amount,
+#                         'remaining': total_debt_amount - total_paid_amount
+#                     }
+#                 }
+#             }
+#         })

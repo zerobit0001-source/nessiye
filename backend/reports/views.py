@@ -867,6 +867,12 @@ from sales.models import Sale, SaleItem
 from debts.models import Debt, Payment
 from customer_management.models import CustomerShop
 from products.models import Product
+from django.core.cache import cache
+from config.cache import (
+    report_summary_key, report_charts_key,
+    report_customers_key, report_products_key,
+    REPORT_TIMEOUT
+)
 
 
 def get_date_range(request):
@@ -887,6 +893,11 @@ class ReportSummaryView(APIView):
 
         from_date, to_date = get_date_range(request)
         thirty_days_ago = timezone.now() - timedelta(days=30)
+
+        key = report_summary_key(request.user.id, from_date, to_date)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
 
         sales = Sale.objects.filter(
             shop=request.user,
@@ -941,7 +952,7 @@ class ReportSummaryView(APIView):
             created_at__date__lte=to_date
         ).count()
 
-        return Response({
+        result = {
             'ok': True,
             'summary': {
                 'total_sales': total,
@@ -956,7 +967,27 @@ class ReportSummaryView(APIView):
                 'urgent_debts': urgent_debts,
                 'avg_per_invoice': avg_per_invoice
             }
-        })
+        }
+
+        cache.set(key, result, timeout=REPORT_TIMEOUT)
+        return Response(result)
+
+        # return Response({
+        #     'ok': True,
+        #     'summary': {
+        #         'total_sales': total,
+        #         'total_debt_registered': total_debt_sales,
+        #         'total_collected': total_paid,
+        #         'remaining_debt': remaining,
+        #         'collection_rate': collection_rate,
+        #         'total_customers': total_customers,
+        #         'new_customers': new_customers,
+        #         'total_invoices': total_invoices,
+        #         'open_debts': open_debts,
+        #         'urgent_debts': urgent_debts,
+        #         'avg_per_invoice': avg_per_invoice
+        #     }
+        # })
 
 
 class ReportChartsView(APIView):
@@ -968,6 +999,11 @@ class ReportChartsView(APIView):
 
         from_date, to_date = get_date_range(request)
         six_months_ago = timezone.now() - timedelta(days=180)
+
+        key = report_charts_key(request.user.id, from_date, to_date)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
 
         sales_items_trend = SaleItem.objects.filter(
             sale__shop=request.user,
@@ -1045,7 +1081,7 @@ class ReportChartsView(APIView):
             )
         ).order_by('month')
 
-        return Response({
+        result = {
             'ok': True,
             'charts': {
                 'sales_trend': sales_trend_data,
@@ -1075,7 +1111,42 @@ class ReportChartsView(APIView):
                     for t in monthly_items
                 ]
             }
-        })
+        }
+
+        cache.set(key, result, timeout=REPORT_TIMEOUT)
+        return Response(result)
+
+        # return Response({
+        #     'ok': True,
+        #     'charts': {
+        #         'sales_trend': sales_trend_data,
+        #         'payments_trend': [
+        #             {
+        #                 'date': str(t['date']),
+        #                 'total': t['total'] or 0,
+        #                 'count': t['count'] or 0
+        #             }
+        #             for t in payments_trend
+        #         ],
+        #         'debts_trend': [
+        #             {
+        #                 'date': str(t['date']),
+        #                 'total': t['total'] or 0,
+        #                 'count': t['count'] or 0
+        #             }
+        #             for t in debts_trend
+        #         ],
+        #         'composed_trend': composed_trend,
+        #         'payment_distribution': pie_data,
+        #         'monthly_revenue': [
+        #             {
+        #                 'month': str(t['month'])[:7],
+        #                 'total': t['total'] or 0
+        #             }
+        #             for t in monthly_items
+        #         ]
+        #     }
+        # })
 
 
 class ReportCustomersView(APIView):
@@ -1087,6 +1158,11 @@ class ReportCustomersView(APIView):
 
         from_date, to_date = get_date_range(request)
         thirty_days_ago = timezone.now() - timedelta(days=30)
+
+        key = report_customers_key(request.user.id, from_date, to_date)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
 
         top_customers = Sale.objects.filter(
             shop=request.user,
@@ -1128,7 +1204,7 @@ class ReportCustomersView(APIView):
             Q(paid__isnull=True) | Q(paid__lt=F('amount'))
         ).order_by('created_at')[:10]
 
-        return Response({
+        result = {
             'ok': True,
             'top_customers': [
                 {
@@ -1161,7 +1237,45 @@ class ReportCustomersView(APIView):
                 }
                 for d in overdue_debtors
             ]
-        })
+        }
+
+        cache.set(key, result, timeout=REPORT_TIMEOUT)
+        return Response(result)
+
+        # return Response({
+        #     'ok': True,
+        #     'top_customers': [
+        #         {
+        #             'customer_name': c['customer__full_name'],
+        #             'phone_number': c['customer__phone_number'],
+        #             'total': c['total'] or 0,
+        #             'total_paid': c['total_paid'] or 0,
+        #             'remaining': c['remaining'] or 0
+        #         }
+        #         for c in top_customers
+        #     ],
+        #     'top_debtors': [
+        #         {
+        #             'customer_name': cs.customer.full_name,
+        #             'phone_number': cs.customer.phone_number,
+        #             'total_debt': cs.total_debt or 0,
+        #             'total_paid': cs.total_paid or 0,
+        #             'remaining': (cs.total_debt or 0) - (cs.total_paid or 0)
+        #         }
+        #         for cs in top_debtors
+        #     ],
+        #     'overdue_debtors': [
+        #         {
+        #             'debt_id': d.debt_id,
+        #             'customer_name': d.customer.customer.full_name,
+        #             'phone_number': d.customer.customer.phone_number,
+        #             'amount': d.amount,
+        #             'remaining': d.amount - (d.paid or 0),
+        #             'created_at': d.created_at
+        #         }
+        #         for d in overdue_debtors
+        #     ]
+        # })
 
 class ReportProductsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -1171,6 +1285,11 @@ class ReportProductsView(APIView):
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
 
         from_date, to_date = get_date_range(request)
+
+        key = report_products_key(request.user.id, from_date, to_date)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
 
         top_selling = SaleItem.objects.filter(
             sale__shop=request.user,
@@ -1195,8 +1314,17 @@ class ReportProductsView(APIView):
             'id', 'name', 'stock', 'sell_price'
         ).order_by('stock')[:10]
 
-        return Response({
+        result = {
             'ok': True,
             'top_selling': list(top_selling),
             'no_sales_products': list(no_sales)
-        })
+        }
+
+        cache.set(key, result, timeout=REPORT_TIMEOUT)
+        return Response(result)
+
+        # return Response({
+        #     'ok': True,
+        #     'top_selling': list(top_selling),
+        #     'no_sales_products': list(no_sales)
+        # })

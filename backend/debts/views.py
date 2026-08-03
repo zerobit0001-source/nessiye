@@ -9,7 +9,7 @@ from django.utils import timezone
 from datetime import timedelta
 from activity.services import log_activity
 from django.db.models import Sum, Count, Q, F
-
+from config.cache import invalidate_dashboard, invalidate_reports
 
 class DebtListView(APIView):
     """This class for debt list view for shop account"""
@@ -23,11 +23,20 @@ class DebtListView(APIView):
         debt_status = request.query_params.get('status', None)
         period = request.query_params.get('period', None)
 
+        search = request.query_params.get('search', None)
+
         thirty_days_ago = timezone.now() - timedelta(days=30)
 
         debts = Debt.objects.filter(
             shop=request.user
         ).select_related('customer__customer').prefetch_related('payments')
+
+        if search:
+            debts = debts.filter(
+                Q(debt_id__icontains=search) |
+                Q(customer__customer__full_name__icontains=search) |
+                Q(customer__customer__phone_number__icontains=search)
+            )
 
         # period filtering
 
@@ -164,6 +173,9 @@ class DebtPayView(APIView):
             object_id=serializer.instance.id
         )
 
+        invalidate_dashboard(request.user.id)
+        invalidate_reports(request.user.id)
+
         return Response({
             'ok': True,
             'message': 'پرداخت ثبت شد',
@@ -267,9 +279,19 @@ class PaymentListView(APIView):
         ordering = request.query_params.get('ordering', '-created_at')
         period = request.query_params.get('period', None)
 
+        search = request.query_params.get('search', None)
+
         payments = Payment.objects.filter(
             debt__shop=request.user
         ).select_related('debt__customer__customer')
+
+        if search:
+            payments = payments.filter(
+                Q(payment_id__icontains=search) |
+                Q(debt__debt_id__icontains=search) |
+                Q(debt__customer__customer__full_name__icontains=search) |
+                Q(debt__customer__customer__phone_number__icontains=search)
+            )
 
         now = timezone.now()
         this_month = now - timedelta(days=30)
