@@ -1286,6 +1286,11 @@ class ReportProductsView(APIView):
 
         from_date, to_date = get_date_range(request)
 
+        key = report_products_key(request.user.id, from_date, to_date)
+        cached = cache.get(key)
+        if cached:
+            return Response(cached)
+
         top_selling = SaleItem.objects.filter(
             sale__shop=request.user,
             sale__created_at__date__gte=from_date,
@@ -1309,8 +1314,17 @@ class ReportProductsView(APIView):
             'id', 'name', 'stock', 'sell_price'
         ).order_by('stock')[:10]
 
-        return Response({
+        result = {
             'ok': True,
             'top_selling': list(top_selling),
             'no_sales_products': list(no_sales)
-        })
+        }
+
+        cache.set(key, result, timeout=REPORT_TIMEOUT)
+        return Response(result)
+
+        # return Response({
+        #     'ok': True,
+        #     'top_selling': list(top_selling),
+        #     'no_sales_products': list(no_sales)
+        # })
