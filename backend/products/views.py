@@ -20,6 +20,7 @@ from sales.models import SaleItem
 from django.core.cache import cache
 from config.cache import dashboard_key, DASHBOARD_TIMEOUT, invalidate_dashboard
 from config.cache import categories_key, CATEGORIES_TIMEOUT
+from config.cache import invalidate_dashboard, invalidate_reports, invalidate_products
 
 class IsShop:
     @staticmethod
@@ -167,6 +168,9 @@ class ProductListCreateView(APIView):
             title=f'اضافه شد {serializer.instance.name} محصول',
             object_id=serializer.instance.id
         )
+
+        invalidate_dashboard(request.user.id)
+        invalidate_products(request.user.id)
 
         return Response({'ok': True, 'message': 'محصول با موفقیت اضافه شد', 'product': serializer.data}, status=status.HTTP_201_CREATED)
     
