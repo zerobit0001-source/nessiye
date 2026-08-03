@@ -240,6 +240,8 @@ class SaleListCreateView(APIView):
         ordering = request.query_params.get("ordering", "-created_at")
         period = request.query_params.get("period", None)
 
+        search = request.query_params.get("search", None)
+
         now = timezone.now()
         today = now.date()
         this_month = now - timedelta(days=30)
@@ -256,6 +258,12 @@ class SaleListCreateView(APIView):
                 )
             )
         )
+
+        if search:
+            sales = sales.filter(
+                Q(customer__full_name__icontains=search) |
+                Q(customer__phone_number__icontains=search)
+            )
 
         # period filter
         now = timezone.now()
