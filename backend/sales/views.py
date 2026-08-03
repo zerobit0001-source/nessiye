@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from datetime import timedelta
 from .models import Sale, SaleItem
 from .serializers import SaleItemSerializer, SaleSerializer
+from config.cache import invalidate_dashboard, invalidate_reports
 
 
 # class SaleListCreateView(APIView):
@@ -432,6 +433,9 @@ class SaleListCreateView(APIView):
                 title=f"فروش ثبت شد {result.instance.customer.full_name if result.instance.customer else 'بدون مشتری'}",
                 object_id=result.instance.id,
             )
+
+        invalidate_dashboard(request.user.id)
+        invalidate_reports(request.user.id)
 
         return Response(
             {"ok": True, "message": "فروش با موفقیت ثبت شد", "sale": result.data},
