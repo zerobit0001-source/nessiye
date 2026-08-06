@@ -221,6 +221,26 @@ export interface GetDashboardCardsResponse {
       total_paid: number;
       remaining: number;
     }[];
+    charts :{
+      sales_trend: [
+        {
+          date: string;
+          total: number;
+        }[]
+      ],
+      payments_trend: [
+        {
+          date: string;
+          total: number;
+        }[]
+      ],
+      debt_distribution: {
+        total_debt: number;
+        total_paid: number;
+        remaining: number;
+      }
+    }
+    }
   };
 }
 
