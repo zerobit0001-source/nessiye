@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/lib/redux/hooks";
+import AppTableRowSkeleton from "../../components/AppTableRowSkeleton";
 
 export interface GetCustomersParams {
   search?: string;
@@ -41,11 +42,11 @@ const CustomersList = ({
 
   const mode = useAppSelector((s) => s.theme);
 
-  if (isLoading) {
-    return Array.from({ length: 8 }).map((_, index) => (
-      <CustomerRowSkeleton key={index} />
-    ));
-  }
+  // if (isLoading) {
+  //   return Array.from({ length: 8 }).map((_, index) => (
+  //     <CustomerRowSkeleton key={index} />
+  //   ));
+  // }
   if (error) {
     return <p>Something went wrong.</p>;
   }
@@ -74,6 +75,7 @@ const CustomersList = ({
             </TableRow>
           </TableHead>
           <TableBody>
+            {isLoading && <AppTableRowSkeleton columns={6} rows={8} />}
             {customers.map((customer) => (
               <CustomerRow customer={customer} key={customer.id} />
             ))}
