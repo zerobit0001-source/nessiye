@@ -24,7 +24,7 @@ export interface DashboardData {
 export const dashboardCards: DashboardCardData[] = [
     {
         id: "totalOutstanding",
-        title: "فروش امروز",
+        title: "فروش هفته",
         unit: "تومان",
         change: 12.4,
         changeType: "increase",
@@ -35,7 +35,7 @@ export const dashboardCards: DashboardCardData[] = [
     },
     {
         id: "overdueAmount",
-        title: "پرداخت‌های امروز",
+        title: "پرداخت‌های هفته",
         unit: "تومان",
         change: 3,
         changeType: "increase",
@@ -46,7 +46,7 @@ export const dashboardCards: DashboardCardData[] = [
     },
     {
         id: "collectedThisMonth",
-        title: "بدهی‌های جدید امروز",
+        title: "بدهی‌های جدید هفته",
         unit: "تومان",
         change: 8.1,
         changeType: "increase",

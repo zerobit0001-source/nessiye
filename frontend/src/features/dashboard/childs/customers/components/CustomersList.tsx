@@ -14,6 +14,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/lib/redux/hooks";
@@ -79,6 +80,7 @@ const CustomersList = ({
           </TableBody>
         </Table>
       </TableContainer>
+      {customers.length === 0 && <Typography align="center" variant="body1">مشتریی یافت نشد.</Typography>}
       {/* {customers.map((customer) => (
                 <Link href={`customers/${customer.id}`} key={customer.id}>
                     <CustomerRow customer={customer} />
