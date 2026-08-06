@@ -27,11 +27,11 @@ const SalesList = ({ search, ordering, status, period }: Props) => {
     page,
   });
 
-  if (isLoading) {
-    return Array.from({ length: 8 }).map((_, i) => (
-      <SalesRowSkeleton key={i} />
-    ));
-  }
+  // if (isLoading) {
+  //   return Array.from({ length: 8 }).map((_, i) => (
+  //     <SalesRowSkeleton key={i} />
+  //   ));
+  // }
 
   if (error) {
     return <Alert severity="error">خطایی رخ داد.</Alert>;
@@ -53,6 +53,7 @@ const SalesList = ({ search, ordering, status, period }: Props) => {
         pageSize: data?.page_size ?? 20,
         onChange: setPage,
       }}
+      loading={isLoading}
     />
   );
 };

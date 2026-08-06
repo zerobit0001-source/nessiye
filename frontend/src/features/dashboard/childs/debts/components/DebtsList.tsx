@@ -6,6 +6,7 @@ import DebtsCreditsRowSkeleton from "./DebtsCreditsRowSkeleton";
 import DebtsCreaditsRows from "./DebtsCreaditsRows";
 import AppTable from "../../components/AppTable";
 import { useState } from "react";
+import AppTableRowSkeleton from "../../components/AppTableRowSkeleton";
 
 interface DebtsListProps {
   search?: string;
@@ -31,11 +32,11 @@ export default function DebtsList({
     page,
   });
 
-  if (isLoading) {
-    return Array.from({ length: 8 }).map((_, index) => (
-      <DebtsCreditsRowSkeleton key={index} />
-    ));
-  }
+  // if (isLoading) {
+  //   return Array.from({ length: 8 }).map((_, index) => (
+  //     <DebtsCreditsRowSkeleton key={index} />
+  //   ));
+  // }
 
   if (error) {
     return <Typography>Something went wrong.</Typography>;
@@ -43,9 +44,9 @@ export default function DebtsList({
 
   const debts = data?.results ?? [];
 
-  if (!debts.length) {
-    return <Typography>بدهی‌ای یافت نشد.</Typography>;
-  }
+  // if (!debts.length) {
+  //   return <Typography>بدهی‌ای یافت نشد.</Typography>;
+  // }
 
   console.log(data);
 
@@ -69,6 +70,7 @@ export default function DebtsList({
         pageSize: data?.page_size ?? 20,
         onChange: setPage,
       }}
+      loading={isLoading}
     />
   );
 }

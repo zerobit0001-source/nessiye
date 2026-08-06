@@ -23,11 +23,11 @@ const PaymentList = ({ search, status, ordering, period }: Props) => {
 
   console.log("this is period", period);
 
-  if (isLoading) {
-    return Array.from({ length: 8 }).map((_, index) => (
-      <PaymentsRowSkeleton key={index} />
-    ));
-  }
+  // if (isLoading) {
+  //   return Array.from({ length: 8 }).map((_, index) => (
+  //     <PaymentsRowSkeleton key={index} />
+  //   ));
+  // }
   if (error) {
     return <p>Something went wrong.</p>;
   }
@@ -46,6 +46,7 @@ const PaymentList = ({ search, status, ordering, period }: Props) => {
         pageSize: data?.page_size ?? 20,
         onChange: setPage,
       }}
+      loading={isLoading}
     />
   );
 };
