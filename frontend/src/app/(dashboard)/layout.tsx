@@ -5,30 +5,30 @@ import MobileMenu from "@/components/dash/MobileMenu";
 import AuthHydrator from "@/utils/auth/AuthHydrateRedux";
 
 export default function MainLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return (
-        <div className="flex h-screen overflow-hidden">
-            {/* Sidebar */}
-            <aside className="hidden lg:flex w-60 shrink-0 ">
-                <AuthHydrator />
-                <SideBar />
-            </aside>
+  return (
+    <div className="flex h-screen overflow-hidden">
+      {/* Sidebar */}
+      <aside className="hidden lg:flex w-60 shrink-0 ">
+        <AuthHydrator />
+        <SideBar />
+      </aside>
 
-            {/* Mobile */}
+      {/* Mobile */}
 
-            {/* Content */}
-            <section className="flex flex-1 flex-col overflow-hidden">
-                <DashboardNavBar />
+      {/* Content */}
+      <section className="flex flex-1 flex-col overflow-hidden">
+        <DashboardNavBar />
 
-                <main className="flex-1 overflow-y-auto p-6">
-                    <div className="mx-auto ">
-                        <SlideUpAnimation>{children}</SlideUpAnimation>
-                    </div>
-                </main>
-            </section>
-        </div>
-    );
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="mx-auto ">
+            <SlideUpAnimation>{children}</SlideUpAnimation>
+          </div>
+        </main>
+      </section>
+    </div>
+  );
 }
