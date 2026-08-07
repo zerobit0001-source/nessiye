@@ -15,7 +15,7 @@ export const ApiProduct = createApi({
   }),
   tagTypes: ["Products"],
   endpoints: (builder) => ({
-    getProducts: builder.query<GetProductsResponse, GetProductsParams>({
+    getProducts: builder.query < GetProductsResponse, GetProductsParams>({
       query: ({ search, category, page, ordering, status }) => ({
         url: "/products/",
         params: {

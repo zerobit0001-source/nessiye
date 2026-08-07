@@ -159,6 +159,7 @@ export interface GetProductsParams {
   page?: number;
   ordering?: string;
   stock_status?: string;
+  status?: string;
 }
 
 // payments
