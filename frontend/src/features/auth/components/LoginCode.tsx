@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { Button, TextField, Typography, Box } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
@@ -10,53 +10,23 @@ import { toast } from "react-toastify";
 const LoginCode = () => {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const inputRef = useRef<HTMLInputElement[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const user = useAppSelector((s) => s.userInfo);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const handleChange = (value: string, index: number) => {
-    if (!/^[0-9]?$/.test(value)) return;
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-    if (value && index < otp.length - 1) {
-      inputRef.current[index + 1]?.focus();
-    }
-    if (otp.length - 1 == index) {
-      handleSubmitOtp();
-    }
+  const handleSubmitOtp = async (code?: string) => {
+    const finalCode = code ?? otp.join("");
 
-    console.log(newOtp);
-  };
-
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    if (e.key === "Backspace") {
-      if (otp[index]) {
-        const newOtp = [...otp];
-        newOtp[index] = "";
-        setOtp(newOtp);
-      } else if (index > 0) {
-        inputRef.current[index - 1]?.focus();
-      }
+    if (finalCode.length !== otp.length) {
+      toast.error("لطفا کد را کامل وارد کنید");
+      return;
     }
-    if (e.key === "Enter") {
-      handleSubmitOtp();
-    }
-  };
-
-  const handleSubmitOtp = async () => {
-    let code = "";
-    otp.map((num) => {
-      code += num;
-    });
 
     try {
       setLoading(true);
+
       const res = await fetch("/api/auth/verify-login", {
         method: "POST",
         headers: {
@@ -64,7 +34,7 @@ const LoginCode = () => {
         },
         body: JSON.stringify({
           phone_number: user.phone_number,
-          code,
+          code: finalCode,
         }),
       });
 
@@ -75,83 +45,131 @@ const LoginCode = () => {
         router.replace("/main");
         return;
       }
-      toast.error(data.error, { draggable: true, closeOnClick: true });
+
+      toast.error(data.error, {
+        draggable: true,
+        closeOnClick: true,
+      });
+      setOtp(["", "", "", "", "", ""]);
     } catch (error) {
-      toast.error("ارور");
-      console.log(error);
+      console.error(error);
+      toast.error("خطایی رخ داد");
     } finally {
       setLoading(false);
     }
   };
 
-  const handlePaste = (e: ClipboardEvent) => {
-    const pasted = e.clipboardData?.getData("text") ?? "";
+  const handleChange = (value: string, index: number) => {
+    if (!/^[0-9]?$/.test(value)) return;
 
-    const digits = pasted.replace(/\D/g, "").slice(0, otp.length).split("");
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
 
-    setOtp((prev) => {
-      const newOtp = [...prev];
+    if (value && index < otp.length - 1) {
+      inputRef.current[index + 1]?.focus();
+    }
 
-      digits.forEach((digit, i) => {
-        newOtp[i] = digit;
-      });
+    // Submit immediately after entering the last digit
+    if (index === otp.length - 1 && value) {
+      handleSubmitOtp(newOtp.join(""));
+    }
+  };
 
-      return newOtp;
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === "Backspace") {
+      if (otp[index]) {
+        const newOtp = [...otp];
+        newOtp[index] = "";
+        setOtp(newOtp);
+      } else if (index > 0) {
+        inputRef.current[index - 1]?.focus();
+      }
+    }
+
+    if (e.key === "Enter") {
+      handleSubmitOtp();
+    }
+  };
+
+  const handlePaste = (
+    e: React.ClipboardEvent<HTMLInputElement>
+  ) => {
+    e.preventDefault();
+
+    const pasted = e.clipboardData.getData("text");
+
+    const digits = pasted
+      .replace(/\D/g, "")
+      .slice(0, otp.length)
+      .split("");
+
+    const newOtp = [...otp];
+
+    digits.forEach((digit, i) => {
+      newOtp[i] = digit;
     });
 
-    inputRef.current[Math.min(digits.length, otp.length - 1)]?.focus();
+    setOtp(newOtp);
+
+    if (digits.length === otp.length) {
+      handleSubmitOtp(newOtp.join(""));
+    } else {
+      inputRef.current[Math.min(digits.length, otp.length - 1)]?.focus();
+    }
   };
 
   useEffect(() => {
-    window.addEventListener("paste", handlePaste);
-
-    return () => {
-      window.removeEventListener("paste", handlePaste);
-    };
+    inputRef.current[0]?.focus();
   }, []);
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-full border-b pb-6 border-gray-400">
-        <Typography variant="body1">کد ارسال شده رو وارد کن</Typography>
+      <Typography variant="h6" className="mb-4!">
+        کد ارسال شده رو وارد کن
+      </Typography>
 
-        <Box display="flex" gap={2} dir="ltr">
-          {otp.map((value, index) => (
-            <TextField
-              key={index}
-              value={value}
-              variant="filled"
-              size="small"
-              type="tel"
-              autoComplete="off"
-              inputRef={(el) => {
-                if (el) inputRef.current[index] = el;
-              }}
-              onChange={(e) => handleChange(e.target.value, index)}
-              onPaste={(e) => handlePaste(e)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              inputProps={{
-                maxLength: 1,
-                inputMode: "numeric",
-                style: {
-                  textAlign: "center",
-                },
-                className: " p-2! md:p-4! max-w-[45px] ",
-              }}
-              className="w-full!"
-            />
-          ))}
-        </Box>
+      <Box display="flex" gap={2} dir="ltr">
+        {otp.map((value, index) => (
+          <TextField
+            key={index}
+            value={value}
+            variant="filled"
+            size="small"
+            type="tel"
+            autoComplete="off"
+            inputRef={(el) => {
+              if (el) inputRef.current[index] = el;
+            }}
+            onChange={(e) => handleChange(e.target.value, index)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
+            onPaste={handlePaste}
+            inputProps={{
+              maxLength: 1,
+              inputMode: "numeric",
+              style: {
+                textAlign: "center",
+              },
+              className: "p-2! md:p-4! max-w-[45px]",
+            }}
+            className="w-full!"
+          />
+        ))}
+      </Box>
 
-        <Button
-          variant="contained"
-          disabled={loading}
-          loading={loading}
-          onClick={handleSubmitOtp}
-        >
-          ارسال کد
-        </Button>
-      </div>
+      <Button
+        variant="contained"
+        loading={loading}
+        disabled={loading}
+        onClick={() => handleSubmitOtp()}
+        className="mt-4!"
+        fullWidth
+      >
+        ارسال کد
+      </Button>
 
       <Typography variant="body2" className="mt-4!">
         قبلا اکانت نداشتید؟{" "}
