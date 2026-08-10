@@ -34,6 +34,8 @@ export default async function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <head>
+
+        
         {/*<Script
           src="//unpkg.com/react-scan/dist/auto.global.js"
           crossOrigin="anonymous"
