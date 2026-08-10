@@ -20,7 +20,7 @@ const Products = async ({ searchParams }: Props) => {
 
   return (
     <Container>
-      <DashboardsPageHeader title="حساب ها" caption="200 محصول">
+      <DashboardsPageHeader title="محصولات" caption="200 محصول">
         <LinkButton
           link="/dashboard/products/create"
           text="افزودن کالا"

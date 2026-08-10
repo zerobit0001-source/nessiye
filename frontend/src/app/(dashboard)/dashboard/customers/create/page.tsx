@@ -1,6 +1,7 @@
 "use client";
 import Container from "@/components/dash/Container";
 import SlideUpAnimation from "@/components/SlideUpAnimation";
+import CreatePagesTitle from "@/features/dashboard/childs/components/CreatePagesTitle";
 import {
   useAddCustomerMutation,
   useVerifyCustomerMutation,
@@ -119,13 +120,7 @@ export default function CreateCustomerPage() {
 
   return (
     <Container>
-      <SlideUpAnimation>
-        <div className="">
-          <Typography variant="h6">ثبت مشتری جدید</Typography>
-          <Typography variant="caption">
-            اطلاعات خواسته شده را تکمیل کنید
-          </Typography>
-        </div>
+        <CreatePagesTitle title="ثبت مشتری جدید" subtitle="اطلاعات خواسته شده را تکمیل کنید" />
         <div className="w-full flex items-center justify-center">
           <AddCustomerForm
             form={form}
@@ -138,7 +133,6 @@ export default function CreateCustomerPage() {
             isLoading={sendCodeQuery.isLoading || verifyCustomerQuery.isLoading}
           />
         </div>
-      </SlideUpAnimation>
     </Container>
   );
 }
