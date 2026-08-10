@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import {
   Avatar,
   Card,
+  CircularProgress,
   List,
   ListItemAvatar,
   ListItemButton,
@@ -27,12 +28,14 @@ interface SelectCustomerDialogProps {
   selectedCustomer: Customer | null;
   customers: Customer[];
   setSelectedCustomer: React.Dispatch<React.SetStateAction<Customer | null>>;
+  isLoading : boolean
 }
 
 export default function SelectCustomerDialog({
   selectedCustomer,
   customers,
   setSelectedCustomer,
+  isLoading
 }: SelectCustomerDialogProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -87,6 +90,7 @@ export default function SelectCustomerDialog({
       >
         <DialogTitle id="alert-dialog-title">انتخاب مشتری</DialogTitle>
         <DialogContent>
+          {isLoading ?? <CircularProgress />}
           <List className="w-full">
             {customers.map((customer) => (
               <ListItemButton

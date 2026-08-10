@@ -133,12 +133,14 @@ export default function CreateDebtForm() {
           selectedCustomer={selectedCustomer}
           customers={customers}
           setSelectedCustomer={setSelectedCustomer}
+          isLoading={isCustomerLoading}
         />
         {/* Product select dialog */}
         <SelectProductDialog
           products={products}
           selectedProducts={selectedProducts}
           setSelectedProducts={setSelectedProducts}
+          isLoading={isProductLoading}
         />
         {/* Selected products list */}
         <SelectedProductsList

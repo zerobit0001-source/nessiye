@@ -140,6 +140,7 @@ export default function CreateSaleForm() {
           products={products}
           selectedProducts={selectedProducts}
           setSelectedProducts={setSelectedProducts}
+          isLoading={isProductLoading}
         />
 
         {/* products List */}
