@@ -55,16 +55,13 @@ so far :
     - [ ] Export PDF endpoint
 
     - [ ] Export Excel endpoint
+
+    - [ ] Activity Logs API
+
 todo :
-
-
-
-
-
 
     - [ ] Notification API
 
-    - [ ] Activity Logs API
 
     - [ ] User Permissions API
 
