@@ -17,7 +17,6 @@ from config.cache import (
     REPORT_TIMEOUT
 )
 
-
 def get_date_range(request):
     from_date = request.query_params.get('from_date')
     to_date = request.query_params.get('to_date')
@@ -133,55 +132,294 @@ class ReportSummaryView(APIView):
         # })
 
 
+# class ReportChartsView(APIView):
+#     permission_classes = [IsAuthenticated]
+# 
+#     def get(self, request):
+#         if not request.user.is_shop:
+#             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+# 
+#         from_date, to_date = get_date_range(request)
+# #####################################################
+#         date_range = []
+# 
+#         current_date = from_date
+#         while current_date <= to_date:
+#             date_range.append(str(current_date))
+#             current_date += timedelta(days=1)
+# #####################################################
+#         six_months_ago = timezone.now() - timedelta(days=180)
+# 
+#         key = report_charts_key(request.user.id, from_date, to_date)
+#         cached = cache.get(key)
+#         if cached:
+#             return Response(cached)
+# 
+#         sales_items_trend = SaleItem.objects.filter(
+#             sale__shop=request.user,
+#             sale__created_at__date__gte=from_date,
+#             sale__created_at__date__lte=to_date
+#         ).annotate(
+#             date=TruncDate('sale__created_at')
+#         ).values('date', 'sale__is_debt').annotate(
+#             total=Sum(
+#                 ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField())
+#             )
+#         ).order_by('date')
+# 
+#         trend_by_date = {}
+#         for t in sales_items_trend:
+#             date = str(t['date'])
+#             if date not in trend_by_date:
+#                 trend_by_date[date] = {'date': date, 'cash': 0, 'debt': 0, 'total': 0}
+#             amount = t['total'] or 0
+#             if t['sale__is_debt']:
+#                 trend_by_date[date]['debt'] += amount
+#             else:
+#                 trend_by_date[date]['cash'] += amount
+#             trend_by_date[date]['total'] += amount
+# 
+#         # sales_trend_data = sorted(trend_by_date.values(), key=lambda x: x['date'])
+# 
+#         sales_trend_data = [
+#             trend_by_date.get(
+#                 date,
+#                 {
+#                     'date': date,
+#                     'cash': 0,
+#                     'debt': 0,
+#                     'total': 0
+#                 }
+#             )
+#             for date in date_range
+#         ]
+# 
+#         payments_trend = Payment.objects.filter(
+#             debt__shop=request.user,
+#             created_at__date__gte=from_date,
+#             created_at__date__lte=to_date
+#         ).annotate(
+#             date=TruncDate('created_at')
+#         ).values('date').annotate(
+#             total=Sum('amount'),
+#             count=Count('id')
+#         ).order_by('date')
+# 
+#         debts_trend = Debt.objects.filter(
+#             shop=request.user,
+#             created_at__date__gte=from_date,
+#             created_at__date__lte=to_date
+#         ).annotate(
+#             date=TruncDate('created_at')
+#         ).values('date').annotate(
+#             total=Sum('amount'),
+#             count=Count('id')
+#         ).order_by('date')
+# 
+#         sales_by_date = {t['date']: t['total'] for t in sales_trend_data}
+#         payments_by_date = {str(t['date']): t['total'] or 0 for t in payments_trend}
+#         all_dates = sorted(set(list(sales_by_date.keys()) + list(payments_by_date.keys())))
+#         composed_trend = [
+#             {
+#                 'date': d,
+#                 'sales': sales_by_date.get(d, 0),
+#                 'payments': payments_by_date.get(d, 0)
+#             }
+#             for d in all_dates
+#         ]
+# 
+#         pie_data = {'cash': 0, 'debt': 0}
+#         for t in sales_trend_data:
+#             pie_data['cash'] += t['cash']
+#             pie_data['debt'] += t['debt']
+# 
+#         monthly_items = SaleItem.objects.filter(
+#             sale__shop=request.user,
+#             sale__created_at__gte=six_months_ago
+#         ).annotate(
+#             month=TruncMonth('sale__created_at')
+#         ).values('month').annotate(
+#             total=Sum(
+#                 ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField())
+#             )
+#         ).order_by('month')
+# 
+#         result = {
+#             'ok': True,
+#             'charts': {
+#                 'sales_trend': sales_trend_data,
+#                 'payments_trend': [
+#                     {
+#                         'date': str(t['date']),
+#                         'total': t['total'] or 0,
+#                         'count': t['count'] or 0
+#                     }
+#                     for t in payments_trend
+#                 ],
+#                 'debts_trend': [
+#                     {
+#                         'date': str(t['date']),
+#                         'total': t['total'] or 0,
+#                         'count': t['count'] or 0
+#                     }
+#                     for t in debts_trend
+#                 ],
+#                 'composed_trend': composed_trend,
+#                 'payment_distribution': pie_data,
+#                 'monthly_revenue': [
+#                     {
+#                         'month': str(t['month'])[:7],
+#                         'total': t['total'] or 0
+#                     }
+#                     for t in monthly_items
+#                 ]
+#             }
+#         }
+# 
+#         cache.set(key, result, timeout=REPORT_TIMEOUT)
+#         return Response(result)
+# 
+#         # return Response({
+#         #     'ok': True,
+#         #     'charts': {
+#         #         'sales_trend': sales_trend_data,
+#         #         'payments_trend': [
+#         #             {
+#         #                 'date': str(t['date']),
+#         #                 'total': t['total'] or 0,
+#         #                 'count': t['count'] or 0
+#         #             }
+#         #             for t in payments_trend
+#         #         ],
+#         #         'debts_trend': [
+#         #             {
+#         #                 'date': str(t['date']),
+#         #                 'total': t['total'] or 0,
+#         #                 'count': t['count'] or 0
+#         #             }
+#         #             for t in debts_trend
+#         #         ],
+#         #         'composed_trend': composed_trend,
+#         #         'payment_distribution': pie_data,
+#         #         'monthly_revenue': [
+#         #             {
+#         #                 'month': str(t['month'])[:7],
+#         #                 'total': t['total'] or 0
+#         #             }
+#         #             for t in monthly_items
+#         #         ]
+#         #     }
+#         # })
+
+from datetime import datetime, time, timedelta
+from django.db.models.functions import Coalesce, TruncDate, TruncMonth
+
 class ReportChartsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         if not request.user.is_shop:
-            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {
+                    'ok': False,
+                    'error': 'دسترسی ندارید'
+                },
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         from_date, to_date = get_date_range(request)
-#####################################################
+
+        if from_date > to_date:
+            return Response(
+                {
+                    'ok': False,
+                    'error': 'بازه تاریخ نامعتبر است'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        cache_key = report_charts_key(
+            request.user.id,
+            from_date,
+            to_date
+        )
+
+        cached = cache.get(cache_key)
+
+        if cached is not None:
+            return Response(cached)
+
         date_range = []
 
         current_date = from_date
+
         while current_date <= to_date:
-            date_range.append(str(current_date))
+            date_range.append(current_date.isoformat())
             current_date += timedelta(days=1)
-#####################################################
-        six_months_ago = timezone.now() - timedelta(days=180)
 
-        key = report_charts_key(request.user.id, from_date, to_date)
-        cached = cache.get(key)
-        if cached:
-            return Response(cached)
+        start_datetime = timezone.make_aware(
+            datetime.combine(from_date, time.min)
+        )
 
-        sales_items_trend = SaleItem.objects.filter(
-            sale__shop=request.user,
-            sale__created_at__date__gte=from_date,
-            sale__created_at__date__lte=to_date
-        ).annotate(
-            date=TruncDate('sale__created_at')
-        ).values('date', 'sale__is_debt').annotate(
-            total=Sum(
-                ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField())
+        end_datetime = timezone.make_aware(
+            datetime.combine(
+                to_date + timedelta(days=1),
+                time.min
             )
-        ).order_by('date')
+        )
+
+
+        sales_items_trend = (
+            SaleItem.objects
+            .filter(
+                sale__shop=request.user,
+                sale__created_at__gte=start_datetime,
+                sale__created_at__lt=end_datetime,
+            )
+            .annotate(
+                date=TruncDate('sale__created_at')
+            )
+            .values(
+                'date',
+                'sale__is_debt'
+            )
+            .annotate(
+                total=Coalesce(
+                    Sum(
+                        ExpressionWrapper(
+                            F('price') * F('quantity'),
+                            output_field=IntegerField()
+                        )
+                    ),
+                    0
+                )
+            )
+            .order_by('date')
+        )
 
         trend_by_date = {}
-        for t in sales_items_trend:
-            date = str(t['date'])
+
+        for item in sales_items_trend:
+            date = str(item['date'])
+
             if date not in trend_by_date:
-                trend_by_date[date] = {'date': date, 'cash': 0, 'debt': 0, 'total': 0}
-            amount = t['total'] or 0
-            if t['sale__is_debt']:
+                trend_by_date[date] = {
+                    'date': date,
+                    'cash': 0,
+                    'debt': 0,
+                    'total': 0,
+                }
+
+            amount = item['total'] or 0
+
+            if item['sale__is_debt']:
                 trend_by_date[date]['debt'] += amount
             else:
                 trend_by_date[date]['cash'] += amount
+
             trend_by_date[date]['total'] += amount
 
-        # sales_trend_data = sorted(trend_by_date.values(), key=lambda x: x['date'])
-
+        # Fill missing days with zero
         sales_trend_data = [
             trend_by_date.get(
                 date,
@@ -189,128 +427,222 @@ class ReportChartsView(APIView):
                     'date': date,
                     'cash': 0,
                     'debt': 0,
-                    'total': 0
+                    'total': 0,
                 }
             )
             for date in date_range
         ]
 
-        payments_trend = Payment.objects.filter(
-            debt__shop=request.user,
-            created_at__date__gte=from_date,
-            created_at__date__lte=to_date
-        ).annotate(
-            date=TruncDate('created_at')
-        ).values('date').annotate(
-            total=Sum('amount'),
-            count=Count('id')
-        ).order_by('date')
 
-        debts_trend = Debt.objects.filter(
-            shop=request.user,
-            created_at__date__gte=from_date,
-            created_at__date__lte=to_date
-        ).annotate(
-            date=TruncDate('created_at')
-        ).values('date').annotate(
-            total=Sum('amount'),
-            count=Count('id')
-        ).order_by('date')
+        payments_trend = (
+            Payment.objects
+            .filter(
+                debt__shop=request.user,
+                created_at__gte=start_datetime,
+                created_at__lt=end_datetime,
+            )
+            .annotate(
+                date=TruncDate('created_at')
+            )
+            .values('date')
+            .annotate(
+                total=Coalesce(
+                    Sum('amount'),
+                    0
+                ),
+                count=Count('id')
+            )
+            .order_by('date')
+        )
 
-        sales_by_date = {t['date']: t['total'] for t in sales_trend_data}
-        payments_by_date = {str(t['date']): t['total'] or 0 for t in payments_trend}
-        all_dates = sorted(set(list(sales_by_date.keys()) + list(payments_by_date.keys())))
-        composed_trend = [
-            {
-                'date': d,
-                'sales': sales_by_date.get(d, 0),
-                'payments': payments_by_date.get(d, 0)
+        payments_by_date = {
+            str(item['date']): {
+                'total': item['total'] or 0,
+                'count': item['count'] or 0,
             }
-            for d in all_dates
+            for item in payments_trend
+        }
+
+        payments_trend_data = [
+            {
+                'date': date,
+                'total': payments_by_date.get(
+                    date,
+                    {}
+                ).get('total', 0),
+                'count': payments_by_date.get(
+                    date,
+                    {}
+                ).get('count', 0),
+            }
+            for date in date_range
         ]
 
-        pie_data = {'cash': 0, 'debt': 0}
-        for t in sales_trend_data:
-            pie_data['cash'] += t['cash']
-            pie_data['debt'] += t['debt']
-
-        monthly_items = SaleItem.objects.filter(
-            sale__shop=request.user,
-            sale__created_at__gte=six_months_ago
-        ).annotate(
-            month=TruncMonth('sale__created_at')
-        ).values('month').annotate(
-            total=Sum(
-                ExpressionWrapper(F('price') * F('quantity'), output_field=IntegerField())
+        debts_trend = (
+            Debt.objects
+            .filter(
+                shop=request.user,
+                created_at__gte=start_datetime,
+                created_at__lt=end_datetime,
             )
-        ).order_by('month')
+            .annotate(
+                date=TruncDate('created_at')
+            )
+            .values('date')
+            .annotate(
+                total=Coalesce(
+                    Sum('amount'),
+                    0
+                ),
+                count=Count('id')
+            )
+            .order_by('date')
+        )
+
+        debts_by_date = {
+            str(item['date']): {
+                'total': item['total'] or 0,
+                'count': item['count'] or 0,
+            }
+            for item in debts_trend
+        }
+
+        debts_trend_data = [
+            {
+                'date': date,
+                'total': debts_by_date.get(
+                    date,
+                    {}
+                ).get('total', 0),
+                'count': debts_by_date.get(
+                    date,
+                    {}
+                ).get('count', 0),
+            }
+            for date in date_range
+        ]
+
+        sales_by_date = {
+            item['date']: item['total']
+            for item in sales_trend_data
+        }
+
+        payments_total_by_date = {
+            item['date']: item['total']
+            for item in payments_trend_data
+        }
+
+        composed_trend = [
+            {
+                'date': date,
+                'sales': sales_by_date.get(date, 0),
+                'payments': payments_total_by_date.get(date, 0),
+            }
+            for date in date_range
+        ]
+
+        payment_distribution = {
+            'cash': 0,
+            'debt': 0,
+        }
+
+        for item in sales_trend_data:
+            payment_distribution['cash'] += item['cash']
+            payment_distribution['debt'] += item['debt']
+
+        six_months_ago = (
+            timezone.now() - timedelta(days=180)
+        )
+
+        monthly_items = (
+            SaleItem.objects
+            .filter(
+                sale__shop=request.user,
+                sale__created_at__gte=six_months_ago,
+            )
+            .annotate(
+                month=TruncMonth('sale__created_at')
+            )
+            .values('month')
+            .annotate(
+                total=Coalesce(
+                    Sum(
+                        ExpressionWrapper(
+                            F('price') * F('quantity'),
+                            output_field=IntegerField()
+                        )
+                    ),
+                    0
+                )
+            )
+            .order_by('month')
+        )
+
+        monthly_by_date = {
+            str(item['month'])[:7]: item['total'] or 0
+            for item in monthly_items
+        }
+
+        now = timezone.now()
+
+        first_month = (
+            now.replace(
+                day=1,
+                hour=0,
+                minute=0,
+                second=0,
+                microsecond=0
+            )
+            - timedelta(days=180)
+        ).replace(day=1)
+
+        months = []
+
+        current_month = first_month
+
+        for _ in range(6):
+            month_key = current_month.strftime('%Y-%m')
+
+            months.append(
+                {
+                    'month': month_key,
+                    'total': monthly_by_date.get(
+                        month_key,
+                        0
+                    )
+                }
+            )
+
+            if current_month.month == 12:
+                current_month = current_month.replace(
+                    year=current_month.year + 1,
+                    month=1
+                )
+            else:
+                current_month = current_month.replace(
+                    month=current_month.month + 1
+                )
+
 
         result = {
             'ok': True,
             'charts': {
                 'sales_trend': sales_trend_data,
-                'payments_trend': [
-                    {
-                        'date': str(t['date']),
-                        'total': t['total'] or 0,
-                        'count': t['count'] or 0
-                    }
-                    for t in payments_trend
-                ],
-                'debts_trend': [
-                    {
-                        'date': str(t['date']),
-                        'total': t['total'] or 0,
-                        'count': t['count'] or 0
-                    }
-                    for t in debts_trend
-                ],
+                'payments_trend': payments_trend_data,
+                'debts_trend': debts_trend_data,
                 'composed_trend': composed_trend,
-                'payment_distribution': pie_data,
-                'monthly_revenue': [
-                    {
-                        'month': str(t['month'])[:7],
-                        'total': t['total'] or 0
-                    }
-                    for t in monthly_items
-                ]
+                'payment_distribution': payment_distribution,
+                'monthly_revenue': months,
             }
         }
 
-        cache.set(key, result, timeout=REPORT_TIMEOUT)
-        return Response(result)
+        cache.set(
+            cache_key,
+            result,
+            timeout=REPORT_TIMEOUT
+        )
 
-        # return Response({
-        #     'ok': True,
-        #     'charts': {
-        #         'sales_trend': sales_trend_data,
-        #         'payments_trend': [
-        #             {
-        #                 'date': str(t['date']),
-        #                 'total': t['total'] or 0,
-        #                 'count': t['count'] or 0
-        #             }
-        #             for t in payments_trend
-        #         ],
-        #         'debts_trend': [
-        #             {
-        #                 'date': str(t['date']),
-        #                 'total': t['total'] or 0,
-        #                 'count': t['count'] or 0
-        #             }
-        #             for t in debts_trend
-        #         ],
-        #         'composed_trend': composed_trend,
-        #         'payment_distribution': pie_data,
-        #         'monthly_revenue': [
-        #             {
-        #                 'month': str(t['month'])[:7],
-        #                 'total': t['total'] or 0
-        #             }
-        #             for t in monthly_items
-        #         ]
-        #     }
-        # })
+        return Response(result)
 
 
 class ReportCustomersView(APIView):
