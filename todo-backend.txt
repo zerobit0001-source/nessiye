@@ -44,8 +44,6 @@ so far :
         - Sales by month
         - Payments by month
         - Revenue by month
-todo :
-
 
     - [ ] Reports APIs
         - Sales Report
@@ -53,6 +51,10 @@ todo :
         - Debts Report
         - Customers Report
         - Products Report
+todo :
+
+
+
 
     - [ ] Export PDF endpoint
 
