@@ -58,13 +58,6 @@ so far :
 
     - [ ] Activity Logs API
 
-todo :
-
-    - [ ] Notification API
-
-
-    - [ ] User Permissions API
-
     - [ ] Search API
         Search across:
         - Customers
@@ -72,6 +65,14 @@ todo :
         - Sales
         - Debts
         - Payments
+todo :
+
+    - [ ] Notification API
+
+
+    - [ ] User Permissions API
+
+
 
     - [ ] Ordering support
 
