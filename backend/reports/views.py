@@ -141,6 +141,14 @@ class ReportChartsView(APIView):
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
 
         from_date, to_date = get_date_range(request)
+#####################################################
+        date_range = []
+
+        current_date = from_date
+        while current_date <= to_date:
+            date_range.append(str(current_date))
+            current_date += timedelta(days=1)
+#####################################################
         six_months_ago = timezone.now() - timedelta(days=180)
 
         key = report_charts_key(request.user.id, from_date, to_date)
@@ -172,7 +180,20 @@ class ReportChartsView(APIView):
                 trend_by_date[date]['cash'] += amount
             trend_by_date[date]['total'] += amount
 
-        sales_trend_data = sorted(trend_by_date.values(), key=lambda x: x['date'])
+        # sales_trend_data = sorted(trend_by_date.values(), key=lambda x: x['date'])
+
+        sales_trend_data = [
+            trend_by_date.get(
+                date,
+                {
+                    'date': date,
+                    'cash': 0,
+                    'debt': 0,
+                    'total': 0
+                }
+            )
+            for date in date_range
+        ]
 
         payments_trend = Payment.objects.filter(
             debt__shop=request.user,
