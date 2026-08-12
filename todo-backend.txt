@@ -51,14 +51,16 @@ so far :
         - Debts Report
         - Customers Report
         - Products Report
+
+    - [ ] Export PDF endpoint
+
+    - [ ] Export Excel endpoint
 todo :
 
 
 
 
-    - [ ] Export PDF endpoint
 
-    - [ ] Export Excel endpoint
 
     - [ ] Notification API
 
