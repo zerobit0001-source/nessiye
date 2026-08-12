@@ -7,7 +7,7 @@ from .models import CustomerShop
 from .serializers import CustomerSerializer
 from sales.models import Sale
 from sales.serializers import SaleSerializer
-from debts.models import Debt
+from debts.models import Debt, Payment
 from debts.serializers import DebtSerializer
 from django.db.models import Max, Sum, OuterRef, Subquery, Q
 from accounts.models import User, OtpCode
