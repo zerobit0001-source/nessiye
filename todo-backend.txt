@@ -39,11 +39,13 @@ so far :
         - sales ?ordering=[-created_at , created_at , remaining_amount , -remaining_amount , amount , -amount] ?period=[today , this_week , this_month]
         - payments ?ordering=[-created_at , created_at , remaining_amount , -remaining_amount , amount , -amount] ?period=[today , this_week , this_month]
         - products ?ordering=[-created_at , created_at , amount , -amount , name , -name] ?status=[stocked , out_of_stock , low_stock]
-todo :
+
     - [ ] Dashboard Charts API
         - Sales by month
         - Payments by month
         - Revenue by month
+todo :
+
 
     - [ ] Reports APIs
         - Sales Report
