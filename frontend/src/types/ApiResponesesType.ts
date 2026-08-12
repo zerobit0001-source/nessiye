@@ -250,6 +250,20 @@ export type GetReportsChartsResponse = {
   ok: boolean;
   charts: ReportsChartsType;
 };
+export type GetReportsTopCustomersResponse = {
+  ok: boolean;
+  top_customers: {
+    customer_name: string;
+    phone_number: string;
+    total: number;
+    total_paid: number;
+    remaining: number;
+    }[];
+};
+export type GetReportsTopsResponse = {
+  ok: boolean;
+  charts: ReportsChartsType;
+};
 export type GetReportsCardsResponse = {
   ok: boolean;
   summary: ReportCardsType;

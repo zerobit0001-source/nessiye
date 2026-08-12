@@ -1,10 +1,21 @@
+"use client";
 import React from "react";
 import ReportTableCard from "./ReportTableCard";
 import { GroupsRounded, ReportProblemRounded } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { formatPrice } from "@/utils/formatters";
+import {
+  useGetTopCustomersQuery,
+  useGetTopProductsQuery,
+} from "../api/ApiReport";
 
 export default function ReportTopsContainer() {
+  const topDebtorsQuery = useGetTopCustomersQuery();
+  const topProductsQuery = useGetTopProductsQuery();
+
+  console.log("top debtors data  : ", topDebtorsQuery.data);
+  console.log("top products data  : ", topProductsQuery.data);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <ReportTableCard
@@ -15,7 +26,7 @@ export default function ReportTopsContainer() {
         rowRender={(item) => (
           <>
             <td className="flex flex-col">
-              <Typography variant="body1">{item.name}</Typography>
+              <Typography variant="body1">{item.customer_name}</Typography>
               <Typography variant="caption">{item.phone_number}</Typography>
             </td>
             <td>
@@ -23,46 +34,19 @@ export default function ReportTopsContainer() {
             </td>
             <td>
               <Typography variant="body2" color="success">
-                {formatPrice(item.paid)}
+                {formatPrice(item.total_paid)}
               </Typography>
             </td>
             <td>
               <Typography variant="body2" color="error">
-                {formatPrice(item.balance)}
+                {formatPrice(item.remaining)}
               </Typography>
             </td>
           </>
         )}
-        data={[
-          {
-            name: "امیررضا عبداللهی",
-            phone_number: "09121234567",
-            total: 850000,
-            paid: 500000,
-            balance: 350000,
-          },
-          {
-            name: "علی محمدی",
-            phone_number: "09351267890",
-            total: 1200000,
-            paid: 700000,
-            balance: 500000,
-          },
-          {
-            name: "زهرا احمدی",
-            phone_number: "09034561234",
-            total: 450000,
-            paid: 450000,
-            balance: 0,
-          },
-          {
-            name: "محمد حسینی",
-            phone_number: "09911223344",
-            total: 980000,
-            paid: 300000,
-            balance: 680000,
-          },
-        ]}
+        data={
+          topDebtorsQuery.isLoading ? [] : topDebtorsQuery.data?.top_customers
+        }
       />
       <ReportTableCard
         icon={<ReportProblemRounded color="error" />}
