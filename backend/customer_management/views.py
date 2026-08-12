@@ -9,9 +9,8 @@ from sales.models import Sale
 from sales.serializers import SaleSerializer
 from debts.models import Debt
 from debts.serializers import DebtSerializer
-from django.db.models import Max, Sum
+from django.db.models import Max, Sum, OuterRef, Subquery, Q
 from accounts.models import User, OtpCode
-from django.db.models import Q
 from activity.services import log_activity
 import random
 from django.utils import timezone
@@ -23,62 +22,6 @@ from config.cache import invalidate_dashboard, invalidate_reports
 class CustomerListCreateView(APIView):
     """This view allows shop users to list their customers and add new customers by phone number with OTP verification."""
     permission_classes = [IsAuthenticated]
-
-    #def get(self, request):
-    #    if not request.user.is_shop:
-    #        return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
-    #    
-    #    search_query = request.query_params.get('search', None)
-    #    ordering = request.query_params.get('ordering', '-total_debts')
-    #    filtering = request.query_params.get('filter', None)
-    #
-    #    customer_shops = CustomerShop.objects.filter(
-    #        shop=request.user
-    #    ).select_related('customer').annotate(
-    #        total_debts=Sum('debts__amount'),
-    #        total_paid=Sum('debts__payments__amount'),
-    #        last_debt=Max('debts__created_at')
-    #    )
-#
-#
-#
-    #    if search_query:
-    #        customer_shops = customer_shops.filter(
-    #            Q(customer__full_name__icontains=search_query) |
-    #            Q(customer__phone_number__icontains=search_query)
-    #        )
-    #
-    #    result = [
-    #        {
-    #            'id': cs.customer.id,
-    #            'full_name': cs.customer.full_name,
-    #            'phone_number': cs.customer.phone_number,
-    #            'total_debts': cs.total_debts or 0,
-    #            'paid_amount': cs.total_paid or 0,
-    #            'remaining_amount': (cs.total_debts or 0) - (cs.total_paid or 0)
-    #        }
-    #        for cs in customer_shops
-    #    ]
-#
-    #    #filtering
-    #    if filtering == 'active':
-    #        result = [r for r in result if r['remaining_amount'] > 0]
-#
-    #    elif filtering == 'settled':
-    #        result = [r for r in result if r['remaining_amount'] <= 0]
-    #    
-    #    elif filtering == 'overdue':
-    #        thirty_days_ago = timezone.now() - timedelta(days=30)
-    #        result = [r for r in result if r['remaining_amount'] > 0 and r['last_debt'] and r['last_debt'] < thirty_days_ago]
-#
-    #    #ordering
-    #    reverse = ordering.startswith('-')
-    #    order_field = ordering.lstrip('-')
-#
-    #    if order_field in ['total_debts', 'paid_amount', 'remaining_amount']:
-    #        result = sorted(result, key=lambda x: x.get(order_field, 0), reverse=reverse)
-    #
-    #    return Response({'ok': True, 'customers': result})
 
     def get(self, request):
         if not request.user.is_shop:
