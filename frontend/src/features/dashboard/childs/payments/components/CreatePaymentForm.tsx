@@ -24,6 +24,7 @@ import {
 import { formatDate, formatPrice } from "@/utils/formatters";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "@/lib/redux/hooks";
+import { skip } from "node:test";
 
 export default function CreatePaymentForm() {
   const [selectedCustomer, setSelectedCustomer] = useState<{
@@ -146,6 +147,7 @@ export default function CreatePaymentForm() {
           selectedCustomer={selectedCustomer}
           customers={customers}
           setSelectedCustomer={setSelectedCustomer}
+          isLoading={isCustomerLoading}
         />
 
         {/* Select Debt for payment */}
@@ -155,6 +157,7 @@ export default function CreatePaymentForm() {
           debts={debts}
           selectedDebt={selectedDebt}
           setSelectedDebt={setSelectedDebt}
+          isLoading={isCreditsLoading}
         />
 
         {/* Selected Debt */}

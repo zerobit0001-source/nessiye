@@ -14,6 +14,7 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -35,6 +36,7 @@ interface SelectCustomerDebtDialogProps {
   selectedDebt: DebtType | null;
   setSelectedDebt: React.Dispatch<React.SetStateAction<DebtType | null>>;
   debts: DebtType[] | [];
+  isLoading: boolean;
 }
 
 export default function SelectCustomerDebtDialog({
@@ -42,6 +44,7 @@ export default function SelectCustomerDebtDialog({
   setSelectedDebt,
   debts,
   selectedCustomer,
+  isLoading,
 }: SelectCustomerDebtDialogProps) {
   const [open, setOpen] = useState(false);
 
@@ -96,8 +99,9 @@ export default function SelectCustomerDebtDialog({
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle id="alert-dialog-title">انتخاب مشتری</DialogTitle>
+        <DialogTitle id="alert-dialog-title">انتخاب بدهی</DialogTitle>
         <DialogContent>
+          {isLoading ?? <CircularProgress />}
           <List className="w-full">
             {debts.map((debt) => (
               <ListItemButton
