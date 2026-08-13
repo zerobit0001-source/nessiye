@@ -120,19 +120,33 @@ export default function CreateCustomerPage() {
 
   return (
     <Container>
-        <CreatePagesTitle title="ثبت مشتری جدید" subtitle="اطلاعات خواسته شده را تکمیل کنید" />
-        <div className="w-full flex items-center justify-center">
-          <AddCustomerForm
-            form={form}
-            handleFormChange={handleFormChange}
-            isCode={isCode}
-            handleSendCode={handleSendCode}
-            handleSubmit={handleSubmit}
-            handleCancel={handleCancel}
-            errors={errors}
-            isLoading={sendCodeQuery.isLoading || verifyCustomerQuery.isLoading}
-          />
-        </div>
+      <CreatePagesTitle
+        title="ثبت مشتری جدید"
+        subtitle="اطلاعات خواسته شده را تکمیل کنید"
+      />
+      <div
+        className="w-full flex items-center justify-center"
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            if (isCode) {
+              handleSubmit(e);
+            } else {
+              handleSendCode(e);
+            }
+          }
+        }}
+      >
+        <AddCustomerForm
+          form={form}
+          handleFormChange={handleFormChange}
+          isCode={isCode}
+          handleSendCode={handleSendCode}
+          handleSubmit={handleSubmit}
+          handleCancel={handleCancel}
+          errors={errors}
+          isLoading={sendCodeQuery.isLoading || verifyCustomerQuery.isLoading}
+        />
+      </div>
     </Container>
   );
 }

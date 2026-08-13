@@ -12,7 +12,6 @@ import {
 
 interface AddCustomerFormProps {
   isCode?: boolean;
-  isLoading?: boolean;
   form: {
     phone_number: string;
     code: string;
@@ -53,7 +52,7 @@ export default function AddCustomerForm({
 
       <Divider />
 
-      <Stack spacing={3} component="form">
+      <Stack spacing={3}>
         <Stack spacing={1}>
           <Typography variant="body2" fontWeight={600}>
             شماره موبایل
