@@ -78,21 +78,38 @@ export default function CreateDebtForm() {
       })),
     };
 
+    const toastId = toast.loading("در حال ثبت نسیه...");
+
     try {
       const result = await addSale(body).unwrap();
 
       if (!result.ok) {
-        toast.error("خطا در ایجاد نسیه");
+        toast.update(toastId, {
+          type: "error",
+          render: "خطا در ایجاد بدهی",
+          autoClose: 2000,
+          isLoading: false,
+        });
         return;
       }
 
-      toast.success("نسیه ثبت شد");
+      toast.update(toastId, {
+        type: "success",
+        render: "بدهی ثبت شد",
+        autoClose: 2000,
+        isLoading: false,
+      });
       setSelectedCustomer(null);
       setSelectedProducts([]);
-      return;
     } catch (error) {
       console.log(error);
-      toast.error(error.data.error || "error");
+      const message = (error as { data?: { error?: string } })?.data?.error;
+      toast.update(toastId, {
+        type: "error",
+        render: `خطا از سمت سرور: ${message ?? "خطا"}`,
+        autoClose: 2000,
+        isLoading: false,
+      });
     }
   }
   const handleIncrease = (productId: number) => {
@@ -170,7 +187,16 @@ export default function CreateDebtForm() {
               {formatPrice(totalCost)} تومان
             </Typography>
           </span>
-          <Button variant={"contained"} color="primary" onClick={handleAddSale}>
+          <Button
+            variant={"contained"}
+            color="primary"
+            onClick={handleAddSale}
+            disabled={
+              addSaleLoading ||
+              !selectedCustomer ||
+              selectedProducts.length === 0
+            }
+          >
             ثبت بدهی
           </Button>
           <Button
