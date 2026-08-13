@@ -78,21 +78,38 @@ export default function CreateSaleForm() {
       })),
     };
 
+    const toastId = toast.loading("در حال ثبت فروش...");
+
     try {
       const result = await addSale(body).unwrap();
 
       if (!result.ok) {
-        toast.error("خطا در ایجاد فروش");
+        toast.update(toastId, {
+          type: "error",
+          render: "خطا در ثبت فروش",
+          autoClose: 2000,
+          isLoading: false,
+        });
         return;
       }
 
-      toast.success("فروش ثبت شد");
+      toast.update(toastId, {
+        type: "success",
+        render: "فروش ثبت شد",
+        autoClose: 2000,
+        isLoading: false,
+      });
       setSelectedCustomer(null);
       setSelectedProducts([]);
       return;
     } catch (error) {
       console.log(error);
-      toast.error(error.data.error || "error");
+      toast.update(toastId, {
+        type: "error",
+        render: "خطا در ثبت فروش",
+        autoClose: 2000,
+        isLoading: false,
+      });
     }
   }
   const handleIncrease = (productId: number) => {
@@ -172,7 +189,12 @@ export default function CreateSaleForm() {
               {formatPrice(totalCost)} تومان
             </Typography>
           </span>
-          <Button variant={"contained"} color="primary" onClick={handleAddSale}>
+          <Button
+            variant={"contained"}
+            color="primary"
+            onClick={handleAddSale}
+            disabled={addSaleLoading || selectedProducts.length === 0}
+          >
             ثبت فروش
           </Button>
           <Button
