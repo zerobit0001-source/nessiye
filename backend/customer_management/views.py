@@ -31,56 +31,32 @@ class CustomerListCreateView(APIView):
         ordering = request.query_params.get('ordering', '-total_debts')
         filtering = request.query_params.get('filter', None)
 
-        # customer_shops = CustomerShop.objects.filter(
-        #     shop=request.user
-        # ).select_related('customer').annotate(
-        #     total_debts=Sum('debts__amount'),
-        #     total_paid=Sum('debts__payments__amount'),
-        #     last_debt=Max('debts__created_at')
-        # )
-
         customer_shops = CustomerShop.objects.filter(
             shop=request.user
-        ).select_related('customer')
-        
+        ).select_related('customer').annotate(
+            total_debts=Sum('debts__amount'),
+            total_paid=Sum('debts__payments__amount'),
+            last_debt=Max('debts__created_at')
+        )
+
         if search_query:
             customer_shops = customer_shops.filter(
                 Q(customer__full_name__icontains=search_query) |
                 Q(customer__phone_number__icontains=search_query)
             )
 
-        result = []
-        for cs in customer_shops:
-            debt_summary = Debt.objects.filter(customer=cs).aggregate(
-                total_debt=Sum('amount'),
-                total_paid=Sum('payments__amount'),
-                last_debt=Max('created_at')
-            )
-            total_debt = debt_summary['total_debt'] or 0
-            total_paid = debt_summary['total_paid'] or 0
-
-            result.append({
+        result = [
+            {
                 'id': cs.customer.id,
                 'full_name': cs.customer.full_name,
                 'phone_number': cs.customer.phone_number,
-                'total_debts': total_debt,
-                'paid_amount': total_paid,
-                'remaining_amount': total_debt - total_paid,
-                'last_debt': debt_summary['last_debt']
-            })
-
-        # result = [
-        #     {
-        #         'id': cs.customer.id,
-        #         'full_name': cs.customer.full_name,
-        #         'phone_number': cs.customer.phone_number,
-        #         'total_debts': cs.total_debts or 0,
-        #         'paid_amount': cs.total_paid or 0,
-        #         'remaining_amount': (cs.total_debts or 0) - (cs.total_paid or 0),
-        #         'last_debt': cs.last_debt
-        #     }
-        #     for cs in customer_shops
-        # ]
+                'total_debts': cs.total_debts or 0,
+                'paid_amount': cs.total_paid or 0,
+                'remaining_amount': (cs.total_debts or 0) - (cs.total_paid or 0),
+                'last_debt': cs.last_debt
+            }
+            for cs in customer_shops
+        ]
 
         # summary
         total = len(result)
