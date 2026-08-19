@@ -170,6 +170,7 @@ const RegisterCode = () => {
         disabled={loading}
         onClick={() => handleSubmitOtp()}
         className="mt-4!"
+        fullWidth
       >
         ارسال کد
       </Button>
