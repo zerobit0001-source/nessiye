@@ -103,6 +103,9 @@ export default function SelectCustomerDebtDialog({
         <DialogContent>
           {isLoading ?? <CircularProgress />}
           <List className="w-full">
+            {debts.length === 0 && !isLoading && (
+              <Typography>هیچ بدهی‌ای یافت نشد.</Typography>
+            )}
             {debts.map((debt) => (
               <ListItemButton
                 selected={selectedDebt?.id === debt.id}
