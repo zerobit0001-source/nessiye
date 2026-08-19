@@ -99,7 +99,6 @@ export default function ReportPaymentTrendChart({
           // dot={{ r: 3 }}
           // activeDot={{ r: 6 }}
         />
-        
       </AreaChart>
     </ResponsiveContainer>
   );
