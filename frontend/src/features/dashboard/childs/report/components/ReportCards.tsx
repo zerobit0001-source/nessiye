@@ -121,12 +121,12 @@ export default function ReportCards({
         return (
           <Grid key={config.title} size={{ xs: 12, sm: 6, lg: 3 }}>
             <Card
-              elevation={0}
+              elevation={3}
               sx={{
                 border: "1px solid",
                 borderColor: "divider",
-                borderRadius: 4,
               }}
+              className="rounded-lg!"
             >
               <CardContent>
                 <Stack

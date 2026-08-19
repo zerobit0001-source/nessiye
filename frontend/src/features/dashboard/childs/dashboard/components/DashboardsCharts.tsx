@@ -34,19 +34,17 @@ const DashboardsCharts = () => {
           caption="نمایش مقدار بدهی داده شده در برابر مبلغ تسویه شده"
           icon={<TrendingUpRounded color="success" />}
         >
-          {
-            isLoading ? (
-              <div className="flex items-center justify-center h-80">
-                <CircularProgress />
-              </div>
-            ) : dashboardCharts?.sales_trend.length === 0 ? (
-              <div className="flex items-center justify-center h-80">
-                <Typography variant="body1">هیچ داده ای یافت نشد.</Typography>
-              </div>
-            ) : (
-              <SalesChart data={dashboardCharts?.sales_trend} />
-            )
-          }
+          {isLoading ? (
+            <div className="flex items-center justify-center h-80">
+              <CircularProgress />
+            </div>
+          ) : dashboardCharts?.sales_trend.length === 0 ? (
+            <div className="flex items-center justify-center h-80">
+              <Typography variant="body1">هیچ داده ای یافت نشد.</Typography>
+            </div>
+          ) : (
+            <SalesChart data={dashboardCharts?.sales_trend} />
+          )}
         </ChartCard>
       </div>
       <div className="col-span-full lg:col-span-2 h-full">
@@ -55,36 +53,35 @@ const DashboardsCharts = () => {
           caption="نمایش مقدار کل بدهی هفته در براره پرداخت"
           icon={<PieChartRounded color="secondary" />}
         >
-          {
-            isLoading ? (
-              <div className="flex items-center justify-center h-80">
-                <CircularProgress />
-              </div>
-            ) : dashboardCharts?.debt_distribution ? (
-              <>
-                  <PaymentDistributionChart data={dashboardCharts?.debt_distribution} />
-                  <ChartLegend
-                    items={[
-                      {
-                        color: "#4CAF50",
-                        label: "پرداخت شده",
-                        value: dashboardCharts?.debt_distribution.total_paid,
-                      },
-                      {
-                        color: "#FF9800",
-                        label: "باقی مانده",
-                        value: dashboardCharts?.debt_distribution.remaining,
-                      },
-                    ]}
-                    />
-              </>
-            ) : (
-              <div className="flex items-center justify-center h-80">
-                <Typography variant="body1">هیچ داده ای یافت نشد.</Typography>
-              </div>
-            )
-          }
-
+          {isLoading ? (
+            <div className="flex items-center justify-center h-80">
+              <CircularProgress />
+            </div>
+          ) : dashboardCharts?.debt_distribution ? (
+            <>
+              <PaymentDistributionChart
+                data={dashboardCharts?.debt_distribution}
+              />
+              <ChartLegend
+                items={[
+                  {
+                    color: "#4CAF50",
+                    label: "پرداخت شده",
+                    value: dashboardCharts?.debt_distribution.total_paid,
+                  },
+                  {
+                    color: "#FF9800",
+                    label: "باقی مانده",
+                    value: dashboardCharts?.debt_distribution.remaining,
+                  },
+                ]}
+              />
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-80">
+              <Typography variant="body1">هیچ داده ای یافت نشد.</Typography>
+            </div>
+          )}
         </ChartCard>
       </div>
       <div className="col-span-full ">
@@ -93,19 +90,17 @@ const DashboardsCharts = () => {
           caption="جمع تمام مبالغ فروش و بدهی "
           icon={<AttachMoneyRounded color="success" />}
         >
-          {
-            isLoading ? (
-              <div className="flex items-center justify-center h-80">
-                <CircularProgress />
-              </div>
-            ) : dashboardCharts?.payments_trend.length === 0 ? (
-              <div className="flex items-center justify-center h-80">
-                <Typography variant="body1">هیچ داده ای یافت نشد.</Typography>
-              </div>
-            ) : (
-              <RevenueChart data={dashboardCharts?.payments_trend} />
-            )
-          }
+          {isLoading ? (
+            <div className="flex items-center justify-center h-80">
+              <CircularProgress />
+            </div>
+          ) : dashboardCharts?.payments_trend.length === 0 ? (
+            <div className="flex items-center justify-center h-80">
+              <Typography variant="body1">هیچ داده ای یافت نشد.</Typography>
+            </div>
+          ) : (
+            <RevenueChart data={dashboardCharts?.payments_trend} />
+          )}
         </ChartCard>
       </div>
     </>

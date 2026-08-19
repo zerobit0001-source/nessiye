@@ -9,7 +9,7 @@ type ChartCardProps = {
 
 export function ChartCard({ title, caption, icon, children }: ChartCardProps) {
   return (
-    <Card>
+    <Card elevation={3} className="rounded-lg! h-full">
       <CardContent>
         <Stack
           direction="row"
@@ -26,7 +26,6 @@ export function ChartCard({ title, caption, icon, children }: ChartCardProps) {
 
           {icon}
         </Stack>
-
         {children}
       </CardContent>
     </Card>

@@ -22,13 +22,13 @@ export default function PaymentsPageCards({
 }: StatsCardProps) {
   return (
     <Card
-      elevation={0}
+      elevation={3}
       sx={{
         p: 2.5,
-        borderRadius: 4,
         border: "1px solid",
         borderColor: "divider",
       }}
+      className="rounded-lg!"
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Box>

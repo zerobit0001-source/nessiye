@@ -70,12 +70,12 @@ export default function ProductsPageCards() {
       {Object.entries(PRODUCTS_CARDS_CONFIG).map(([key, config]) => (
         <Grid key={config.title} size={{ xs: 12, sm: 6, lg: 3 }}>
           <Card
-            elevation={0}
+            elevation={3}
             sx={{
-              borderRadius: 4,
               border: "1px solid",
               borderColor: "divider",
             }}
+            className="rounded-lg!"
           >
             <CardContent
               sx={{
