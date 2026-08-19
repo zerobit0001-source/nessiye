@@ -48,7 +48,7 @@ const SALES_STATS_CONFIG = {
     icon: <AttachMoneyRounded />,
     color: "#22C55E",
     bg: "#F0FDF4",
-    unit: "عدد",
+    unit: "تومان",
   },
   this_month_debt: {
     title: "فروش نسیه این ماه",
@@ -71,13 +71,13 @@ export default function SalesPageCards() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }} key={config.title}>
           <SlideUpBoxAnimation delay={index / 15 + 0.1}>
             <Card
-              elevation={1}
+              elevation={3}
               sx={{
-                borderRadius: 3,
                 border: "1px solid",
                 borderColor: "divider",
                 height: "100%",
               }}
+              className="rounded-lg!"
             >
               <CardContent>
                 <Stack
@@ -90,13 +90,19 @@ export default function SalesPageCards() {
                       {config.title}
                     </Typography>
 
-                    <Typography variant="h6" fontWeight={700}>
-                      {isLoading ? (
-                        <Skeleton variant="text" />
-                      ) : (
-                        formatPrice(summary[key])
-                      )}{" "}
-                      {config.unit}
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      className="flex items-center gap-2"
+                    >
+                      <span>
+                        {isLoading ? (
+                          <Skeleton variant="text" width={70} />
+                        ) : (
+                          formatPrice(summary[key])
+                        )}
+                      </span>
+                      <Typography variant="body1">{config.unit}</Typography>
                     </Typography>
                   </Stack>
 

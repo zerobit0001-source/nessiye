@@ -61,13 +61,13 @@ export default function CustomerCards() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }} key={config.title}>
           <SlideUpBoxAnimation key={config.title} delay={index / 15 + 0.1}>
             <Card
-              elevation={1}
+              elevation={3}
               sx={{
-                borderRadius: 3,
                 border: "1px solid",
                 borderColor: "divider",
                 height: "100%",
               }}
+              className="rounded-lg!"
             >
               <CardContent>
                 <Stack

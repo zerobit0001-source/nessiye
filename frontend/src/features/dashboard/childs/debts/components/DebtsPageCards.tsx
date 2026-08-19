@@ -87,13 +87,13 @@ export default function DebtsCards() {
         <Grid size={{ xs: 12, sm: 6, md: 3 }} key={config.title}>
           <SlideUpBoxAnimation delay={index / 15 + 0.1}>
             <Card
-              elevation={1}
+              elevation={3}
               sx={{
-                borderRadius: 3,
                 border: "1px solid",
                 borderColor: "divider",
                 height: "100%",
               }}
+              className="rounded-lg!"
             >
               <CardContent>
                 <Stack
@@ -106,9 +106,19 @@ export default function DebtsCards() {
                       {config.title}
                     </Typography>
 
-                    <Typography variant="h6" fontWeight={700}>
-                      {isLoading ? <Skeleton variant="text" /> : summary[key]}{" "}
-                      {config.unit}
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      className="flex gap-2 items-center"
+                    >
+                      <span>
+                        {isLoading ? (
+                          <Skeleton variant="text" width={70} />
+                        ) : (
+                          summary[key]
+                        )}{" "}
+                      </span>
+                      <Typography variant="body1">{config.unit}</Typography>
                     </Typography>
                   </Stack>
 
