@@ -7,12 +7,22 @@ interface LinkButtonProps {
   text: string;
   link: string;
   variant: "contained" | "outlined" | "text";
+  icon?: boolean;
 }
 
-export default function LinkButton({ text, link, variant }: LinkButtonProps) {
+export default function LinkButton({
+  text,
+  link,
+  variant,
+  icon = true,
+}: LinkButtonProps) {
   return (
     <Link href={link}>
-      <Button variant={variant} endIcon={<AddRounded fontSize="small" />} className="rounded-lg!" >
+      <Button
+        variant={variant}
+        endIcon={icon ? <AddRounded fontSize="small" /> : null}
+        className="rounded-lg!"
+      >
         {text}
       </Button>
     </Link>
