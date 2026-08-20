@@ -18,17 +18,20 @@ const ProfilePage = () => {
 
   return (
     <Container>
-      <Card className="p-4 flex flex-col justify-center gap-8">
-        <div className="flex flex-col justify-center md:justify-start md:flex-row items-center gap-4">
+      <Card
+        className="p-4 w-full lg:w-96 m-auto flex flex-col justify-center items-center gap-8 rounded-lg!"
+        elevation={3}
+      >
+        <div className="flex flex-col justify-center items-center gap-4">
           <div className="">
             <Avatar
-              className="size-20! md:size-30! lg:size-40!"
+              className="size-20! md:size-30! lg:size-40! cursor-pointer"
               src={default_Profile.src}
             >
               {user.full_name?.[0] || "A"}
             </Avatar>
           </div>
-          <div className="text-center md:text-start">
+          <div className="text-center ">
             <Typography variant="h5">{user.full_name}</Typography>
             <Typography variant="body1">
               {user.phone_number} - فروشگاه {user.shop_name}
@@ -36,34 +39,44 @@ const ProfilePage = () => {
             <Typography variant="body1">
               {user.email || user.shop_address}
             </Typography>
-            <Button variant="outlined">تغییر عکس پروفایل</Button>
           </div>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full">
           <Typography variant="h6">اکانت</Typography>
           <TextField
             type="text"
             size="small"
             placeholder="نام کاربری"
             label="نام کاربری"
+            value={user.full_name}
           />
           <TextField
             type="email"
             size="small"
-            placeholder="ایمیل"
+            placeholder="example@gmail.com"
             label="ایمیل"
+            value={user.email}
           />
           <TextField
             type="tel"
             size="small"
             placeholder="شماره تلفن"
             label="شماره تلفن"
+            value={user.phone_number}
           />
           <TextField
-            type="tel"
             size="small"
             placeholder="نام فروشگاه"
             label="نام فروشگاه"
+            value={user.shop_name}
+          />
+          <TextField
+            size="small"
+            multiline
+            rows={4}
+            placeholder="آدرس فروشگاه"
+            label="آدرس فروشگاه"
+            value={user.shop_address}
           />
         </div>
         <div className=" flex gap-4 ">
