@@ -48,7 +48,6 @@ export default function CreatePaymentForm({
   const [customers, setCustomers] = useState<CustomerType[] | []>([]);
   const [amount, setAmount] = useState("");
   const [check, setCheck] = useState<boolean>(false);
-  const initializedCustomerRef = useRef(false);
 
   const {
     data: customersData,
@@ -77,28 +76,34 @@ export default function CreatePaymentForm({
 
   console.log(customers);
 
+  // intialize the customers
   useEffect(() => {
     if (CustomersSuccess) {
       setCustomers(customersData.customers);
     }
   }, [CustomersSuccess, customersData]);
+
+  // intialize customers debts
   useEffect(() => {
     if (CreditsSuccess) {
       setDebts(Credits.debts);
     }
   }, [CreditsSuccess, Credits]);
-  useEffect(() => {
-    setSelectedDebt(null);
 
-    if (selectedCustomer) {
-      getCustomerCredits(selectedCustomer.id);
-    } else {
+  useEffect(() => {
+    if (!selectedCustomer) {
       setDebts([]);
+      setSelectedDebt(null);
+      return;
     }
+
+    getCustomerCredits(selectedCustomer.id);
   }, [selectedCustomer, getCustomerCredits]);
 
+  // price initialization
   useEffect(() => {
     if (check && selectedDebt) {
+      console.log(selectedDebt);
       setAmount(String(selectedDebt.remaining));
     }
     if (!check) {
@@ -108,14 +113,12 @@ export default function CreatePaymentForm({
 
   // intialize selectedCustomer based on customerId
   useEffect(() => {
-    if (!customerId || !CustomersSuccess) return;
-    if (initializedCustomerRef.current) return;
+    if (!customerId || !CustomersSuccess || customers.length === 0) return;
 
     const customerIdNumber = Number(customerId);
 
     if (!Number.isInteger(customerIdNumber)) {
       toast.error("شناسه مشتری نامعتبر است");
-      initializedCustomerRef.current = true;
       return;
     }
 
@@ -125,7 +128,6 @@ export default function CreatePaymentForm({
 
     if (!customer) {
       toast.error("مشتری موردنظر پیدا نشد");
-      initializedCustomerRef.current = true;
       return;
     }
 
@@ -134,9 +136,20 @@ export default function CreatePaymentForm({
       phone_number: customer.phone_number,
       full_name: customer.full_name,
     });
-
-    initializedCustomerRef.current = true;
   }, [customerId, CustomersSuccess, customers]);
+
+  // intialize debt based on debtId
+  useEffect(() => {
+    if (!debtId || !CreditsSuccess || debts.length === 0) return;
+
+    const debt = debts.find((debt) => debt.id === Number(debtId));
+    if (!debt) {
+      toast.error("بدهی موردنظر پیدا نشد");
+      return;
+    }
+
+    setSelectedDebt(debt);
+  }, [debtId, CreditsSuccess, debts]);
 
   const resetForm = () => {
     setSelectedCustomer(null);

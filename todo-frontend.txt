@@ -88,6 +88,8 @@ so far :
     - [ * ] Responsive Layout
     - [ * ] Create the profile page
     - [ * ] Fix the debt page payment button
+    - [ * ] Create querys for create pages like debts/create?customer=2 or ?customer=0911111111 | payments/create?debtId=2
+
 
 
 
@@ -268,8 +270,6 @@ todo :
     + [ ] Lazy Loading
 
     + [ ] Unit Tests
-
-    + [ ] Create querys for create pages like debts/create?customer=2 or ?customer=0911111111 | payments/create?debtId=2
 
     + [ ] Create the sale detail page
 
