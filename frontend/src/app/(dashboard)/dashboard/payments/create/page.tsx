@@ -1,14 +1,27 @@
 import Container from "@/components/dash/Container";
 import CreatePagesTitle from "@/features/dashboard/childs/components/CreatePagesTitle";
 import CreatePaymentForm from "@/features/dashboard/childs/payments/components/CreatePaymentForm";
-import { Typography } from "@mui/material";
 
-export default function CreatePaymentPage() {
+interface CreatePaymentPageProps {
+  searchParams: {
+    customerId?: string;
+    debtId?: string;
+  };
+}
+
+export default async function CreatePaymentPage({
+  searchParams,
+}: CreatePaymentPageProps) {
+  const { customerId, debtId } = await searchParams;
+
   return (
     <Container>
-      <CreatePagesTitle title="ثبت دریافت وجه (تسویه)" subtitle=" ثبت پرداخت‌های نقدی یا کارتخوان مشتری بابت بدهی‌های قبلی." />
+      <CreatePagesTitle
+        title="ثبت دریافت وجه (تسویه)"
+        subtitle=" ثبت پرداخت‌های نقدی یا کارتخوان مشتری بابت بدهی‌های قبلی."
+      />
       <div className="flex justify-center w-full">
-        <CreatePaymentForm />
+        <CreatePaymentForm customerId={customerId} debtId={debtId} />
       </div>
     </Container>
   );

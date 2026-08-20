@@ -87,6 +87,8 @@ so far :
     - [ * ] Dark Mode
     - [ * ] Responsive Layout
     - [ * ] Create the profile page
+    - [ * ] Fix the debt page payment button
+
 
 
 
@@ -266,8 +268,6 @@ todo :
     + [ ] Lazy Loading
 
     + [ ] Unit Tests
-
-    + [ ] Fix the debt page payment button
 
     + [ ] Create querys for create pages like debts/create?customer=2 or ?customer=0911111111 | payments/create?debtId=2
 

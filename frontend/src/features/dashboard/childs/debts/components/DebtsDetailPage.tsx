@@ -66,6 +66,8 @@ export default function DebtsDetailPage({ id }: Props) {
     ? (data.debt.paid_amount / data.debt.amount) * 100
     : 0;
 
+  console.log(data);
+
   return (
     <Box
       sx={{

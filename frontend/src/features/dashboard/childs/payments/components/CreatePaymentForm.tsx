@@ -1,6 +1,6 @@
 "use client";
 import { useGetModalDataQuery } from "@/features/dashboard/api/ApiModalsData";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SelectCustomerDialog from "../../debts/components/SelectCustomerDialog";
 import {
   ApiCustomer,
@@ -24,14 +24,22 @@ import {
 import { formatDate, formatPrice } from "@/utils/formatters";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "@/lib/redux/hooks";
-import { skip } from "node:test";
+import { number } from "framer-motion";
 
-export default function CreatePaymentForm() {
+export default function CreatePaymentForm({
+  customerId,
+  debtId,
+}: {
+  customerId?: string;
+  debtId?: string;
+}) {
   const [selectedCustomer, setSelectedCustomer] = useState<{
     id: number;
     phone_number: string;
     full_name: string;
   } | null>(null);
+
+  console.log("search params : ", customerId, debtId);
 
   const dispatch = useAppDispatch();
 
@@ -40,6 +48,7 @@ export default function CreatePaymentForm() {
   const [customers, setCustomers] = useState<CustomerType[] | []>([]);
   const [amount, setAmount] = useState("");
   const [check, setCheck] = useState<boolean>(false);
+  const initializedCustomerRef = useRef(false);
 
   const {
     data: customersData,
@@ -65,6 +74,8 @@ export default function CreatePaymentForm() {
       isSuccess: addPaymentSuccess,
     },
   ] = useAddPaymentMutation();
+
+  console.log(customers);
 
   useEffect(() => {
     if (CustomersSuccess) {
@@ -95,11 +106,43 @@ export default function CreatePaymentForm() {
     }
   }, [check, selectedDebt]);
 
+  // intialize selectedCustomer based on customerId
+  useEffect(() => {
+    if (!customerId || !CustomersSuccess) return;
+    if (initializedCustomerRef.current) return;
+
+    const customerIdNumber = Number(customerId);
+
+    if (!Number.isInteger(customerIdNumber)) {
+      toast.error("شناسه مشتری نامعتبر است");
+      initializedCustomerRef.current = true;
+      return;
+    }
+
+    const customer = customers.find(
+      (customer) => customer.id === customerIdNumber,
+    );
+
+    if (!customer) {
+      toast.error("مشتری موردنظر پیدا نشد");
+      initializedCustomerRef.current = true;
+      return;
+    }
+
+    setSelectedCustomer({
+      id: customer.id,
+      phone_number: customer.phone_number,
+      full_name: customer.full_name,
+    });
+
+    initializedCustomerRef.current = true;
+  }, [customerId, CustomersSuccess, customers]);
+
   const resetForm = () => {
     setSelectedCustomer(null);
     setSelectedDebt(null);
     setDebts([]);
-    setAmount(0);
+    setAmount("");
     setCheck(false);
   };
 
@@ -135,7 +178,7 @@ export default function CreatePaymentForm() {
 
       resetForm();
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       toast.error(error?.data?.error || "خطایی در ثبت پرداخت رخ داد");
     }
   }
