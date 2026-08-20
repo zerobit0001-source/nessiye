@@ -12,6 +12,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class DebtSerializer(serializers.ModelSerializer):
+    customer = serializers.SerializerMethodField()
     items = SaleItemDetailSerializer(source = 'sale.items', many=True, read_only=True)
     remaining = serializers.SerializerMethodField()
     is_paid = serializers.SerializerMethodField()
@@ -27,6 +28,15 @@ class DebtSerializer(serializers.ModelSerializer):
             'payments', 'description', 'created_at'
         ]
         read_only_fields = ['shop', 'created_at']
+
+    def get_customer(seld, obj):
+        if not obj.customer:
+            return None
+        return {
+            'id': obj.customer.customer.id,
+            'full_name': obj.customer.customer.full_name,
+            'phone_number': obj.customer.customer.phone_number,
+        }
 
     def get_remaining(self, obj):
         return obj.remaining
