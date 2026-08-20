@@ -88,13 +88,13 @@ export default function ProductDetailsPageStats({
         return (
           <Card
             key={key}
-            elevation={1}
+            elevation={3}
             sx={{
               height: "100%",
               border: "1px solid",
               borderColor: config.borderColor || "divider",
-              borderRadius: 4,
             }}
+            className="rounded-lg!"
           >
             <CardContent
               sx={{
