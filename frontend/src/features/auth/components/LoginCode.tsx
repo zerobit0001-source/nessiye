@@ -24,6 +24,10 @@ const LoginCode = () => {
       return;
     }
 
+    if (loading) {
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -78,7 +82,7 @@ const LoginCode = () => {
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) => {
     if (e.key === "Backspace") {
       if (otp[index]) {
@@ -95,17 +99,12 @@ const LoginCode = () => {
     }
   };
 
-  const handlePaste = (
-    e: React.ClipboardEvent<HTMLInputElement>
-  ) => {
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
 
     const pasted = e.clipboardData.getData("text");
 
-    const digits = pasted
-      .replace(/\D/g, "")
-      .slice(0, otp.length)
-      .split("");
+    const digits = pasted.replace(/\D/g, "").slice(0, otp.length).split("");
 
     const newOtp = [...otp];
 
