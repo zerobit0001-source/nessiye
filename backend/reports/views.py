@@ -520,11 +520,20 @@ class ReportCustomersView(APIView):
             ).values('total')
         )
         
+        # top_debtors = CustomerShop.objects.filter(
+        #     shop=request.user
+        # ).select_related('customer').annotate(
+        #     total_debt=Sum('debts__amount'),
+        #     total_paid=Sum('debts__payments__amount')
+        # ).filter(
+        #     total_debt__isnull=False
+        # ).order_by('-total_debt')[:10]
+
         top_debtors = CustomerShop.objects.filter(
             shop=request.user
         ).select_related('customer').annotate(
-            total_debt=Sum('debts__amount'),
-            total_paid=Sum('debts__payments__amount')
+            total_debt=Coalesce(Subquery(debt_total_subquery), 0),
+            total_paid=Coalesce(Subquery(payment_total_subquery), 0),
         ).filter(
             total_debt__isnull=False
         ).order_by('-total_debt')[:10]
