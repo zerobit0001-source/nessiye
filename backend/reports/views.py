@@ -10,6 +10,8 @@ from sales.models import Sale, SaleItem
 from debts.models import Debt, Payment
 from customer_management.models import CustomerShop
 from products.models import Product
+from datetime import datetime, time, timedelta
+from django.db.models.functions import Coalesce, TruncDate, TruncMonth
 from django.core.cache import cache
 from config.cache import (
     report_summary_key, report_charts_key,
@@ -131,9 +133,6 @@ class ReportSummaryView(APIView):
         #     }
         # })
 
-
-from datetime import datetime, time, timedelta
-from django.db.models.functions import Coalesce, TruncDate, TruncMonth
 
 class ReportChartsView(APIView):
     permission_classes = [IsAuthenticated]
