@@ -75,18 +75,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "railway",
-#         "USER": "postgres",
-#         "PASSWORD": "bCqAEcFXjMRupUISSduByrwKmgXRxlAg",
-#         "HOST": os.getenv("DB_HOST", "postgres.railway.internal"),
-#         "PORT": os.getenv("DB_PORT", "5432"),
-#     }
-# }
-
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
