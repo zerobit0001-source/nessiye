@@ -4,7 +4,7 @@ from rest_framework import status
 from django.utils import timezone
 from datetime import timedelta
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Sum, Count, Avg, F, ExpressionWrapper, IntegerField, Q
+from django.db.models import Sum, Count, Avg, F, ExpressionWrapper, IntegerField, Q, OuterRef, Subquery
 from django.db.models.functions import TruncDate, TruncMonth
 from sales.models import Sale, SaleItem
 from debts.models import Debt, Payment
@@ -502,6 +502,15 @@ class ReportCustomersView(APIView):
             )
         ).order_by('-total')[:10]
 
+        debt_total_subquery = (
+            Debt.objects.filter(
+                customer = OuterRef('pk'),
+                shop = request.user
+            ).values('customer').annotate(
+                total=Sum('amount')
+            ).values('total')
+        )
+        
         top_debtors = CustomerShop.objects.filter(
             shop=request.user
         ).select_related('customer').annotate(
