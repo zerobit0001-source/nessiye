@@ -94,19 +94,32 @@ export default function CreateCustomerPage() {
       code: "",
     });
 
+    const toastId = toast.loading("در حال افزودن مشتری...");
+
     try {
       const result = await verifyCustomer(form).unwrap();
 
-      console.log("Add product result:", result);
+      console.log("Add customer result:", result);
 
       if (result.ok) {
-        toast.success("مشتری اضافه شد");
+        toast.update(toastId, {
+          type: "success",
+          render: "مشتری اضافه شد",
+          autoClose: 2000,
+          isLoading: false,
+        });
         setIsCode(false);
       } else {
         toast.error("خطا در اضافه کردن مشتری");
+        toast.update(toastId, {
+          type: "error",
+          render: "خطا در اضافه کردن مشتری",
+          autoClose: 2000,
+          isLoading: false,
+        });
       }
     } catch (error) {
-      console.log("Error adding product:", error);
+      console.log("Error adding customer:", error);
       toast.error(error.data.error || "خطا در ثبت مشتری");
       return;
     }
