@@ -103,7 +103,7 @@ export default function DebtsDetailPage({ id }: Props) {
         </Stack>
 
         <LinkButton
-          link={`/dashboard/payments/create?customerId=${data?.debt.customer}&debtId=${data?.debt.id}`}
+          link={`/dashboard/payments/create?customerId=${data?.debt.customer.id}&debtId=${data?.debt.id}`}
           text="افزودن پرداخت"
           variant="contained"
           icon={false}

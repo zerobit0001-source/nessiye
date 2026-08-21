@@ -3,6 +3,7 @@ import {
   CatergoyType,
   CustomersListType,
   CustomerType,
+  DebtDetailType,
   DebtsListType,
   DebtType,
   ModalCustomersType,
@@ -66,7 +67,7 @@ export interface GetDebtsResponeseType {
 }
 export interface GetDebtByIdResponeseType {
   ok: boolean;
-  debt: DebtType;
+  debt: DebtDetailType;
 }
 
 // products
