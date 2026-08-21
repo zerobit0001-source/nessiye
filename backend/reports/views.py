@@ -510,6 +510,15 @@ class ReportCustomersView(APIView):
                 total=Sum('amount')
             ).values('total')
         )
+
+        payment_total_subquery = (
+            Payment.objects.filter(
+                debt__customer = OuterRef('pk'),
+                debt__shop = request.user
+            ).values('debt__customer').annotate(
+                total=Sum('amount')
+            ).values('total')
+        )
         
         top_debtors = CustomerShop.objects.filter(
             shop=request.user
