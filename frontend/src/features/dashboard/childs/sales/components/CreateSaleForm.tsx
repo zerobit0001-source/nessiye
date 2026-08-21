@@ -21,7 +21,11 @@ import SelectCustomerDialog from "./SelectCsutomerDialog";
 import SelectProductDialog from "../../debts/components/SelectProductDialog";
 import SelectedProductsList from "../../debts/components/SelectedProductsList";
 
-export default function CreateSaleForm() {
+export default function CreateSaleForm({
+  customerId,
+}: {
+  customerId?: string;
+}) {
   const [scannerOpen, setScannerOpen] = useState(false);
 
   const [selectedCustomer, setSelectedCustomer] = useState<{
@@ -56,6 +60,7 @@ export default function CreateSaleForm() {
     data: customersData,
     isLoading: isCustomerLoading,
     error: isCustomerError,
+    isSuccess: isCustomerSuccess,
   } = useGetModalDataQuery({ type: "customers" });
   const {
     data: productsData,
@@ -68,6 +73,33 @@ export default function CreateSaleForm() {
 
   const customers = customersData?.customers ?? [];
   const products = productsData?.products ?? [];
+
+  // intialize selectedCustomer based on customerId
+  useEffect(() => {
+    if (!customerId || !isCustomerSuccess || customers.length === 0) return;
+
+    const customerIdNumber = Number(customerId);
+
+    if (!Number.isInteger(customerIdNumber)) {
+      toast.error("شناسه مشتری نامعتبر است");
+      return;
+    }
+
+    const customer = customers.find(
+      (customer) => customer.id === customerIdNumber,
+    );
+
+    if (!customer) {
+      toast.error("مشتری موردنظر پیدا نشد");
+      return;
+    }
+
+    setSelectedCustomer({
+      id: customer.id,
+      phone_number: customer.phone_number,
+      full_name: customer.full_name,
+    });
+  }, [customerId, isCustomerSuccess, customers]);
 
   async function handleAddSale() {
     const body = {
