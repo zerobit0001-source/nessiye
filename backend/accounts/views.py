@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -111,7 +113,8 @@ class RegisterVerifyCodeView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if not otp_code.is_valid():
+        if not otp_code.is_valid() or otp_code.created_at < timezone.now() - timedelta(minutes=2):
+            otp_code.delete()
             return Response(
                 {
                     "ok": False,
