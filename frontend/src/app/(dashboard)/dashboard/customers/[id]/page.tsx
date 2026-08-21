@@ -14,7 +14,7 @@ const Customer = async ({ params }: customerProps) => {
 
     return (
         <Container>
-            <CustomerPageHeader />
+            <CustomerPageHeader id={id} />
             <CustomersPage id={id} />
         </Container>
     );
