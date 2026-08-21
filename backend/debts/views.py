@@ -10,6 +10,7 @@ from datetime import timedelta
 from activity.services import log_activity
 from django.db.models import Sum, Count, Q, F
 from config.cache import invalidate_dashboard, invalidate_reports
+from django.db import transaction
 
 class DebtListView(APIView):
     """This class for debt list view for shop account"""
@@ -142,45 +143,59 @@ class DebtPayView(APIView):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
 
-        try:
-            debt = Debt.objects.get(pk=pk, shop=request.user)
-        except Debt.DoesNotExist:
-            return Response({'ok': False, 'error': 'بدهی یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+        with transaction.atomic():
 
-        if debt.is_paid:
-            return Response({'ok': False, 'error': 'این بدهی قبلاً پرداخت شده است'}, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                debt = Debt.objects.get(pk=pk, shop=request.user)
+            except Debt.DoesNotExist:
+                return Response({'ok': False, 'error': 'بدهی یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
 
-        pay_full = request.data.get('pay_full', False)
-        amount = request.data.get('amount', 0)
+            if debt.is_paid:
+                return Response({'ok': False, 'error': 'این بدهی قبلاً پرداخت شده است'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if pay_full:
-            amount = debt.remaining
-        else:
-            if not amount:
-                return Response({'ok': False, 'error': 'مبلغ الزامی است'}, status=status.HTTP_400_BAD_REQUEST)
-            if amount > debt.remaining:
+            pay_full = request.data.get('pay_full', False)
+            amount = request.data.get('amount', 0)
+
+            if pay_full:
                 amount = debt.remaining
+            else:
+                if not amount:
+                    return Response({'ok': False, 'error': 'مبلغ الزامی است'}, status=status.HTTP_400_BAD_REQUEST)
 
-        Payment.objects.create(debt=debt, amount=amount)
+                try:
+                    amount = int(amount)
+                except (TypeError, ValueError):
+                    return Response({'ok': False, 'error': 'مبلغ باید عدد باشد'}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = DebtSerializer(debt)
+                if amount <= 0:
+                    return Response({'ok': False, 'error': 'مبلغ باید بزرگتر از صفر باشد'}, status=status.HTTP_400_BAD_REQUEST)
 
-        log_activity(
-            shop=request.user,
-            action='create',
-            entity='payment',
-            title=f'پرداخت شد {serializer.instance.customer.customer.full_name} بدهی',
-            object_id=serializer.instance.id
-        )
+                if amount > debt.remaining:
+                    return Response({'ok': False, 'error': 'مبلغ پرداختی نمی‌تواند بیشتر از مبلغ باقی‌مانده باشد'}, status=status.HTTP_400_BAD_REQUEST)
+                
+                # if amount > debt.remaining:
+                #     amount = debt.remaining
 
-        invalidate_dashboard(request.user.id)
-        invalidate_reports(request.user.id)
-
-        return Response({
-            'ok': True,
-            'message': 'پرداخت ثبت شد',
-            'debt': serializer.data
-        })
+            Payment.objects.create(debt=debt, amount=amount)
+    
+            serializer = DebtSerializer(debt)
+    
+            log_activity(
+                shop=request.user,
+                action='create',
+                entity='payment',
+                title=f'پرداخت شد {serializer.instance.customer.customer.full_name} بدهی',
+                object_id=serializer.instance.id
+            )
+    
+            invalidate_dashboard(request.user.id)
+            invalidate_reports(request.user.id)
+    
+            return Response({
+                'ok': True,
+                'message': 'پرداخت ثبت شد',
+                'debt': serializer.data
+            })
 
 
 # class PaymentListView(APIView):
