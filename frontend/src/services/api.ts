@@ -8,5 +8,25 @@ export const api = createApi({
     credentials: "include",
   }),
 
+  tagTypes: [
+    "Charts",
+    "Cards",
+    "TopCustomers",
+    "TopDebtors",
+    "TopProducts",
+    "Payments",
+    "Products",
+    "Customers",
+    "Customer",
+    "Credits",
+    "Shops",
+    "Shop",
+    "Shop/Debts",
+    "Shop/Sales",
+    "Shop/Payments",
+    "Sales",
+    "Debts",
+  ],
+
   endpoints: () => ({}),
 });

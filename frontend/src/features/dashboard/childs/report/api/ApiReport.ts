@@ -1,17 +1,11 @@
+import { api } from "@/services/api";
 import {
   GetReportsCardsResponse,
   GetReportsChartsResponse,
   GetReportsTopCustomersResponse,
 } from "@/types/ApiResponesesType";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const ApiReport = createApi({
-  reducerPath: "ApiReport",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api/",
-    credentials: "include",
-  }),
-  tagTypes: ["Charts", "Cards", "TopCustomers", "TopDebtors", "TopProducts"],
+export const ApiReport = api.injectEndpoints({
   endpoints: (builder) => ({
     getCharts: builder.query<GetReportsChartsResponse, void>({
       query: () => "reports/charts/",

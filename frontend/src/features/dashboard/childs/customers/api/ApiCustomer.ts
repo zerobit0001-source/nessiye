@@ -1,3 +1,4 @@
+import { api } from "@/services/api";
 import {
   GetCustomerDetailsResponse,
   GetCustomerResponse,
@@ -5,15 +6,8 @@ import {
 } from "@/types/ApiResponesesType";
 import { CustomerModalFormType } from "@/types/modalsTypes";
 import { CustomerType } from "@/types/types";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const ApiCustomer = createApi({
-  reducerPath: "ApiCustomer",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api/",
-    credentials: "include",
-  }),
-  tagTypes: ["Customers", "Customer", "Credits"],
+export const ApiCustomer = api.injectEndpoints({
   endpoints: (builder) => ({
     getCustomers: builder.query<
       GetCustomersResponse,

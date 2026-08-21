@@ -1,3 +1,4 @@
+import { api } from "@/services/api";
 import {
   GetDebtByIdResponeseType,
   GetDebtsResponeseType,
@@ -8,15 +9,8 @@ import {
   GetSalesResponesType,
   GetShopDetailResponse,
 } from "@/types/ApiResponesesType";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const ApiAccount = createApi({
-  reducerPath: "ApiAccount",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api/",
-    credentials: "include",
-  }),
-  tagTypes: ["Shops", "Shop", "Shop/Debts", "Shop/Sales", "Shop/Payments"],
+export const ApiAccount = api.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query<
       {

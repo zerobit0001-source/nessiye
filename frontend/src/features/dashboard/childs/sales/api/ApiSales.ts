@@ -1,18 +1,12 @@
+import { api } from "@/services/api";
 import {
   GetDebtByIdResponeseType,
   GetDebtsResponeseType,
   GetSalesResponesType,
   PostSalesType,
 } from "@/types/ApiResponesesType";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const ApiSales = createApi({
-  reducerPath: "ApiSales",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api/",
-    credentials: "include",
-  }),
-  tagTypes: ["Sales", "Debts"],
+export const ApiSales = api.injectEndpoints({
   endpoints: (builder) => ({
     getSales: builder.query<
       GetSalesResponesType,
