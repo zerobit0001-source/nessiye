@@ -109,6 +109,7 @@ export default function CreateCustomerPage() {
           isLoading: false,
         });
         setIsCode(false);
+        
       } else {
         toast.error("خطا در اضافه کردن مشتری");
         toast.update(toastId, {

@@ -16,6 +16,7 @@ import { ApiPayment } from "@/features/dashboard/childs/payments/api/ApiPayment"
 import { ApiModalsData } from "@/features/dashboard/api/ApiModalsData";
 import { ApiDashboard } from "@/features/dashboard/childs/dashboard/api/ApiDashboard";
 import { ApiReport } from "@/features/dashboard/childs/report/api/ApiReport";
+import { api } from "@/services/api";
 
 export const store = configureStore({
   reducer: {
@@ -35,6 +36,8 @@ export const store = configureStore({
     [ApiModalsData.reducerPath]: ApiModalsData.reducer,
     [ApiDashboard.reducerPath]: ApiDashboard.reducer,
     [ApiReport.reducerPath]: ApiReport.reducer,
+
+    api: api.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -47,6 +50,7 @@ export const store = configureStore({
       ApiModalsData.middleware,
       ApiDashboard.middleware,
       ApiReport.middleware,
+      api.middleware,
     ),
 });
 
