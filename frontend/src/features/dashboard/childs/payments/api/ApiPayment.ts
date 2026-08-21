@@ -29,7 +29,7 @@ export const ApiPayment = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(data),
       }),
-      invalidatesTags: ["Payments"],
+      invalidatesTags: ["Payments", "Dashboard", "Debts"],
     }),
   }),
 });

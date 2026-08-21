@@ -9,6 +9,7 @@ export const api = createApi({
   }),
 
   tagTypes: [
+    "Dashboard",
     "Charts",
     "Cards",
     "TopCustomers",

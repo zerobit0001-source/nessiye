@@ -40,7 +40,7 @@ export const ApiSales = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(data),
       }),
-      invalidatesTags: ["Sales", "Debts"],
+      invalidatesTags: ["Sales", "Debts", "Dashboard"],
     }),
     getDebts: builder.query<
       GetDebtsResponeseType,
