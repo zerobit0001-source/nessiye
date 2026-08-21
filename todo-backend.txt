@@ -71,7 +71,7 @@ so far :
     - [ ] Filtering support
 todo :
 
-    - [ ] Notification API
+    - [ ] Notification API ****
     
     - [ ] User Permissions API
 
