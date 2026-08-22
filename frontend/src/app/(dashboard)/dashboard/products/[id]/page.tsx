@@ -1,14 +1,27 @@
-
+import type { Metadata } from "next";
 import ProductDetailsPage from "@/features/dashboard/childs/products/components/ProductDetailsPage";
 
-const Product = async ({ params }: { params: { id: number } }) => {
-    const { id } = await params;
+interface ProductProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
-    
-    
-    return (
-        <ProductDetailsPage id={id} />
-    );
+export async function generateMetadata({
+  params,
+}: ProductProps): Promise<Metadata> {
+  const { id } = await params;
+
+  return {
+    title: `محصول ${id}`,
+    description: `مشاهده جزئیات محصول شماره ${id}، قیمت و اطلاعات کالا.`,
+  };
+}
+
+const Product = async ({ params }: ProductProps) => {
+  const { id } = await params;
+
+  return <ProductDetailsPage id={id} />;
 };
 
 export default Product;

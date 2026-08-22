@@ -7,14 +7,11 @@ import DebtsPageToolbar from "@/features/dashboard/childs/debts/components/Debts
 import LinkButton from "@/features/dashboard/components/LinkButton";
 import { Metadata } from "next";
 
-
-
 export const metadata: Metadata = {
-  title: "ثبت مشتری جدید",
+  title: "بدهی‌ها",
   description:
-    "ثبت مشتری جدید و ایجاد حساب مشتری در فروشگاه با استفاده از نسیه.",
+    "مدیریت بدهی‌ها، مشاهده مبالغ پرداخت‌شده و باقی‌مانده حساب مشتریان.",
 };
-
 
 interface Props {
   searchParams: Promise<{

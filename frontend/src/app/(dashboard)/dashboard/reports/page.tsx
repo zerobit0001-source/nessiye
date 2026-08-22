@@ -1,10 +1,12 @@
+import type { Metadata } from "next";
 import Container from "@/components/dash/Container";
-import SaleReportPage from "@/features/dashboard/childs/report/components/SaleReportPage";
-import ReportPageHeader from "@/features/dashboard/childs/report/components/ReportPageHeader";
-import ReportFilters from "@/features/dashboard/childs/report/components/ReportFilters";
-import ReportCards from "@/features/dashboard/childs/report/components/ReportCards";
-import ReportTopsContainer from "@/features/dashboard/childs/report/components/ReportTopsContainer";
 import ReportPage from "@/features/dashboard/childs/report/components/ReportPage";
+
+export const metadata: Metadata = {
+  title: "گزارش‌ها",
+  description:
+    "مشاهده گزارش‌های فروش، پرداخت‌ها، بدهی‌ها، مشتریان و عملکرد فروشگاه.",
+};
 
 const Report = () => {
   return (

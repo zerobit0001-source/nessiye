@@ -1,15 +1,14 @@
 "use client";
 
 import Container from "@/components/dash/Container";
-import CopyButtonSku from "@/features/dashboard/components/CopyButtonSku";
 import ProductPageHeader from "@/features/dashboard/components/ProductPageHeader";
-import { Avatar, Card, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useGetProductByIdQuery } from "../api/ApiProduct";
 import ProductDetailsPageDetails from "./ProductDetailsPageDetails";
 import ProductDetailsPageStats from "./ProductDetailsPageStats";
 import ProductRecentActivity from "./ProductRecentActivity";
 
-const ProductDetailsPage = ({ id }: { id: number }) => {
+const ProductDetailsPage = ({ id }: { id: string }) => {
   const { data, isLoading, isSuccess, error } = useGetProductByIdQuery(id);
 
   const product = isSuccess ? data.product : null;
