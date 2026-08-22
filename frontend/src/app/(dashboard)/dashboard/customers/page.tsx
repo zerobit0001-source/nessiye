@@ -1,14 +1,16 @@
 import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
-import { CustomersBranchName } from "@/data/DashboardCustomers";
-import AddCustomerModal from "@/features/dashboard/components/AddCustomerModal";
-import BranchHead from "@/features/dashboard/components/BranchHead";
 import { Box } from "@mui/material";
 import CustomersList from "@/features/dashboard/childs/customers/components/CustomersList";
-import CustomersSearch from "@/features/dashboard/childs/customers/components/CustomersSearch";
 import CustomerCards from "@/features/dashboard/childs/customers/components/CustomersCards";
 import CustomersPageToolbar from "@/features/dashboard/childs/customers/components/CustomersPageToolbar";
 import LinkButton from "@/features/dashboard/components/LinkButton";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "مشتریان",
+  description: "مدیریت مشتریان و مشاهده وضعیت حساب و بدهی مشتریان.",
+};
 
 interface Props {
   searchParams: Promise<{
@@ -37,9 +39,6 @@ const DashboardCustomers = async ({ searchParams }: Props) => {
       <CustomerCards />
       <CustomersPageToolbar />
       <Box className="w-full overflow-x-scroll xl:overflow-auto">
-        {/* <CustomersSearch /> */}
-        {/* branches */}
-        {/* <BranchHead branches={CustomersBranchName} /> */}
         <CustomersList
           search={params.search}
           ordering={params.ordering}

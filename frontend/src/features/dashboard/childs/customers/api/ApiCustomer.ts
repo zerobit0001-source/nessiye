@@ -11,7 +11,7 @@ export const ApiCustomer = api.injectEndpoints({
   endpoints: (builder) => ({
     getCustomers: builder.query<
       GetCustomersResponse,
-      { search?: string; page?: number; ordering?: string; filtering?: string }
+      { search?: string; page?: string; ordering?: string; filtering?: string }
     >({
       query: ({ search, page, ordering, filtering }) => ({
         url: "customers/",

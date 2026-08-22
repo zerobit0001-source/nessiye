@@ -2,11 +2,20 @@ import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
 import { Box } from "@mui/material";
 import DebtsList from "@/features/dashboard/childs/debts/components/DebtsList";
-import AddDebtModal from "@/features/dashboard/components/AddDebtsModal";
-import { Suspense } from "react";
 import DebtsCards from "@/features/dashboard/childs/debts/components/DebtsPageCards";
 import DebtsPageToolbar from "@/features/dashboard/childs/debts/components/DebtsPageToolbar";
 import LinkButton from "@/features/dashboard/components/LinkButton";
+import { Metadata } from "next";
+
+
+
+export const metadata: Metadata = {
+  title: "ثبت مشتری جدید",
+  description:
+    "ثبت مشتری جدید و ایجاد حساب مشتری در فروشگاه با استفاده از نسیه.",
+};
+
+
 interface Props {
   searchParams: Promise<{
     search?: string;

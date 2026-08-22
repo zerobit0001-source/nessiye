@@ -22,7 +22,7 @@ import AppTableRowSkeleton from "../../components/AppTableRowSkeleton";
 
 export interface GetCustomersParams {
   search?: string;
-  page?: number;
+  page?: string;
   ordering?: string;
   filtering?: string;
 }
