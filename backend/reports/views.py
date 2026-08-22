@@ -480,27 +480,82 @@ class ReportCustomersView(APIView):
         if cached:
             return Response(cached)
 
+        #top_customers = Sale.objects.filter(
+        #    shop=request.user,
+        #    created_at__date__gte=from_date,
+        #    created_at__date__lte=to_date,
+        #    customer__isnull=False
+        #).values(
+        #    'customer__full_name',
+        #    'customer__phone_number'
+        #).annotate(
+        #    total=Sum(
+        #        ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField())
+        #    ),
+        #    total_paid=Sum(
+        #        ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()),
+        #        filter=Q(is_debt=False)
+        #    ),
+        #    remaining=Sum(
+        #        ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()),
+        #        filter=Q(is_debt=True)
+        #    )
+        #).order_by('-total')[:10]
+
+        debt_total_subqueryi = Debt.objects.filter(
+            customer__customer_id=OuterRef('customer_id'),
+            shop=request.user
+        ).values(
+            'customer__customer_id'
+        ).annotate(
+            total=Sum('amount')
+        ).values('total')
+        
+        payment_total_subquery = Payment.objects.filter(
+            debt__customer__customer_id=OuterRef('customer_id'),
+            debt__shop=request.user
+        ).values(
+            'debt__customer__customer_id'
+        ).annotate(
+            total=Sum('amount')
+        ).values('total')
+        
+        
         top_customers = Sale.objects.filter(
             shop=request.user,
             created_at__date__gte=from_date,
             created_at__date__lte=to_date,
             customer__isnull=False
         ).values(
+            'customer_id',
             'customer__full_name',
             'customer__phone_number'
         ).annotate(
             total=Sum(
-                ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField())
+                ExpressionWrapper(
+                    F('items__price') * F('items__quantity'),
+                    output_field=IntegerField()
+                )
             ),
-            total_paid=Sum(
-                ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()),
+            total_cash=Sum(
+                ExpressionWrapper(
+                    F('items__price') * F('items__quantity'),
+                    output_field=IntegerField()
+                ),
                 filter=Q(is_debt=False)
             ),
-            remaining=Sum(
-                ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()),
-                filter=Q(is_debt=True)
+            debt_total=Coalesce(
+                Subquery(debt_total_subqueryi),
+                0
+            ),
+            payment_total=Coalesce(
+                Subquery(payment_total_subquery),
+                0
             )
+        ).annotate(
+            remaining=F('debt_total') - F('payment_total')
         ).order_by('-total')[:10]
+
 
         debt_total_subquery = (
             Debt.objects.filter(
@@ -549,13 +604,23 @@ class ReportCustomersView(APIView):
 
         result = {
             'ok': True,
+            #'top_customers': [
+            #    {
+            #        'customer_name': c['customer__full_name'],
+            #        'phone_number': c['customer__phone_number'],
+            #        'total': c['total'] or 0,
+            #        'total_paid': c['total_paid'] or 0,
+            #        'remaining': c['remaining'] or 0
+            #    }
+            #    for c in top_customers
+            #],
             'top_customers': [
                 {
                     'customer_name': c['customer__full_name'],
                     'phone_number': c['customer__phone_number'],
                     'total': c['total'] or 0,
-                    'total_paid': c['total_paid'] or 0,
-                    'remaining': c['remaining'] or 0
+                    'total_paid': c['total_cash'] or 0,
+                    'remaining': max(c['remaining'] or 0, 0)
                 }
                 for c in top_customers
             ],
