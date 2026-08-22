@@ -516,7 +516,7 @@ class CustomerHistoryView(APIView):
         total_paid = summary['total_paid'] or 0
 
         sales = Sale.objects.filter(
-            shop=request.user, customer_id=pk
+            shop=request.user, customer_id=pk, is_debt=False
         ).prefetch_related('items__product')
 
         debts = Debt.objects.filter(
