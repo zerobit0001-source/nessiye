@@ -1,19 +1,14 @@
+import { api } from "@/services/api";
 
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-export const ApiModalsData = createApi({
-    reducerPath: "ApiModalsData",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "/api/",
-        credentials: "include",
+export const ApiModalsData = api.injectEndpoints({
+  endpoints: (builder) => ({
+    getModalData: builder.query<
+      any,
+      { type: "products" | "customers" | "credits" }
+    >({
+      query: ({ type }) => `modal?type=${type}`,
     }),
-    endpoints: (builder) => ({
-        getModalData: builder.query<any, { type: 'products' | 'customers' | 'credits' }>({
-            query: ({type}) => `modal?type=${type}`,
-        }),
-    }),
+  }),
 });
 
-export const {
-    useGetModalDataQuery
-} = ApiModalsData;
+export const { useGetModalDataQuery } = ApiModalsData;

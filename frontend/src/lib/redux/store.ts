@@ -8,14 +8,7 @@ import { paymentSliceReducer } from "@/features/dashboard/childs/payments/slices
 import { productFormReducers } from "@/features/dashboard/childs/products/slices/productFormSlice";
 import { salesSliceReducer } from "@/features/dashboard/childs/debts/slices/debtsFormSlice";
 
-import { ApiProduct } from "@/features/dashboard/childs/products/api/ApiProduct";
-import { ApiCustomer } from "@/features/dashboard/childs/customers/api/ApiCustomer";
-import { ApiSales } from "@/features/dashboard/childs/sales/api/ApiSales";
-import { ApiAccount } from "@/features/account/api/ApiAccount";
-import { ApiPayment } from "@/features/dashboard/childs/payments/api/ApiPayment";
-import { ApiModalsData } from "@/features/dashboard/api/ApiModalsData";
-import { ApiDashboard } from "@/features/dashboard/childs/dashboard/api/ApiDashboard";
-import { ApiReport } from "@/features/dashboard/childs/report/api/ApiReport";
+import { api } from "@/services/api";
 
 export const store = configureStore({
   reducer: {
@@ -26,28 +19,17 @@ export const store = configureStore({
     paymentsForm: paymentSliceReducer,
     customersForm: customerSliceReducer,
     productsForm: productFormReducers,
-
-    [ApiProduct.reducerPath]: ApiProduct.reducer,
-    [ApiCustomer.reducerPath]: ApiCustomer.reducer,
-    [ApiSales.reducerPath]: ApiSales.reducer,
-    [ApiAccount.reducerPath]: ApiAccount.reducer,
-    [ApiPayment.reducerPath]: ApiPayment.reducer,
-    [ApiModalsData.reducerPath]: ApiModalsData.reducer,
-    [ApiDashboard.reducerPath]: ApiDashboard.reducer,
-    [ApiReport.reducerPath]: ApiReport.reducer,
+    
+    api: api.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
-      ApiProduct.middleware,
-      ApiCustomer.middleware,
-      ApiSales.middleware,
-      ApiAccount.middleware,
-      ApiPayment.middleware,
-      ApiModalsData.middleware,
-      ApiDashboard.middleware,
-      ApiReport.middleware,
+      api.middleware,
     ),
+  devTools: {
+    maxAge: 50,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

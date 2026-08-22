@@ -1,19 +1,11 @@
+import { api } from "@/services/api";
 import {
   addPaymentResponse,
   GetPaymentsResponse,
   PostPaymentBody,
 } from "@/types/ApiResponesesType";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const ApiPayment = createApi({
-  reducerPath: "ApiPayment",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api/",
-    credentials: "include",
-  }),
-
-  tagTypes: ["Payments"],
-
+export const ApiPayment = api.injectEndpoints({
   endpoints: (builder) => ({
     getPayments: builder.query<
       GetPaymentsResponse,
@@ -37,7 +29,7 @@ export const ApiPayment = createApi({
         method: "POST",
         body: JSON.stringify(data),
       }),
-      invalidatesTags: ["Payments"],
+      invalidatesTags: ["Payments", "Dashboard", "Debts"],
     }),
   }),
 });

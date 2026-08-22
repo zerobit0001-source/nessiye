@@ -110,7 +110,7 @@ export default function CreateDebtForm({ customerId }: CreateDebtFormProps) {
       })),
     };
 
-    const toastId = toast.loading("در حال ثبت نسیه...");
+    const toastId = toast.loading("در حال ثبت بدهی...");
 
     try {
       const result = await addSale(body).unwrap();

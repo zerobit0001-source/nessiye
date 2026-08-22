@@ -1,3 +1,4 @@
+import { api } from "@/services/api";
 import {
   GetCategoriesResponse,
   GetProductResponse,
@@ -5,17 +6,10 @@ import {
 } from "@/types/ApiResponesesType";
 import { ProductModalFormType } from "@/types/modalsTypes";
 import { GetProductsParams, ProductType } from "@/types/types";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const ApiProduct = createApi({
-  reducerPath: "ApiProduct",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api/",
-    credentials: "include",
-  }),
-  tagTypes: ["Products"],
+export const ApiProduct = api.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query < GetProductsResponse, GetProductsParams>({
+    getProducts: builder.query<GetProductsResponse, GetProductsParams>({
       query: ({ search, category, page, ordering, status }) => ({
         url: "/products/",
         params: {
