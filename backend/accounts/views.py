@@ -143,6 +143,41 @@ class RegisterVerifyCodeView(APIView):
             "access": str(refresh.access_token)
         })
 
+####################################
+
+class CustomerRegisterView(APIView):
+
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        phone_number = serializer.validated_data["phone_number"]
+
+        if User.objects.filter(phone_number=phone_number).exists():
+            return Response(
+                {"ok": False, "error": "این شماره قبلاً ثبت شده است"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = User.objects.create_user(
+            phone_number=phone_number,
+            full_name=serializer.validated_data["full_name"],
+            password=serializer.validated_data["password"],
+            is_shop=False,
+            shop_name="",
+            shop_address=""
+        )
+
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            "ok": True,
+            "message": "ثبت نام موفق",
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
+        }, status=status.HTTP_201_CREATED)
+
+##################################
+
 
 class LoginView(APIView):
 
