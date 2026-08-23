@@ -90,22 +90,6 @@ const Signup = () => {
       return;
     }
 
-    // const mypromise = new Promise((resolve, reject) => {
-    //     setTimeout(() => {
-    //         let success = true;
-    //         if (success) {
-    //             resolve("successfully");
-    //             redirect("?mode=code");
-    //         }
-    //         reject("unsuccessfully");
-    //     }, 2000);
-    // });
-    // toast.promise(mypromise, {
-    //     pending: "درحال ارسال اطلاعات",
-    //     success: "کد ارسال شده را وارد کنید",
-    //     error: "مشکلی در ارسال اطلات به وجود آمده",
-    // });
-
     try {
       setLoading(true);
       const res = await fetch("api/auth/signup", {
@@ -139,6 +123,68 @@ const Signup = () => {
       }
 
       toast.error(data.error);
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async () => {
+    const result = signupFormSchema.safeParse(formData);
+
+    if (!result.success) {
+      return;
+    }
+
+    const toastId = toast.loading("در حال ارسال اطلاعات");
+
+    try {
+      setLoading(true);
+      const res = await fetch("api/auth/customer-register", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.ok) {
+        router.replace("/main");
+        toast.update(toastId, {
+          type: "success",
+          render: "ثبت نام اننجام شد",
+          autoClose: 2000,
+          isLoading: false,
+        });
+        dispatch(
+          userInfoActions.updateForm({
+            field: "phone_number",
+            value: formData.phone_number,
+          }),
+        );
+        dispatch(
+          userInfoActions.updateForm({
+            field: "full_name",
+            value: formData.full_name,
+          }),
+        );
+        dispatch(
+          userInfoActions.updateForm({
+            field: "password",
+            value: formData.password,
+          }),
+        );
+        return;
+      }
+
+      toast.update(toastId, {
+        type: "error",
+        render: data.error,
+        autoClose: 2000,
+        isLoading: false,
+      });
 
       console.log(data);
     } catch (error) {
@@ -224,7 +270,7 @@ const Signup = () => {
         />
         <Button
           variant="contained"
-          onClick={handleSubmin}
+          onClick={handleRegister}
           disabled={!canSubmit || loading}
         >
           ثبت نام
