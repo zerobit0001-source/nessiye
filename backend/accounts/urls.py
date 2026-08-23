@@ -18,10 +18,14 @@ from .views import (
     MyShopPaymentsView,
     MyShopSaleDetailView,
     MyShopPaymentDetailView,
+    CustomerRegisterView
 )
 
 urlpatterns = [
     path("register/", RegisterView.as_view()),
+    ###################
+    path("customer/register/", CustomerRegisterView.as_view()),
+    ###################
     path("verify_register/", RegisterVerifyCodeView.as_view()),
     path("login/", LoginView.as_view()),
     path("send_otp/", SendOTPView.as_view()),
