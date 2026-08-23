@@ -1,7 +1,13 @@
 import Container from "@/components/dash/Container";
 import CreatePagesTitle from "@/features/dashboard/childs/components/CreatePagesTitle";
 import CreateSaleForm from "@/features/dashboard/childs/sales/components/CreateSaleForm";
-import { Typography } from "@mui/material";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "ثبت فروش جدید",
+  description:
+    "ثبت فروش جدید، افزودن محصولات خریداری شده و مدیریت تراکنش فروش مشتریان.",
+};
 
 interface CreateSalePageProps {
   searchParams: {

@@ -1,15 +1,19 @@
 import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
-import BranchHead from "@/features/dashboard/components/BranchHead";
-import PagesFilterLinks from "@/features/dashboard/childs/customers/components/CustomersSearch";
 import { Box } from "@mui/material";
 import SalesList from "@/features/dashboard/childs/sales/components/SalesList";
-import { SaleBranchName } from "@/data/DashboardSale";
-import AddSaleModal from "@/features/dashboard/components/AddSaleModal";
-import { Suspense } from "react";
 import SalesPageCards from "@/features/dashboard/childs/sales/components/SalesPageCard";
 import SalesToolbar from "@/features/dashboard/childs/sales/components/SalesPageToolbar";
 import LinkButton from "@/features/dashboard/components/LinkButton";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "فروش‌ها",
+  description:
+    "مشاهده و مدیریت فروش‌های ثبت شده، جزئیات تراکنش‌ها و اطلاعات خرید مشتریان.",
+};
+
 interface Props {
   searchParams: Promise<{
     search?: string;

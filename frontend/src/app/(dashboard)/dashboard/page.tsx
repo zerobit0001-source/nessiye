@@ -1,14 +1,17 @@
 import Container from "@/components/dash/Container";
-import AddPaymentModal from "@/features/dashboard/components/AddPaymentModal";
 import DashboardsCards from "@/features/dashboard/childs/dashboard/components/DashboardsCards";
 import DashboardsCharts from "@/features/dashboard/childs/dashboard/components/DashboardsCharts";
 import DashboardsRecents from "@/features/dashboard/childs/dashboard/components/DashboardsRecents";
 import { CheckAuthServer } from "@/utils/auth/CheckAuth";
-import AddSaleModal from "@/features/dashboard/components/AddSaleModal";
 import DashboardPageHeader from "@/features/dashboard/childs/dashboard/components/DashboardPageHeader";
 import QuickActions from "@/features/dashboard/childs/dashboard/components/QuickActions";
-import DateSelector from "@/features/dashboard/childs/dashboard/components/DateSelector";
-import { Typography } from "@mui/material";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "داشبورد",
+  description: "نمای کلی فروش، بدهی‌ها، پرداخت‌ها و وضعیت فروشگاه.",
+};
 
 // dasboard
 

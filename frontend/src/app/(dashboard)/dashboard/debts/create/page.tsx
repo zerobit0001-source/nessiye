@@ -1,12 +1,19 @@
+import type { Metadata } from "next";
 import Container from "@/components/dash/Container";
 import CreatePagesTitle from "@/features/dashboard/childs/components/CreatePagesTitle";
 import CreateDebtForm from "@/features/dashboard/childs/debts/components/CreateDebtForm";
 
 interface CreateDebtPageProps {
-  searchParams: {
+  searchParams: Promise<{
     customerId?: string;
-  };
+  }>;
 }
+
+export const metadata: Metadata = {
+  title: "ثبت بدهی جدید",
+  description:
+    "ثبت بدهی جدید برای مشتری، افزودن اقلام خریداری شده و مدیریت حساب نسیه.",
+};
 
 export default async function CreateDebtPage({
   searchParams,

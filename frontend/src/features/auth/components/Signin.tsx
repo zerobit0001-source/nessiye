@@ -14,9 +14,16 @@ const validatePhone = z
   .trim()
   .nonempty("شماره موبایل نمی‌تواند خالی باشد.")
   .regex(/^09\d{9}$/, "شماره موبایل باید با 09 شروع شده و 11 رقم باشد.");
+
+const validatePassword = z.string().trim().nonempty("رمز عبور الزامی است");
+
 const Signin = () => {
   const [phone, setPhone] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
   const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -26,7 +33,6 @@ const Signin = () => {
   const handleValueChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setPhone(() => e.target.value);
     const value = e.target.value;
 
     setPhone(value);
@@ -43,6 +49,7 @@ const Signin = () => {
 
   const handleSendOtpCode = async () => {
     const validationError = validatePhone.safeParse(phone);
+
     if (!validationError.success) {
       setPhoneError(validationError.error.issues[0].message);
       return;
@@ -50,8 +57,6 @@ const Signin = () => {
 
     setPhoneError(null);
     setLoading(true);
-
-    // --- Simulate API Call ---
 
     try {
       const res = await fetch("/api/auth/send-code", {
@@ -89,6 +94,53 @@ const Signin = () => {
     }
   };
 
+  const handleLoginWhitPassword = async () => {
+    const validationErrorPhone = validatePhone.safeParse(phone);
+    const validationErrorPassword = validatePassword.safeParse(password);
+
+    if (!validationErrorPhone.success) {
+      setPhoneError(validationErrorPhone.error.issues[0].message);
+      return;
+    }
+    if (!validationErrorPassword.success) {
+      setPasswordError(validationErrorPassword.error.issues[0].message);
+      return;
+    }
+
+    setPhoneError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/login-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone_number: phone,
+          password: password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!data.ok) {
+        toast.error(data.error);
+        return;
+      }
+
+      console.log(data);
+      toast.success(data.message);
+      router.replace("/main");
+    } catch (error) {
+      console.log(error);
+      toast.error("خطا در ارسال کد");
+      return;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-4 w-full border-b pb-6 border-gray-400">
@@ -116,15 +168,44 @@ const Signin = () => {
           }}
           error={!!phoneError}
           helperText={
-            phoneError
-              ? phoneError
-              : "شماره ای که با آن ثبت نام کردید"
+            phoneError ? phoneError : "شماره ای که با آن ثبت نام کردید"
+          }
+        />
+        <TextField
+          label="گذرواژه"
+          size="small"
+          type="text"
+          placeholder="abcdefg123"
+          required
+          autoComplete="off"
+          value={password}
+          onChange={(e) => {
+            const value = e.target.value;
+            setPassword(value);
+            const validationResult = validatePassword.safeParse(value);
+
+            if (!validationResult.success) {
+              setPasswordError(validationResult.error.issues[0].message);
+              return;
+            }
+
+            setPasswordError(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              // Trigger button click via its ref
+              buttonRef.current?.click();
+            }
+          }}
+          error={!!passwordError}
+          helperText={
+            passwordError ? passwordError : "شماره ای که با آن ثبت نام کردید"
           }
         />
 
         <Button
           variant="contained"
-          onClick={handleSendOtpCode}
+          onClick={handleLoginWhitPassword}
           ref={buttonRef}
           disabled={loading || !!phoneError}
         >

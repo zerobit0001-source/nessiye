@@ -1,6 +1,12 @@
 import Container from "@/components/dash/Container";
 import CreatePagesTitle from "@/features/dashboard/childs/components/CreatePagesTitle";
 import CreatePaymentForm from "@/features/dashboard/childs/payments/components/CreatePaymentForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "ثبت پرداخت جدید",
+  description: "ثبت پرداخت مشتری، تسویه بدهی‌ها و بروزرسانی وضعیت حساب نسیه.",
+};
 
 interface CreatePaymentPageProps {
   searchParams: {

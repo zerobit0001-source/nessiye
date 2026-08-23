@@ -2,11 +2,17 @@ import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
 import { Box } from "@mui/material";
 import DebtsList from "@/features/dashboard/childs/debts/components/DebtsList";
-import AddDebtModal from "@/features/dashboard/components/AddDebtsModal";
-import { Suspense } from "react";
 import DebtsCards from "@/features/dashboard/childs/debts/components/DebtsPageCards";
 import DebtsPageToolbar from "@/features/dashboard/childs/debts/components/DebtsPageToolbar";
 import LinkButton from "@/features/dashboard/components/LinkButton";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "بدهی‌ها",
+  description:
+    "مدیریت بدهی‌ها، مشاهده مبالغ پرداخت‌شده و باقی‌مانده حساب مشتریان.",
+};
+
 interface Props {
   searchParams: Promise<{
     search?: string;

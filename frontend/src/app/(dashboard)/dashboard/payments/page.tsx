@@ -1,12 +1,18 @@
 import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
 import PaymentList from "@/features/dashboard/childs/payments/components/PaymentList";
-import AddPaymentModal from "@/features/dashboard/components/AddPaymentModal";
 import PaymentsPageToolbar from "@/features/dashboard/childs/payments/components/PaymetPageToolbar";
-import PaymentsPageCards from "@/features/dashboard/childs/payments/components/PaymentsPageCards";
 import DebtsCards from "@/features/dashboard/childs/debts/components/DebtsPageCards";
 import { Box } from "@mui/material";
 import LinkButton from "@/features/dashboard/components/LinkButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "پرداختی‌ها",
+  description:
+    "مشاهده و مدیریت پرداخت‌های مشتریان، مبالغ تسویه شده و تاریخچه تراکنش‌های مالی.",
+};
+
 interface Props {
   searchParams: Promise<{
     search?: string;

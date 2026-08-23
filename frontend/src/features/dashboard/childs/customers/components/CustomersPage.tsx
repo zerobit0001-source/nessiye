@@ -108,7 +108,7 @@ const CustomersPage = ({ id }: { id: string }) => {
             <Typography variant="h6" color="info">
               {summary?.total_debt.toLocaleString("fa")} تومان
             </Typography>
-            <Typography variant="caption">چمع کل حساب</Typography>
+            <Typography variant="caption">جمع کل حساب</Typography>
           </Box>
           <Box className="flex flex-col gap-0 items-center">
             <Typography variant="h6" color="success">

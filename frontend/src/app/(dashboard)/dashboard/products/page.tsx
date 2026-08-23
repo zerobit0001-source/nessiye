@@ -1,11 +1,17 @@
 import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
-import AddProductModal from "@/features/dashboard/components/AddProductModal";
-import ProductsSearch from "@/features/dashboard/childs/products/components/ProductsSearch";
 import ProductsList from "@/features/dashboard/childs/products/components/ProductsList";
 import ProductsPageCards from "@/features/dashboard/childs/products/components/ProductsPageCards";
 import ProductsPageToolbar from "@/features/dashboard/childs/products/components/ProductsPageToolbar";
 import LinkButton from "@/features/dashboard/components/LinkButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "محصولات",
+  description:
+    "مدیریت محصولات فروشگاه، مشاهده موجودی، قیمت‌ها و اطلاعات کالاها.",
+};
+
 interface Props {
   searchParams: Promise<{
     search?: string;
