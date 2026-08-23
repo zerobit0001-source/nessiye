@@ -222,6 +222,31 @@ class CustomerListCreateView(APIView):
 
         return response
     
+    # def post(self, request):
+    #     if not request.user.is_shop:
+    #         return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+# 
+    #     phone_number = request.data.get('phone_number')
+    #     if not phone_number:
+    #         return Response({'ok': False, 'error': 'شماره تلفن الزامی است'}, status=status.HTTP_400_BAD_REQUEST)
+# 
+    #     try:
+    #         customer = User.objects.get(phone_number=phone_number, is_shop=False)
+    #     except User.DoesNotExist:
+    #         return Response({'ok': False, 'error': 'کاربر یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
+# 
+    #     if CustomerShop.objects.filter(shop=request.user, customer=customer).exists():
+    #         return Response({'ok': False, 'error': 'این مشتری قبلاً اضافه شده است'}, status=status.HTTP_400_BAD_REQUEST)
+# 
+    #     OtpCode.objects.filter(phone_number=phone_number).delete()
+# 
+    #     code = random.randint(100000, 999999)
+    #     OtpCode.objects.create(phone_number=phone_number, code=str(code))
+# 
+    #     # send_otp_code(phone_number, code)
+# 
+    #     return Response({'ok': True, 'message': 'کد تایید به مشتری ارسال شد'})
+
     def post(self, request):
         if not request.user.is_shop:
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
@@ -238,113 +263,13 @@ class CustomerListCreateView(APIView):
         if CustomerShop.objects.filter(shop=request.user, customer=customer).exists():
             return Response({'ok': False, 'error': 'این مشتری قبلاً اضافه شده است'}, status=status.HTTP_400_BAD_REQUEST)
 
-        OtpCode.objects.filter(phone_number=phone_number).delete()
+        CustomerShop.objects.create(shop=request.user, customer=customer)
+        serializer = CustomerSerializer(customer)
 
-        code = random.randint(100000, 999999)
-        OtpCode.objects.create(phone_number=phone_number, code=str(code))
+        invalidate_dashboard(request.user.id)
+        invalidate_reports(request.user.id)
 
-        # send_otp_code(phone_number, code)
-
-        return Response({'ok': True, 'message': 'کد تایید به مشتری ارسال شد'})
-
-# class CustomerListCreateView(APIView):
-#     """This view allows shop users to list their customers and add new customers by phone number with OTP verification."""
-#     permission_classes = [IsAuthenticated]
-# 
-#     def get(self, request):
-#         if not request.user.is_shop:
-#             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
-# 
-#         search_query = request.query_params.get('search', None)
-#         ordering = request.query_params.get('ordering', '-total_debts')
-#         filtering = request.query_params.get('filter', None)
-# 
-#         customer_shops = CustomerShop.objects.filter(
-#             shop=request.user
-#         ).select_related('customer').annotate(
-#             total_debts=Sum('debts__amount'),
-#             total_paid=Sum('debts__payments__amount'),
-#             last_debt=Max('debts__created_at')
-#         )
-# 
-#         if search_query:
-#             customer_shops = customer_shops.filter(
-#                 Q(customer__full_name__icontains=search_query) |
-#                 Q(customer__phone_number__icontains=search_query)
-#             )
-# 
-#         result = [
-#             {
-#                 'id': cs.customer.id,
-#                 'full_name': cs.customer.full_name,
-#                 'phone_number': cs.customer.phone_number,
-#                 'total_debts': cs.total_debts or 0,
-#                 'paid_amount': cs.total_paid or 0,
-#                 'remaining_amount': (cs.total_debts or 0) - (cs.total_paid or 0),
-#                 'last_debt': cs.last_debt
-#             }
-#             for cs in customer_shops
-#         ]
-# 
-#         # summary
-#         total = len(result)
-#         this_month = timezone.now() - timedelta(days=30)
-#         new_this_month = customer_shops.filter(created_at__gte=this_month).count()
-#         active = len([r for r in result if r['remaining_amount'] > 0])
-#         settled = len([r for r in result if r['remaining_amount'] <= 0])
-#         thirty_days_ago = timezone.now() - timedelta(days=30)
-#         overdue = len([r for r in result if r['remaining_amount'] > 0 and r['last_debt'] and r['last_debt'] < thirty_days_ago])
-# 
-#         # filtering
-#         if filtering == 'active':
-#             result = [r for r in result if r['remaining_amount'] > 0]
-#         elif filtering == 'settled':
-#             result = [r for r in result if r['remaining_amount'] <= 0]
-#         elif filtering == 'overdue':
-#             result = [r for r in result if r['remaining_amount'] > 0 and r['last_debt'] and r['last_debt'] < thirty_days_ago]
-# 
-#         # ordering
-#         reverse = ordering.startswith('-')
-#         order_field = ordering.lstrip('-')
-#         if order_field in ['total_debts', 'paid_amount', 'remaining_amount']:
-#             result = sorted(result, key=lambda x: x.get(order_field, 0), reverse=reverse)
-# 
-#         paginator = StandardPagination()
-#         page = paginator.paginate_queryset(result, request)
-#         response = paginator.get_paginated_response(page)
-#         response.data['summary'] = {
-#             'total': total,
-#             'new_this_month': new_this_month,
-#             'active': active,
-#             'settled': settled,
-#             'overdue': overdue
-#         }
-#         return response
-# 
-#     def post(self, request):
-#         if not request.user.is_shop:
-#             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
-# 
-#         phone_number = request.data.get('phone_number')
-#         if not phone_number:
-#             return Response({'ok': False, 'error': 'شماره تلفن الزامی است'}, status=status.HTTP_400_BAD_REQUEST)
-# 
-#         try:
-#             customer = User.objects.get(phone_number=phone_number, is_shop=False)
-#         except User.DoesNotExist:
-#             return Response({'ok': False, 'error': 'کاربر یافت نشد'}, status=status.HTTP_404_NOT_FOUND)
-# 
-#         if CustomerShop.objects.filter(shop=request.user, customer=customer).exists():
-#             return Response({'ok': False, 'error': 'این مشتری قبلاً اضافه شده است'}, status=status.HTTP_400_BAD_REQUEST)
-# 
-#         OtpCode.objects.filter(phone_number=phone_number).delete()
-# 
-#         code = random.randint(100000, 999999)
-#         OtpCode.objects.create(phone_number=phone_number, code=str(code))
-# 
-#         # send_otp_code(phone_number, code)
-# 
-#         return Response({'ok': True, 'message': 'کد تایید به مشتری ارسال شد'})
+        return Response({'ok': True, 'message': 'مشتری اضافه شد', 'customer': serializer.data}, status=status.HTTP_201_CREATED)
 
 
 class CustomerVerifyView(APIView):
