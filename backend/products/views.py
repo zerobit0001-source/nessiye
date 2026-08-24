@@ -227,7 +227,7 @@ class ProductDetailView(APIView):
 
         create_notification(
             shop=request.user,
-            entity='product',
+            entity='products',
             action='updated',
             title='محصول ویرایش شد',
             message=f'{product.name} - قیمت جدید {product.sell_price:,} تومان - موجودی جدید {product.stock}',
@@ -251,7 +251,7 @@ class ProductDetailView(APIView):
 
         create_notification(
             shop=request.user,
-            entity='product',
+            entity='products',
             action='deleted',
             title='محصول حذف شد',
             message=f'{product.name} - قیمت فروش {product.sell_price:,} تومان',
