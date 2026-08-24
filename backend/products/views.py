@@ -22,6 +22,7 @@ from django.core.cache import cache
 from config.cache import dashboard_key, DASHBOARD_TIMEOUT, invalidate_dashboard
 from config.cache import categories_key, CATEGORIES_TIMEOUT
 from config.cache import invalidate_dashboard, invalidate_reports, invalidate_products
+from notifications.services import create_notification
 
 class IsShop:
     @staticmethod
@@ -168,6 +169,15 @@ class ProductListCreateView(APIView):
             entity='product',
             title=f'اضافه شد {serializer.instance.name} محصول',
             object_id=serializer.instance.id
+        )
+
+        create_notification(
+            shop=request.user,
+            entity='product',
+            action='created',
+            title='محصول جدید ایجاد شد',
+            message=f'{serializer.instance.name} - قیمت فروش {serializer.instance.sell_price:,} تومان - موجودی {serializer.instance.stock}',
+            entity_id=serializer.instance.id
         )
 
         invalidate_dashboard(request.user.id)
