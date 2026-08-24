@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "debts",
     "activity",
     "reports",
+    "notifications",
 ]
 
 MIDDLEWARE = [
