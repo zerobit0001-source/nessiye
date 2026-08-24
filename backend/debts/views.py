@@ -162,7 +162,7 @@ class DebtPayView(APIView):
 
                 create_notification(
                     shop=request.user,
-                    entity='payment',
+                    entity='payments',
                     action='paid',
                     title= 'تسویه بدهی',
                     message=f'بدهی {serializer.instance.customer.customer.full_name} به مبلغ {amount} به صورت کامل توسط فروشگاه تسویه شد',
@@ -194,14 +194,14 @@ class DebtPayView(APIView):
             log_activity(
                 shop=request.user,
                 action='create',
-                entity='payment',
+                entity='payments',
                 title=f'پرداخت شد {serializer.instance.customer.customer.full_name} بدهی',
                 object_id=serializer.instance.id
             )
 
             create_notification(
                 shop=request.user,
-                entity='payment',
+                entity='payments',
                 action='paid',
                 title= 'تسویه بدهی',
                 message=f'بدهی به مبلغ {amount} توسط {serializer.instance.customer.customer.full_name} پرداخت شد',
