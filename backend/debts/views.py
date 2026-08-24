@@ -11,6 +11,7 @@ from activity.services import log_activity
 from django.db.models import Sum, Count, Q, F
 from config.cache import invalidate_dashboard, invalidate_reports
 from django.db import transaction
+from notifications.services import create_notification
 
 class DebtListView(APIView):
     """This class for debt list view for shop account"""
@@ -158,6 +159,16 @@ class DebtPayView(APIView):
 
             if pay_full:
                 amount = debt.remaining
+
+                create_notification(
+                    shop=request.user,
+                    entity='payment',
+                    action='paid',
+                    title= 'تسویه بدهی',
+                    message=f'بدهی {serializer.instance.customer.customer.full_name} به مبلغ {amount} به صورت کامل توسط فروشگاه تسویه شد',
+                    entity_id=serializer.instance.id
+                )
+
             else:
                 if not amount:
                     return Response({'ok': False, 'error': 'مبلغ الزامی است'}, status=status.HTTP_400_BAD_REQUEST)
@@ -186,6 +197,15 @@ class DebtPayView(APIView):
                 entity='payment',
                 title=f'پرداخت شد {serializer.instance.customer.customer.full_name} بدهی',
                 object_id=serializer.instance.id
+            )
+
+            create_notification(
+                shop=request.user,
+                entity='payment',
+                action='paid',
+                title= 'تسویه بدهی',
+                message=f'بدهی به مبلغ {amount} توسط {serializer.instance.customer.customer.full_name} پرداخت شد',
+                entity_id=serializer.instance.id
             )
     
             invalidate_dashboard(request.user.id)
