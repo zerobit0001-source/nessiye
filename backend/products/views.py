@@ -284,9 +284,17 @@ class ModalView(APIView):
             return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
 
         modal_type = request.query_params.get('type')
+        serach = request.query_params.get('search')
 
         if modal_type == 'customers':
             customer_shops = CustomerShop.objects.filter(shop=request.user).select_related('customer')
+
+            if serach:
+                customer_shops = customer_shops.filter(
+                    Q(customer__full_name__icontains=serach) |
+                    Q(customer__phone_number__icontains=serach)
+                )
+
             result = [
                 {
                     'id': cs.customer.id,
@@ -299,6 +307,13 @@ class ModalView(APIView):
 
         elif modal_type == 'products':
             products = Product.objects.filter(shop=request.user)
+
+            if serach:
+                products = products.filter(
+                    Q(name__icontains=serach) |
+                    Q(barcode__icontains=serach)
+                )
+
             result = [
                 {
                     'id': p.id,
@@ -318,6 +333,13 @@ class ModalView(APIView):
             
             if customer_id:
                 debts = debts.filter(customer__customer_id=customer_id)
+
+            if serach:
+                debts = debts.filter(
+                    Q(customer__customer__full_name__icontains=serach) |
+                    Q(customer__customer__phone_number__icontains=serach) |
+                    Q(debt_id__icontains=serach)
+                )
             
             result = [
                 {
