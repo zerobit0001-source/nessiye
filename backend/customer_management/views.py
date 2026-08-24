@@ -18,6 +18,7 @@ from django.utils import timezone
 from datetime import timedelta
 from config.pagination import StandardPagination
 from config.cache import invalidate_dashboard, invalidate_reports
+from notifications.services import create_notification
 
 class CustomerListCreateView(APIView):
     """
@@ -265,6 +266,15 @@ class CustomerListCreateView(APIView):
 
         CustomerShop.objects.create(shop=request.user, customer=customer)
         serializer = CustomerSerializer(customer)
+
+        create_notification(
+            shop=request.user,
+            entity='customers',
+            action='created',
+            title='مشتری جدید اضافه شد',
+            message=f'مشتری {serializer.instance.full_name} با شماره {serializer.instance.phone_number} به لیست مشتریان اضافه شد',
+            entity_id=serializer.instance.id
+        )
 
         invalidate_dashboard(request.user.id)
         invalidate_reports(request.user.id)
