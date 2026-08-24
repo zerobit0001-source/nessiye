@@ -166,7 +166,7 @@ class ProductListCreateView(APIView):
         log_activity(
             shop=request.user,
             action='create',
-            entity='products',
+            entity='product',
             title=f'اضافه شد {serializer.instance.name} محصول',
             object_id=serializer.instance.id
         )
