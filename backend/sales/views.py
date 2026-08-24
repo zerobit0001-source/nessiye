@@ -452,6 +452,15 @@ class SaleListCreateView(APIView):
                 object_id=result.instance.id,
             )
 
+            create_notification(
+                shop=request.user,
+                entity='sales',
+                action='created',
+                title='فروش ثبت شد',
+                message=f'{result.instance.customer.full_name if result.instance.customer else "بدون مشتری"} - مبلغ {sum(item.price * item.quantity for item in sale.items.all()):,} تومان',
+                entity_id=result.instance.id
+            )
+
         invalidate_dashboard(request.user.id)
         invalidate_reports(request.user.id)
 
