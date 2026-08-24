@@ -4,10 +4,10 @@ from accounts.models import User
 
 class Notification(models.Model):
     ENTITY_CHOICES = [
-        ('customer', 'customer'),
-        ('debt', 'debt'),
-        ('payment', 'payment'),
-        ('product', 'product'),
+        ('customers', 'customers'),
+        ('debts', 'debts'),
+        ('payments', 'payments'),
+        ('products', 'products'),
     ]
 
     ACTION_CHOICES = [
