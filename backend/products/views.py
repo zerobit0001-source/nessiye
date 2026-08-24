@@ -225,6 +225,15 @@ class ProductDetailView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        create_notification(
+            shop=request.user,
+            entity='product',
+            action='updated',
+            title='محصول ویرایش شد',
+            message=f'{product.name} - قیمت جدید {product.sell_price:,} تومان - موجودی جدید {product.stock}',
+            entity_id=product.id
+        )
+
         return Response({'ok': True, 'message': 'محصول با موفقیت ویرایش شد', 'product': serializer.data}, status=status.HTTP_200_OK)
     
     def delete(self, request, pk):
