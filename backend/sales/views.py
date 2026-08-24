@@ -434,7 +434,7 @@ class SaleListCreateView(APIView):
 
             create_notification(
                 shop=request.user,
-                entity='debt',
+                entity='debts',
                 action='created',
                 title='بدهی ثبت شد',
                 message=f'{customer_shop.customer.full_name} - مبلغ {total:,} تومان',
