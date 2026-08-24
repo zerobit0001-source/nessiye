@@ -166,14 +166,14 @@ class ProductListCreateView(APIView):
         log_activity(
             shop=request.user,
             action='create',
-            entity='product',
+            entity='products',
             title=f'اضافه شد {serializer.instance.name} محصول',
             object_id=serializer.instance.id
         )
 
         create_notification(
             shop=request.user,
-            entity='product',
+            entity='products',
             action='created',
             title='محصول جدید ایجاد شد',
             message=f'{serializer.instance.name} - قیمت فروش {serializer.instance.sell_price:,} تومان - موجودی {serializer.instance.stock}',
