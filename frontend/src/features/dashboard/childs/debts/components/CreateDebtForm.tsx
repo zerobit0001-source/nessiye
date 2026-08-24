@@ -1,16 +1,7 @@
 "use client";
 
 import { ProductType } from "@/types/types";
-import {
-  Autocomplete,
-  Avatar,
-  Box,
-  Button,
-  Card,
-  createFilterOptions,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Card, createFilterOptions, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAddSalesMutation } from "../../sales/api/ApiSales";
 import { useGetModalDataQuery } from "@/features/dashboard/api/ApiModalsData";
@@ -26,6 +17,9 @@ interface CreateDebtFormProps {
 
 export default function CreateDebtForm({ customerId }: CreateDebtFormProps) {
   const [scannerOpen, setScannerOpen] = useState(false);
+
+  const [search, setSearch] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const [selectedCustomer, setSelectedCustomer] = useState<{
     id: number;
@@ -50,6 +44,16 @@ export default function CreateDebtForm({ customerId }: CreateDebtFormProps) {
     }) => `${option.full_name} ${option.phone_number}`,
   });
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
+
   // products api RTKQuery
   const [
     addSale,
@@ -65,7 +69,10 @@ export default function CreateDebtForm({ customerId }: CreateDebtFormProps) {
     data: productsData,
     isLoading: isProductLoading,
     error: isProductError,
-  } = useGetModalDataQuery({ type: "products" });
+  } = useGetModalDataQuery({
+    type: "products",
+    search: search ? debouncedSearch.trim() : "",
+  });
 
   console.log("this is modals customers : ", customersData);
   console.log("this is modals products : ", productsData);
@@ -190,6 +197,8 @@ export default function CreateDebtForm({ customerId }: CreateDebtFormProps) {
           selectedProducts={selectedProducts}
           setSelectedProducts={setSelectedProducts}
           isLoading={isProductLoading}
+          search={search}
+          setSearch={setSearch}
         />
         {/* Selected products list */}
         <SelectedProductsList

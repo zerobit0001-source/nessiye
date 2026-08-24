@@ -4,9 +4,9 @@ export const ApiModalsData = api.injectEndpoints({
   endpoints: (builder) => ({
     getModalData: builder.query<
       any,
-      { type: "products" | "customers" | "credits" }
+      { type: "products" | "customers" | "credits"; search?: string }
     >({
-      query: ({ type }) => `modal?type=${type}`,
+      query: ({ type, search }) => `modal?type=${type}&search=${search}`,
     }),
   }),
 });
