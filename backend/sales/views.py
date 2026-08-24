@@ -15,6 +15,7 @@ from datetime import timedelta
 from .models import Sale, SaleItem
 from .serializers import SaleItemSerializer, SaleSerializer
 from config.cache import invalidate_dashboard, invalidate_reports
+from notifications.services import create_notification
 
 
 # class SaleListCreateView(APIView):
@@ -429,6 +430,15 @@ class SaleListCreateView(APIView):
                 object_id=Debt.objects.filter(shop=request.user, customer=customer_shop)
                 .last()
                 .id,
+            )
+
+            create_notification(
+                shop=request.user,
+                entity='debt',
+                action='created',
+                title='بدهی ثبت شد',
+                message=f'{customer_shop.customer.full_name} - مبلغ {total:,} تومان',
+                entity_id=Debt.objects.filter(shop=request.user, customer=customer_shop).last().id
             )
 
         else:
