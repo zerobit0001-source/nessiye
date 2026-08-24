@@ -53,6 +53,7 @@ export default function SelectProductDialog({
 
   const handleClose = () => {
     setOpen(false);
+    setSearch("");
   };
 
   return (

@@ -46,7 +46,7 @@ export default function CreateDebtForm({ customerId }: CreateDebtFormProps) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearch(search);
+      setDebouncedSearch(search.trim());
     }, 500);
 
     return () => {
@@ -71,7 +71,7 @@ export default function CreateDebtForm({ customerId }: CreateDebtFormProps) {
     error: isProductError,
   } = useGetModalDataQuery({
     type: "products",
-    search: search ? debouncedSearch.trim() : "",
+    search: debouncedSearch,
   });
 
   console.log("this is modals customers : ", customersData);
