@@ -911,3 +911,112 @@ class DashboardView(APIView):
 #                 }
 #             }
 #         })
+
+
+class GlobalSearchView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_shop:
+            return Response({'ok': False, 'error': 'دسترسی ندارید'}, status=status.HTTP_403_FORBIDDEN)
+
+        query = request.query_params.get('q')
+        if not query or len(query) < 2:
+            return Response({'ok': False, 'error': 'حداقل ۲ کاراکتر وارد کنید'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # مشتریان
+        customer_shops = CustomerShop.objects.filter(
+            shop=request.user
+        ).filter(
+            Q(customer__full_name__icontains=query) |
+            Q(customer__phone_number__icontains=query)
+        ).select_related('customer')[:5]
+
+        # بدهی‌ها
+        debts = Debt.objects.filter(
+            shop=request.user
+        ).filter(
+            Q(debt_id__icontains=query) |
+            Q(customer__customer__full_name__icontains=query)
+        ).select_related('customer__customer').prefetch_related('payments')[:5]
+
+        # فروش‌ها
+        sales = Sale.objects.filter(
+            shop=request.user
+        ).filter(
+            Q(id__icontains=query) |
+            Q(customer__full_name__icontains=query)
+        ).select_related('customer').annotate(
+            total=Sum(ExpressionWrapper(F('items__price') * F('items__quantity'), output_field=IntegerField()))
+        )[:5]
+
+        # محصولات
+        products = Product.objects.filter(
+            shop=request.user
+        ).filter(
+            Q(name__icontains=query) |
+            Q(barcode__icontains=query)
+        )[:5]
+
+        # پرداخت‌ها
+        payments = Payment.objects.filter(
+            debt__shop=request.user
+        ).filter(
+            Q(payment_id__icontains=query) |
+            Q(debt__customer__customer__full_name__icontains=query)
+        ).select_related('debt__customer__customer')[:5]
+
+        return Response({
+            'ok': True,
+            'query': query,
+            'results': {
+                'customers': [
+                    {
+                        'id': cs.customer.id,
+                        'full_name': cs.customer.full_name,
+                        'phone_number': cs.customer.phone_number
+                    }
+                    for cs in customer_shops
+                ],
+                'debts': [
+                    {
+                        'id': d.id,
+                        'debt_id': d.debt_id,
+                        'customer_name': d.customer.customer.full_name,
+                        'amount': d.amount,
+                        'remaining': d.remaining
+                    }
+                    for d in debts
+                ],
+                'sales': [
+                    {
+                        'id': s.id,
+                        'customer_name': s.customer.full_name if s.customer else 'مشتری حضوری',
+                        'total': s.total or 0,
+                        'is_debt': s.is_debt,
+                        'created_at': s.created_at
+                    }
+                    for s in sales
+                ],
+                'products': [
+                    {
+                        'id': p.id,
+                        'name': p.name,
+                        'barcode': p.barcode,
+                        'sell_price': p.sell_price,
+                        'stock': p.stock
+                    }
+                    for p in products
+                ],
+                'payments': [
+                    {
+                        'id': p.id,
+                        'payment_id': p.payment_id,
+                        'customer_name': p.debt.customer.customer.full_name,
+                        'amount': p.amount,
+                        'created_at': p.created_at
+                    }
+                    for p in payments
+                ]
+            }
+        })
