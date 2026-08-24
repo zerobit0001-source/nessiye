@@ -414,6 +414,25 @@ class SaleListCreateView(APIView):
             product.stock -= item["quantity"]
             product.save()
 
+            if product.stock == 0:
+                create_notification(
+                    shop=request.user,
+                    entity='products',
+                    action='out_of_stock',
+                    title='محصول تمام شد',
+                    message=f'محصول {product.name} تمام شد',
+                    entity_id=product.id
+                )
+            elif product.stock < 5:
+                create_notification(
+                    shop=request.user,
+                    entity='products',
+                    action='low_stock',
+                    title='موجودی محصول کم است',
+                    message=f'موجودی محصول {product.name} کم است - موجودی: {product.stock}',
+                    entity_id=product.id
+                )
+
         result = SaleSerializer(sale)
 
         if is_debt:
