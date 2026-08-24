@@ -248,6 +248,16 @@ class ProductDetailView(APIView):
             return Response({'ok': False, 'message': 'شما اجازه حذف این محصول را ندارید'}, status=status.HTTP_403_FORBIDDEN)
         
         product.delete()
+
+        create_notification(
+            shop=request.user,
+            entity='product',
+            action='deleted',
+            title='محصول حذف شد',
+            message=f'{product.name} - قیمت فروش {product.sell_price:,} تومان',
+            entity_id=product.id
+        )
+
         return Response({'ok': True, 'message': 'محصول با موفقیت حذف شد'}, status=status.HTTP_200_OK)
     
 
