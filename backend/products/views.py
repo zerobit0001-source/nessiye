@@ -73,9 +73,9 @@ class ProductListCreateView(APIView):
         status = request.query_params.get('status')
 
         if request.user.is_authenticated and request.user.is_shop:
-            products = Product.objects.filter(shop=request.user)
+            products = Product.objects.filter(shop=request.user, is_deleted=False)
         else:
-            products = Product.objects.all()
+            products = Product.objects.filter(is_deleted=False)
 
         if barcode:
             product = products.filter(barcode=barcode).first()
@@ -118,7 +118,7 @@ class ProductListCreateView(APIView):
             products = products.order_by(ordering_map[ordering])
 
         # summary
-        all_products = Product.objects.filter(shop=request.user) if request.user.is_authenticated and request.user.is_shop else Product.objects.all()
+        all_products = Product.objects.filter(shop=request.user, is_deleted=False) if request.user.is_authenticated and request.user.is_shop else Product.objects.all()
         total_count = all_products.count()
         total_stock = all_products.aggregate(total=Sum('stock'))['total'] or 0
         stocked_count = all_products.filter(stock__gt=10).count()
@@ -247,7 +247,7 @@ class ProductDetailView(APIView):
         if product.shop != request.user:
             return Response({'ok': False, 'message': 'شما اجازه حذف این محصول را ندارید'}, status=status.HTTP_403_FORBIDDEN)
         
-        product.delete()
+        product.soft_delete()
 
         create_notification(
             shop=request.user,
