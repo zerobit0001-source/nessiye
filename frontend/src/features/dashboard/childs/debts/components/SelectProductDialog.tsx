@@ -13,6 +13,7 @@ import {
   ListItemButton,
   ListItemText,
   TextField,
+  Typography,
 } from "@mui/material";
 import {
   CloseRounded,
@@ -103,6 +104,9 @@ export default function SelectProductDialog({
               overflowY: "auto",
             }}
           >
+            {products.length === 0 && (
+              <Typography variant="body2">محصولی یافت نشد</Typography>
+            )}
             {isLoading ? (
               <div className="flex justify-center py-6">
                 <CircularProgress size={28} />

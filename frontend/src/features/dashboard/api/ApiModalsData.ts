@@ -6,7 +6,7 @@ export const ApiModalsData = api.injectEndpoints({
       any,
       { type: "products" | "customers" | "credits"; search?: string }
     >({
-      query: ({ type, search }) => `modal?type=${type}&search=${search}`,
+      query: ({ type, search }) => `modal?type=${type}&search=${search || ""}`,
     }),
   }),
 });

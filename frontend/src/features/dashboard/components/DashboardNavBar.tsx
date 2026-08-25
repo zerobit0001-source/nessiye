@@ -44,10 +44,6 @@ const DashboardNavBar = () => {
         elevation={0}
         sx={{
           width: 380,
-          display: {
-            xs: "none",
-            md: "flex",
-          },
           alignItems: "center",
           px: 2,
           py: 0.5,
@@ -56,6 +52,7 @@ const DashboardNavBar = () => {
           border: 1,
           borderColor: "divider",
         }}
+        className="hidden lg:flex"
       >
         <Search
           sx={{
