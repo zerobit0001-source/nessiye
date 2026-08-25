@@ -1,7 +1,6 @@
 import DashboardNavBar from "@/features/dashboard/components/DashboardNavBar";
 import SideBar from "@/features/dashboard/components/SideBar";
 import SlideUpAnimation from "@/components/SlideUpAnimation";
-import MobileMenu from "@/components/dash/MobileMenu";
 import AuthHydrator from "@/utils/auth/AuthHydrateRedux";
 
 export default function MainLayout({

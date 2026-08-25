@@ -1,5 +1,6 @@
 import { api } from "@/services/api";
 import { GetDashboardCardsResponse } from "@/types/ApiResponesesType";
+import { number } from "framer-motion";
 
 const ApiDashboard = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -7,7 +8,17 @@ const ApiDashboard = api.injectEndpoints({
       query: () => "dashboard/",
       providesTags: ["Dashboard"],
     }),
+    getUnreadedNotificationsCount: builder.query<
+      { ok: boolean; unread_count: number },
+      void
+    >({
+      query: () => "notifications/unread-count/",
+      providesTags: ["Notifications-count"],
+    }),
   }),
 });
 
-export const { useGetDashboardCardsQuery } = ApiDashboard;
+export const {
+  useGetDashboardCardsQuery,
+  useGetUnreadedNotificationsCountQuery,
+} = ApiDashboard;
