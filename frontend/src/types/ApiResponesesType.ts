@@ -8,6 +8,7 @@ import {
   DebtType,
   ModalCustomersType,
   ModalProductsType,
+  OverduesListType,
   PaymentsListType,
   PaymentType,
   ProductsListType,
@@ -68,6 +69,15 @@ export interface GetDebtsResponeseType {
 export interface GetDebtByIdResponeseType {
   ok: boolean;
   debt: DebtDetailType;
+}
+
+export interface GetOverduesResponseType {
+  ok: boolean;
+  count: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+  results: OverduesListType[];
 }
 
 // products

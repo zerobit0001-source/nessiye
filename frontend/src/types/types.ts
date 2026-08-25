@@ -91,6 +91,18 @@ export interface SalesListType {
   created_at: string;
 }
 
+// overdue
+
+export type OverduesListType = {
+  id: number;
+  debt_id: string;
+  customer_name: string;
+  total_amount: number;
+  paid_amount: number;
+  remaining_amount: number;
+  created_at: string;
+};
+
 // products
 export type ProductType = {
   id: number;

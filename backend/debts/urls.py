@@ -7,5 +7,5 @@ urlpatterns = [
     path('debts/<int:pk>/pay/', DebtPayView.as_view()),
     path('debts/<str:debt_id>/customer_pay/', CustomerDebtPayView.as_view()),
     path('payments/', PaymentListView.as_view()),
-    path('overdue/', OverdueDebtsView.as_view()),
+    path('overdues/', OverdueDebtsView.as_view()),
 ]
