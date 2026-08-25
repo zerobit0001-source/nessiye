@@ -1,12 +1,10 @@
-  "use client";
+"use client";
 
 import { Typography } from "@mui/material";
 import { useGetDebtsQuery } from "../../sales/api/ApiSales";
-import DebtsCreditsRowSkeleton from "./DebtsCreditsRowSkeleton";
 import DebtsCreaditsRows from "./DebtsCreaditsRows";
 import AppTable from "../../components/AppTable";
 import { useState } from "react";
-import AppTableRowSkeleton from "../../components/AppTableRowSkeleton";
 
 interface DebtsListProps {
   search?: string;
@@ -22,7 +20,6 @@ export default function DebtsList({
   period,
 }: DebtsListProps) {
   const [page, setPage] = useState(1);
-
 
   const { data, isLoading, error } = useGetDebtsQuery({
     search,
