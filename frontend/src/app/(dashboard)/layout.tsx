@@ -16,8 +16,6 @@ export default function MainLayout({
         <SideBar />
       </aside>
 
-      {/* Mobile */}
-
       {/* Content */}
       <section className="flex flex-1 flex-col overflow-hidden">
         <DashboardNavBar />
