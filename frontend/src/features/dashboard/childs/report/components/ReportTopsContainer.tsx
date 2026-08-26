@@ -12,10 +12,8 @@ import {
 export default function ReportTopsContainer() {
   const topDebtorsQuery = useGetTopCustomersQuery();
   const topProductsQuery = useGetTopProductsQuery();
-
-  console.log("top debtors data  : ", topDebtorsQuery.data);
-  console.log("top products data  : ", topProductsQuery.data);
-
+ 
+ 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <ReportTableCard

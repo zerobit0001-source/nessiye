@@ -38,9 +38,7 @@ export default function CreatePaymentForm({
     phone_number: string;
     full_name: string;
   } | null>(null);
-
-  console.log("search params : ", customerId, debtId);
-
+ 
   const dispatch = useAppDispatch();
 
   const [selectedDebt, setSelectedDebt] = useState<DebtType | null>(null);
@@ -73,9 +71,7 @@ export default function CreatePaymentForm({
       isSuccess: addPaymentSuccess,
     },
   ] = useAddPaymentMutation();
-
-  console.log(customers);
-
+ 
   // intialize the customers
   useEffect(() => {
     if (CustomersSuccess) {
@@ -103,7 +99,7 @@ export default function CreatePaymentForm({
   // price initialization
   useEffect(() => {
     if (check && selectedDebt) {
-      console.log(selectedDebt);
+ 
       setAmount(String(selectedDebt.remaining));
     }
     if (!check) {
@@ -191,7 +187,7 @@ export default function CreatePaymentForm({
 
       resetForm();
     } catch (error: any) {
-      console.log(error);
+ 
       toast.error(error?.data?.error || "خطایی در ثبت پرداخت رخ داد");
     }
   }

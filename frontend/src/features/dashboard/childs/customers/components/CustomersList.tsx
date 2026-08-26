@@ -52,8 +52,7 @@ const CustomersList = ({
   }
 
   const customers = data?.results ?? [];
-  console.log(data);
-
+ 
   return (
     <>
       <TableContainer component={Paper}>

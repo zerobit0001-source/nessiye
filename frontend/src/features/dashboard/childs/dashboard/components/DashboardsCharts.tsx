@@ -17,13 +17,6 @@ import { useGetDashboardCardsQuery } from "../api/ApiDashboard";
 
 const DashboardsCharts = () => {
   const { data, isLoading, error } = useGetDashboardCardsQuery();
-
-  useEffect(() => {
-    if (data) {
-      console.log("Dashboard Cards Charts:", data.data.charts);
-    }
-  }, [data]);
-
   const dashboardCharts = data?.data.charts;
 
   return (

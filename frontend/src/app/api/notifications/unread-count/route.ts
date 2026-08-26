@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
-    const result = await authenticatedFetch("accounts/profile/");
+    const result = await authenticatedFetch("notifications/unread-count/");
 
     if (!result || result.response.status == 401) {
       return NextResponse.json(
@@ -31,5 +31,11 @@ export async function GET(req: Request) {
       });
     }
     return response;
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
 }

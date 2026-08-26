@@ -95,9 +95,7 @@ export default function CreateProductForm() {
     }
 
     setErrors({});
-
-    console.log(result.data);
-
+ 
     try {
       const res = await createProduct(result.data).unwrap();
 

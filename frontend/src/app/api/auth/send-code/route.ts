@@ -17,9 +17,7 @@ export async function POST(req: Request) {
         );
 
         const data = await res.json();
-
-        console.log(data);
-
+ 
         if (!res.ok || !data.ok) {
             return NextResponse.json(
                 data,

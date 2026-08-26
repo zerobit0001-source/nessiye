@@ -1,9 +1,19 @@
 import { authenticatedFetch } from "@/lib/authenticatedFetch";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function POST(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
-    const result = await authenticatedFetch("accounts/profile/");
+    const { id } = await params;
+
+    const result = await authenticatedFetch(`notifications/${id}/read/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!result || result.response.status == 401) {
       return NextResponse.json(
@@ -31,5 +41,11 @@ export async function GET(req: Request) {
       });
     }
     return response;
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error adding product:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
 }

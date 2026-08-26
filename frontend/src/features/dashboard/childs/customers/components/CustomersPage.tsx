@@ -37,9 +37,7 @@ const CustomersPage = ({ id }: { id: string }) => {
   const summary = profileSuccess ? profile.summary : null;
   const sales = creditsSuccess ? credits.sales : [];
   const debts = creditsSuccess ? credits.debts : [];
-
-  console.log(customer, summary);
-
+ 
   if (creditsLoading || profileLoading) {
     return (
       <Container>

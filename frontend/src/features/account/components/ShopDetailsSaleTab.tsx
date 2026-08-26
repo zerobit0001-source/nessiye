@@ -11,9 +11,7 @@ export default function ShopDetailsSaleTab({ shopId }: { shopId: number }) {
   if (salesQuery.isLoading) return <div>Loading...</div>;
   if (salesQuery.error) return <div>Error: {salesQuery.error.message}</div>;
   if (!salesQuery.isSuccess) return <div>No data</div>;
-
-  console.log("this is customers sales : ", salesQuery.data);
-
+ 
   return (
     <div className="flex flex-col gap-4">
       {salesQuery.data.total_pages > 1 && (

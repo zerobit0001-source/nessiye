@@ -16,7 +16,7 @@ export const CustomersDataAutoComplete: Array<CustomersUsernameAndId> = Customer
 
 export const SelectedCustomersDebts = (id: string | number) => {
     const { payeds } = GetCustomer(id);
-    console.log(payeds);
+ 
     return payeds
 }
 

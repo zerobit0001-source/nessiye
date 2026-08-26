@@ -51,9 +51,7 @@ const page = () => {
         number_of_shops: 0,
       };
   const my_shops = isSuccess ? data.shops : [];
-
-  console.log(data);
-
+ 
   return (
     <Container>
       <SlideUpAnimation>

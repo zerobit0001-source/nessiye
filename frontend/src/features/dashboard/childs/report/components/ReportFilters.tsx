@@ -30,7 +30,7 @@ export default function ReportFilters() {
     from_date: "",
     to_date: "",
   });
-  console.log(filters);
+ 
   return (
     <Card
       elevation={0}

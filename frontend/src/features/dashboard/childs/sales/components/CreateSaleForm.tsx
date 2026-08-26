@@ -80,10 +80,8 @@ export default function CreateSaleForm({
     isLoading: isProductLoading,
     error: isProductError,
   } = useGetModalDataQuery({ type: "products", search: debouncedSearch });
-
-  console.log("this is modals customers : ", customersData);
-  console.log("this is modals products : ", productsData);
-
+ 
+ 
   const customers = customersData?.customers ?? [];
   const products = productsData?.products ?? [];
 
@@ -148,7 +146,7 @@ export default function CreateSaleForm({
       setSelectedProducts([]);
       return;
     } catch (error) {
-      console.log(error);
+ 
       toast.update(toastId, {
         type: "error",
         render: "خطا در ثبت فروش",

@@ -21,9 +21,11 @@ import {
   KeyboardArrowDownRounded,
 } from "@mui/icons-material";
 import MobileMenu from "@/components/dash/MobileMenu";
+import { useGetUnreadedNotificationsCountQuery } from "../childs/dashboard/api/ApiDashboard";
 
 const DashboardNavBar = () => {
   const user = useAppSelector((s) => s.userInfo);
+  const notificationCountQuery = useGetUnreadedNotificationsCountQuery();
 
   return (
     <Box
@@ -80,11 +82,23 @@ const DashboardNavBar = () => {
       >
         <ToggleThemeBtn />
 
-        <IconButton>
-          <Badge badgeContent={3} color="error">
-            <NotificationsOutlined />
-          </Badge>
-        </IconButton>
+        {/* notification icon */}
+        <Link href={"/dashboard/notifications"}>
+          <IconButton>
+            <Badge
+              badgeContent={
+                (notificationCountQuery.isLoading
+                  ? ".."
+                  : notificationCountQuery.data?.unread_count > 99
+                    ? "+99"
+                    : notificationCountQuery.data?.unread_count) || 0
+              }
+              color="error"
+            >
+              <NotificationsOutlined />
+            </Badge>
+          </IconButton>
+        </Link>
 
         <Divider orientation="vertical" flexItem className="hidden lg:flex" />
 

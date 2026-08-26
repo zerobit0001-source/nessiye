@@ -42,8 +42,7 @@ const ProductDetailsPage = ({ id }: { id: string }) => {
       </Container>
     );
   }
-
-  console.log(product);
+ 
   return (
     <Container>
       <ProductPageHeader id={id} />

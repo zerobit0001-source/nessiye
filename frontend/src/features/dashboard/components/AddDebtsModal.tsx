@@ -82,10 +82,8 @@ const AddDebtModal = () => {
         isLoading: isProductLoading,
         error: isProductError,
     } = useGetModalDataQuery({ type: "products" }, { skip: !open });
-
-    console.log("this is modals customers : ", customersData);
-    console.log("this is modals products : ", productsData);
-
+ 
+ 
     const customers = customersData?.customers ?? [];
     const products = productsData?.products ?? [];
 
@@ -179,7 +177,7 @@ const AddDebtModal = () => {
             setSelectedProducts([]);
             return;
         } catch (error) {
-            console.log(error);
+ 
             toast.error(error.data.error || "error");
         }
     }
@@ -188,9 +186,7 @@ const AddDebtModal = () => {
         dispatch(salesSliceActions.resetForm());
         handleClose();
     };
-
-    console.log(form);
-
+ 
     return (
         <>
             <Button

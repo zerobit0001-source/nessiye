@@ -48,9 +48,7 @@ const ProductsList = ({ search, category, ordering, status }: GetProductsParams)
   if (data.results.length <= 0) {
     return <p className="text-center text-gray-500">محصولی یافت نشد.</p>;
   }
-
-  console.log(data);
-
+ 
   const pagination = {
     page,
     totalPages: data?.total_pages ?? 1,

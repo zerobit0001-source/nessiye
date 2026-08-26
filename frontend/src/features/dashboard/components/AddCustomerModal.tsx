@@ -64,17 +64,13 @@ const AddCustomerModal = () => {
         });
         if (!isValid.success) {
             toast.error(isValid.error.issues[0].message);
-            console.log(isValid.error.issues);
+ 
             return;
         }
-
-        console.log("this is from handle sent code");
-
+ 
         try {
             const result = await addCustomer(form).unwrap();
-
-            console.log("Add product result:", result);
-
+ 
             if (result.ok) {
                 toast.success("کد برای مشتری ارسال شد");
                 dispatch(customerSliceActions.resetForm());
@@ -83,7 +79,7 @@ const AddCustomerModal = () => {
                 toast.error("خطا در ارسال کد مشتری");
             }
         } catch (error) {
-            console.log("Error adding product:", error);
+ 
             toast.error(error.data.error || "خطا در ثبت مشتری");
             return;
         }
@@ -95,17 +91,13 @@ const AddCustomerModal = () => {
         });
         if (!isValid.success) {
             toast.error(isValid.error.issues[0].message);
-            console.log(isValid.error.issues);
+ 
             return;
         }
-
-        console.log("this from handle verify code");
-
+ 
         try {
             const result = await verifyCustomer(form).unwrap();
-
-            console.log("Add product result:", result);
-
+ 
             if (result.ok) {
                 toast.success("مشتری اضافه شد");
                 dispatch(customerSliceActions.resetForm());
@@ -115,7 +107,7 @@ const AddCustomerModal = () => {
                 toast.error("خطا در اضافه کردن مشتری");
             }
         } catch (error) {
-            console.log("Error adding product:", error);
+ 
             toast.error(error.data.error || "خطا در ثبت مشتری");
             return;
         }

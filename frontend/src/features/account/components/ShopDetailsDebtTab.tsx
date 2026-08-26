@@ -12,9 +12,7 @@ export default function ShopDetailsDebtTab({ shopId }: { shopId: number }) {
   if (debtsQuery.isLoading) return <div>Loading...</div>;
   if (debtsQuery.error) return <div>Error: {debtsQuery.error.message}</div>;
   if (!debtsQuery.isSuccess) return <div>No data</div>;
-
-  console.log("this is customers debts : ", debtsQuery.data);
-
+ 
   return (
     <div className="flex flex-col gap-4">
       {debtsQuery.data.total_pages > 1 && (

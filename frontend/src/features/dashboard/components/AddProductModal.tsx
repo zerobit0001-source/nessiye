@@ -54,9 +54,7 @@ const AddProductModal = () => {
     isLoading: categoryIsLoading,
     error: categoryError,
   } = useGetCategoriesQuery();
-
-  console.log(categoriesData);
-
+ 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let { name, value }: { name: string; value: string | number } = e.target;
     if (name === "buy_price" || name === "sell_price" || name === "stock") {
@@ -80,15 +78,13 @@ const AddProductModal = () => {
     const isValid = validateAddProductForm.safeParse(form);
     if (!isValid.success) {
       toast.error(isValid.error.issues[0].message);
-      console.log(isValid.error.issues);
+ 
       return;
     }
 
     try {
       const result = await addProduct(form).unwrap();
-
-      console.log("Add product result:", result);
-
+ 
       if (result.ok) {
         toast.success("محصول با موفقیت ثبت شد");
         dispatch(productFormActions.resetForm());

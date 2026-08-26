@@ -44,9 +44,7 @@ export default function DebtsList({
   // if (!debts.length) {
   //   return <Typography>بدهی‌ای یافت نشد.</Typography>;
   // }
-
-  console.log(data);
-
+ 
   return (
     <AppTable
       headers={[

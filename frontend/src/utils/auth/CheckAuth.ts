@@ -20,9 +20,7 @@ export const CheckAuthServer = async () => {
     const cookieStore = await cookies()
 
     const Token = cookieStore.get("access")
-
-    console.log("cheking");
-
+ 
     if (!Token) {
         redirect("auth?mode=signin")
     }
@@ -35,8 +33,6 @@ export const SignoutAuth = async () => {
     const cookieStore = await cookies()
 
     cookieStore.delete("access")
-
-    console.log('object');
-
+ 
     redirect('/auth?mode=signin')
 }

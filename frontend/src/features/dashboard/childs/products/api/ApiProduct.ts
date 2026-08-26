@@ -36,14 +36,14 @@ export const ApiProduct = api.injectEndpoints({
         method: "POST",
         body: newProduct,
       }),
-      invalidatesTags: ["Products"],
+      invalidatesTags: ["Products", "Notifications-count"],
     }),
     deleteProduct: builder.mutation<any, any>({
       query: (id) => ({
         url: `products/${id}/`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Products"],
+      invalidatesTags: ["Products", "Notifications-count"],
     }),
     updateProduct: builder.mutation<
       { ok: boolean; product: ProductType },
@@ -54,7 +54,7 @@ export const ApiProduct = api.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Products"],
+      invalidatesTags: ["Products", "Notifications-count"],
     }),
     getCategories: builder.query<GetCategoriesResponse, void>({
       query: () => "products/categories/",

@@ -58,9 +58,7 @@ const ShopDetailsPage = ({
         total_paid: 0,
         total_remaining: 0,
       };
-
-  console.log(data);
-
+ 
   return (
     <Container>
       <SlideUpAnimation>

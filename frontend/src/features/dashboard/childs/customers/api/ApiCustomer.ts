@@ -45,7 +45,7 @@ export const ApiCustomer = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(data),
       }),
-      invalidatesTags: ["Customers"],
+      invalidatesTags: ["Customers", "Notifications-count"],
     }),
     verifyCustomer: builder.mutation<
       { ok: boolean; message: string; customer: CustomerType },
@@ -56,7 +56,7 @@ export const ApiCustomer = api.injectEndpoints({
         method: "POST",
         body: JSON.stringify(data),
       }),
-      invalidatesTags: ["Customers"],
+      invalidatesTags: ["Customers", "Notifications-count"],
     }),
   }),
 });

@@ -13,7 +13,6 @@ export async function GET(req: Request) {
             ? `customers/?${queryString}`
             : "customers/";
 
-        console.log(endpoint)
         const result = await authenticatedFetch(endpoint)
 
         if (!result || result.response.status == 401) {

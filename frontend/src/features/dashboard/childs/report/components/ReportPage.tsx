@@ -23,9 +23,7 @@ export default function ReportPage() {
   if (!chartQuery.data?.charts || !cardQuery.data?.summary) {
     return <div>hi</div>;
   }
-
-  console.log(chartQuery.data);
-
+ 
   return (
     <>
       <ReportPageHeader />
