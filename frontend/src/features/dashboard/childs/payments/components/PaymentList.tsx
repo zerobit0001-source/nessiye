@@ -20,9 +20,7 @@ const PaymentList = ({ search, status, ordering, period }: Props) => {
     period,
     page,
   });
-
-  console.log("this is period", period);
-
+ 
   // if (isLoading) {
   //   return Array.from({ length: 8 }).map((_, index) => (
   //     <PaymentsRowSkeleton key={index} />
@@ -33,7 +31,7 @@ const PaymentList = ({ search, status, ordering, period }: Props) => {
   }
 
   const payments = data?.results ?? [];
-  console.log(data);
+ 
   return (
     <AppTable
       headers={["شناسه", "مشتری", "مبلغ", "روش پرداخت", "تاریخ", ""]}

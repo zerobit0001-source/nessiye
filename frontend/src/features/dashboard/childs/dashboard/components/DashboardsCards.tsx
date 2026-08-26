@@ -7,13 +7,6 @@ import { useEffect } from "react";
 
 const DashboardsCards = () => {
   const { data, isLoading, error } = useGetDashboardCardsQuery();
-
-  useEffect(() => {
-    if (data) {
-      console.log("Dashboard Cards Data:", data);
-    }
-  }, [data]);
-
   const dashboardData = data?.data;
 
   return (

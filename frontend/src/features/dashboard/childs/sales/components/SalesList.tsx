@@ -38,9 +38,7 @@ const SalesList = ({ search, ordering, status, period }: Props) => {
   }
 
   const sales = data?.results ?? [];
-
-  console.log(data);
-
+ 
   return (
     <AppTable
       headers={headers}

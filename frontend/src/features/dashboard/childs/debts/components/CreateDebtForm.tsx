@@ -73,10 +73,8 @@ export default function CreateDebtForm({ customerId }: CreateDebtFormProps) {
     type: "products",
     search: debouncedSearch,
   });
-
-  console.log("this is modals customers : ", customersData);
-  console.log("this is modals products : ", productsData);
-
+ 
+ 
   const customers = customersData?.customers ?? [];
   const products = productsData?.products ?? [];
 
@@ -141,7 +139,7 @@ export default function CreateDebtForm({ customerId }: CreateDebtFormProps) {
       setSelectedCustomer(null);
       setSelectedProducts([]);
     } catch (error) {
-      console.log(error);
+ 
       const message = (error as { data?: { error?: string } })?.data?.error;
       toast.update(toastId, {
         type: "error",

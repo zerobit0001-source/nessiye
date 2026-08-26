@@ -7,10 +7,8 @@ export async function GET(
 ) {
   try {
     const { id, paymentId } = await params;
-
-    console.log("shop id from route handler : ", id);
-    console.log("payment id from route handler : ", paymentId);
-
+ 
+ 
     const result = await authenticatedFetch(
       `accounts/me/shops/${id}/payments/${paymentId}`,
     );

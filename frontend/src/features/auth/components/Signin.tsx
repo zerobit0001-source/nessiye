@@ -75,8 +75,7 @@ const Signin = () => {
         toast.error(data.error);
         return;
       }
-
-      console.log(data);
+ 
       dispatch(
         userInfoActions.updateForm({
           field: "phone_number",
@@ -86,7 +85,7 @@ const Signin = () => {
       toast.success(data.message);
       router.push("?mode=login-code");
     } catch (error) {
-      console.log(error);
+ 
       toast.error("خطا در ارسال کد");
       return;
     } finally {
@@ -128,12 +127,11 @@ const Signin = () => {
         toast.error(data.error);
         return;
       }
-
-      console.log(data);
+ 
       toast.success(data.message);
       router.replace("/main");
     } catch (error) {
-      console.log(error);
+ 
       toast.error("خطا در ارسال کد");
       return;
     } finally {

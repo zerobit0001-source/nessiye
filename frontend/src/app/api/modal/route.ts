@@ -6,10 +6,8 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type");
     const search = searchParams.get("search") || "";
-
-    console.log("type: ", type);
-    console.log("search: ", search);
-
+ 
+ 
     const result = await authenticatedFetch(
       `modal?type=${type}&search=${search}`,
     );

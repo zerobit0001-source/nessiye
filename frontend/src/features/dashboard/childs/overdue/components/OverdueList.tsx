@@ -8,9 +8,7 @@ export default function OverdueList() {
   const [page, setPage] = useState(1);
 
   const overdueQuery = useGetOverduesQuery();
-
-  console.log("overdues data : ", overdueQuery.data);
-
+ 
   const overdues = overdueQuery.data?.results ?? [];
 
   return (

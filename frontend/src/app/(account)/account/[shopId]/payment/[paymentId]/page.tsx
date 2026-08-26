@@ -8,8 +8,8 @@ export default async function page({
   const { shopId, paymentId } = await params;
   const shopIdNumber = Number(shopId);
   const paymentIdNumber = paymentId;
-  console.log("shop ID : ", shopId);
-  console.log("payment ID : ", paymentId);
+ 
+ 
   return (
     <AccountPaymentDetailsPage
       paymentId={paymentIdNumber}

@@ -4,9 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-
-    console.log("this is otp code : ", body);
-
+ 
     const res = await fetch(`${env.API_BASE_URL}accounts/customer/register/`, {
       method: "POST",
       headers: {

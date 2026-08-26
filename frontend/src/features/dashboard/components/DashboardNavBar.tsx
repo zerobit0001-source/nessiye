@@ -26,9 +26,7 @@ import { useGetUnreadedNotificationsCountQuery } from "../childs/dashboard/api/A
 const DashboardNavBar = () => {
   const user = useAppSelector((s) => s.userInfo);
   const notificationCountQuery = useGetUnreadedNotificationsCountQuery();
-
-  console.log(notificationCountQuery.data);
-
+ 
   return (
     <Box
       component="header"

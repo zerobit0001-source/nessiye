@@ -71,10 +71,8 @@ const AddSaleModal = () => {
     addSale,
     { data: addSaleRes, isLoading: addSaleLoading, error: addSaleError },
   ] = useAddSalesMutation();
-
-  console.log("this is modals customers : ", customersData);
-  console.log("this is modals products : ", productsData);
-
+ 
+ 
   const customers = customersData?.customers ?? [];
   const products = productsData?.products ?? [];
 
@@ -137,7 +135,7 @@ const AddSaleModal = () => {
       setSelectedProducts([]);
       return;
     } catch (error) {
-      console.log(error);
+ 
       toast.error("error");
     }
   }
@@ -146,9 +144,7 @@ const AddSaleModal = () => {
     dispatch(salesSliceActions.resetForm());
     handleClose();
   };
-
-  console.log(form);
-
+ 
   return (
     <>
       <Button

@@ -12,9 +12,7 @@ export default function ShopDetailsPaymentTab({ shopId }: { shopId: number }) {
   if (paymentsQuery.error)
     return <div>Error: {paymentsQuery.error.message}</div>;
   if (!paymentsQuery.isSuccess) return <div>No data</div>;
-
-  console.log("this is customers payments : ", paymentsQuery.data);
-
+ 
   return (
     <div className="flex flex-col gap-4">
       {paymentsQuery.data.total_pages > 1 && (

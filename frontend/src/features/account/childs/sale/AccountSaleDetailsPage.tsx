@@ -30,8 +30,7 @@ export default function AccountSaleDetailsPage({
   if (!isSuccess) return <div>No data</div>;
 
   const sale = isSuccess ? data?.sale : null;
-
-  console.log(data);
+ 
   return (
     <Container>
       <SlideUpAnimation>

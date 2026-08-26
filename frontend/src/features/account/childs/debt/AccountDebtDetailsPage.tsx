@@ -31,8 +31,7 @@ export default function AccountDebtDetailsPage({
   if (!isSuccess) return <div>No data</div>;
 
   const debt = isSuccess ? data?.debt : null;
-
-  console.log(data);
+ 
   return (
     <Container>
       <SlideUpAnimation>

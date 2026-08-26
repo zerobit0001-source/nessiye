@@ -104,7 +104,7 @@ const AddDebtForCustomerModal = ({ customer }: { customer: CustomerType }) => {
             setSelectedProducts([]);
             return;
         } catch (error) {
-            console.log(error);
+ 
             toast.error(error.data.error || "error");
         }
     }
@@ -167,8 +167,7 @@ const AddDebtForCustomerModal = ({ customer }: { customer: CustomerType }) => {
 
         setScannerOpen(false);
     };
-
-    console.log(form);
+ 
     return (
         <>
             <Button

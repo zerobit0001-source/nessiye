@@ -168,10 +168,9 @@ const ShopRegister = () => {
             }
 
             toast.error(data.error);
-
-            console.log(data);
+ 
         } catch (error) {
-            console.log(error);
+ 
         } finally {
             setLoading(false);
         }

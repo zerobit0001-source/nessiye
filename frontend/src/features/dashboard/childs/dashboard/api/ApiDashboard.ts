@@ -15,10 +15,21 @@ const ApiDashboard = api.injectEndpoints({
       query: () => "notifications/unread-count/",
       providesTags: ["Notifications-count"],
     }),
+    getNotifications: builder.query({
+      query: ({ type }) => ({
+        url: "notifications/",
+        params: {
+          type,
+        },
+      }),
+      providesTags: ["Notifications"],
+    }),
   }),
 });
 
 export const {
   useGetDashboardCardsQuery,
   useGetUnreadedNotificationsCountQuery,
+  useGetNotificationsQuery,
+  
 } = ApiDashboard;

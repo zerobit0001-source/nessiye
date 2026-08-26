@@ -27,7 +27,8 @@ export const api = createApi({
     "Shop/Payments",
     "Sales",
     "Debts",
-    "Notifications-count"
+    "Notifications",
+    "Notifications-count",
   ],
 
   endpoints: () => ({}),

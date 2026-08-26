@@ -123,10 +123,9 @@ const Signup = () => {
       }
 
       toast.error(data.error);
-
-      console.log(data);
+ 
     } catch (error) {
-      console.log(error);
+ 
     } finally {
       setLoading(false);
     }
@@ -185,10 +184,9 @@ const Signup = () => {
         autoClose: 2000,
         isLoading: false,
       });
-
-      console.log(data);
+ 
     } catch (error) {
-      console.log(error);
+ 
     } finally {
       setLoading(false);
     }

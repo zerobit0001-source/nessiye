@@ -72,10 +72,6 @@ export default function ShopDetailsTab({ shopId }: ShopDetailsProps) {
     setValue(newValue);
   };
 
-  // console.log("this is customers debts : ", debts);
-  // console.log("this is customers sales : ", sales);
-  // console.log("this is customers payments : ", payments);
-
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

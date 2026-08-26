@@ -29,7 +29,7 @@ export default function CreateCustomerForm() {
 
   const handleSendCode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(form);
+ 
     const validation = validateAddCustomerForm.safeParse({
       phone_number: form.phone_number,
     });
@@ -52,9 +52,7 @@ export default function CreateCustomerForm() {
 
     try {
       const result = await sendCode(form).unwrap();
-
-      console.log("Add product result:", result);
-
+ 
       if (result.ok) {
         toast.success("کد برای مشتری ارسال شد");
         setIsCode(true);
@@ -62,7 +60,7 @@ export default function CreateCustomerForm() {
         toast.error("خطا در ارسال کد مشتری");
       }
     } catch (error) {
-      console.log("Error adding product:", error);
+ 
       toast.error(error.data.error || "خطا در ثبت مشتری");
       return;
     }
@@ -94,9 +92,7 @@ export default function CreateCustomerForm() {
 
     try {
       const result = await verifyCustomer(form).unwrap();
-
-      console.log("Add customer result:", result);
-
+ 
       if (result.ok) {
         toast.update(toastId, {
           type: "success",
@@ -115,7 +111,7 @@ export default function CreateCustomerForm() {
         });
       }
     } catch (error) {
-      console.log("Error adding customer:", error);
+ 
       toast.error(error.data.error || "خطا در ثبت مشتری");
       return;
     }

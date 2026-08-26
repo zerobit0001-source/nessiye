@@ -25,8 +25,7 @@ export default function AccountPaymentDetailsPage({
   if (!isSuccess) return <div>No data</div>;
 
   const payment = isSuccess ? data.payment : null;
-
-  console.log(payment);
+ 
   return (
     <Container>
       <SlideUpAnimation>

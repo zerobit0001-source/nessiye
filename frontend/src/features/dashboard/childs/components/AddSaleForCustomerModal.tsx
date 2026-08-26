@@ -100,7 +100,7 @@ const AddSaleForCustomerModal = ({ customer }: { customer: CustomerType }) => {
       setSelectedProducts([]);
       return;
     } catch (error) {
-      console.log(error);
+ 
       toast.error("error");
     }
   }
@@ -109,9 +109,7 @@ const AddSaleForCustomerModal = ({ customer }: { customer: CustomerType }) => {
     dispatch(salesSliceActions.resetForm());
     handleClose();
   };
-
-  console.log(form);
-
+ 
   return (
     <>
       <Button
