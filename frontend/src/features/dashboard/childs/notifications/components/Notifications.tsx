@@ -5,9 +5,9 @@ import { useGetNotificationsQuery } from "../../dashboard/api/ApiDashboard";
 
 export default function Notifications() {
 
-  const NotificationsQuery = useGetNotificationsQuery()
+  const NotificationsQuery = useGetNotificationsQuery({type : ""})
 
-  console.log(NotificationsQuery.data)
+  console.log("this is notifications",NotificationsQuery.data)
   
   
   return (

@@ -1,10 +1,11 @@
 import Container from "@/components/dash/Container";
 import DashboardsPageHeader from "@/components/dash/DashboardsPageHeader";
+import Notifications from "@/features/dashboard/childs/notifications/components/Notifications";
 import NotificationsPageCards from "@/features/dashboard/childs/notifications/components/NotificationsPageCards";
 import NotificationsPageFilter from "@/features/dashboard/childs/notifications/components/NotificationsPageFilters";
 import { Button } from "@mui/material";
 
-export default async function Notifications() {
+export default async function NotificationsPage() {
   return (
     <Container>
       <div className="w-full mx-auto flex flex-col gap-4 lg:max-w-250">
@@ -18,7 +19,7 @@ export default async function Notifications() {
         </DashboardsPageHeader>
         <NotificationsPageCards />
         <NotificationsPageFilter />
-        {/*<Notifications />  */}
+        <Notifications />
       </div>
     </Container>
   );
