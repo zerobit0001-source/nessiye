@@ -160,14 +160,14 @@ class DebtPayView(APIView):
             if pay_full:
                 amount = debt.remaining
 
-                create_notification(
-                    shop=request.user,
-                    entity='payments',
-                    action='paid',
-                    title= 'تسویه بدهی',
-                    message=f'بدهی {serializer.instance.customer.customer.full_name} به مبلغ {amount} به صورت کامل توسط فروشگاه تسویه شد',
-                    entity_id=serializer.instance.id
-                )
+                # create_notification(
+                #     shop=request.user,
+                #     entity='payments',
+                #     action='paid',
+                #     title= 'تسویه بدهی',
+                #     message=f'بدهی {serializer.instance.customer.customer.full_name} به مبلغ {amount} به صورت کامل توسط فروشگاه تسویه شد',
+                #     entity_id=serializer.instance.id
+                # )
 
             else:
                 if not amount:
@@ -199,14 +199,14 @@ class DebtPayView(APIView):
                 object_id=serializer.instance.id
             )
 
-            create_notification(
-                shop=request.user,
-                entity='payments',
-                action='paid',
-                title= 'تسویه بدهی',
-                message=f'بدهی به مبلغ {amount} توسط {serializer.instance.customer.customer.full_name} پرداخت شد',
-                entity_id=serializer.instance.id
-            )
+            # create_notification(
+            #     shop=request.user,
+            #     entity='payments',
+            #     action='paid',
+            #     title= 'تسویه بدهی',
+            #     message=f'بدهی به مبلغ {amount} توسط {serializer.instance.customer.customer.full_name} پرداخت شد',
+            #     entity_id=serializer.instance.id
+            # )
     
             invalidate_dashboard(request.user.id)
             invalidate_reports(request.user.id)
