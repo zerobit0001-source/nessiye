@@ -1,3 +1,4 @@
+"use client";
 import { NotificationType } from "@/types/types";
 import {
   Inventory2Rounded,
@@ -5,6 +6,8 @@ import {
   PersonRounded,
   ReceiptLongRounded,
 } from "@mui/icons-material";
+import { useReadMessageByIdMutation } from "../../dashboard/api/ApiDashboard";
+import { toast } from "react-toastify";
 
 type Props = {
   notification: NotificationType;
@@ -19,6 +22,33 @@ const entityIcons = {
 
 export default function NotificationCard({ notification }: Props) {
   const Icon = entityIcons[notification.entity] ?? ReceiptLongRounded;
+
+  const [readNotifecation, { data, isLoading, isError }] =
+    useReadMessageByIdMutation();
+
+  const handleReadNotification = async (id: number) => {
+    const loadingToast = toast.loading("در حال خواندن اعلان...");
+    console.log("this notification clicked : ", id);
+    try {
+      await readNotifecation(id).unwrap();
+
+      toast.update(loadingToast, {
+        render: "اعلان با موفقیت خوانده شد",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Failed to read notification:", error);
+
+      toast.update(loadingToast, {
+        render: "خواندن اعلان ناموفق بود",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
+  };
 
   return (
     <div
@@ -42,6 +72,9 @@ export default function NotificationCard({ notification }: Props) {
             : "bg-[#f7fcfb] hover:bg-[#f2faf8]"
         }
       `}
+      onClick={() =>
+        notification.is_read ? null : handleReadNotification(notification.id)
+      }
     >
       {/* Unread indicator */}
       {!notification.is_read && (

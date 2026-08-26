@@ -3,7 +3,6 @@ import {
   GetDashboardCardsResponse,
   GetNotificationsResponseType,
 } from "@/types/ApiResponesesType";
-import { number } from "framer-motion";
 
 const ApiDashboard = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -30,6 +29,13 @@ const ApiDashboard = api.injectEndpoints({
       }),
       providesTags: ["Notifications"],
     }),
+    readMessageById: builder.mutation({
+      query: (id) => ({
+        url: `notifications/${id}/`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Notifications", "Notifications-count"],
+    }),
   }),
 });
 
@@ -37,4 +43,5 @@ export const {
   useGetDashboardCardsQuery,
   useGetUnreadedNotificationsCountQuery,
   useGetNotificationsQuery,
+  useReadMessageByIdMutation,
 } = ApiDashboard;

@@ -26,7 +26,7 @@ import { useGetUnreadedNotificationsCountQuery } from "../childs/dashboard/api/A
 const DashboardNavBar = () => {
   const user = useAppSelector((s) => s.userInfo);
   const notificationCountQuery = useGetUnreadedNotificationsCountQuery();
- 
+
   return (
     <Box
       component="header"
@@ -83,20 +83,22 @@ const DashboardNavBar = () => {
         <ToggleThemeBtn />
 
         {/* notification icon */}
-        <IconButton>
-          <Badge
-            badgeContent={
-              (notificationCountQuery.isLoading
-                ? ".."
-                : notificationCountQuery.data?.unread_count > 99
-                  ? "+99"
-                  : notificationCountQuery.data?.unread_count) || 0
-            }
-            color="error"
-          >
-            <NotificationsOutlined />
-          </Badge>
-        </IconButton>
+        <Link href={"/dashboard/notifications"}>
+          <IconButton>
+            <Badge
+              badgeContent={
+                (notificationCountQuery.isLoading
+                  ? ".."
+                  : notificationCountQuery.data?.unread_count > 99
+                    ? "+99"
+                    : notificationCountQuery.data?.unread_count) || 0
+              }
+              color="error"
+            >
+              <NotificationsOutlined />
+            </Badge>
+          </IconButton>
+        </Link>
 
         <Divider orientation="vertical" flexItem className="hidden lg:flex" />
 
