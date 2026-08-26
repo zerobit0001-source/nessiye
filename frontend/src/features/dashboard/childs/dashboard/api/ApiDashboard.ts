@@ -1,5 +1,8 @@
 import { api } from "@/services/api";
-import { GetDashboardCardsResponse } from "@/types/ApiResponesesType";
+import {
+  GetDashboardCardsResponse,
+  GetNotificationsResponseType,
+} from "@/types/ApiResponesesType";
 import { number } from "framer-motion";
 
 const ApiDashboard = api.injectEndpoints({
@@ -15,11 +18,14 @@ const ApiDashboard = api.injectEndpoints({
       query: () => "notifications/unread-count/",
       providesTags: ["Notifications-count"],
     }),
-    getNotifications: builder.query({
-      query: ({ type }) => ({
+    getNotifications: builder.query<
+      GetNotificationsResponseType,
+      { is_read: "" | false }
+    >({
+      query: ({ is_read }) => ({
         url: "notifications/",
         params: {
-          type,
+          is_read,
         },
       }),
       providesTags: ["Notifications"],
@@ -31,5 +37,4 @@ export const {
   useGetDashboardCardsQuery,
   useGetUnreadedNotificationsCountQuery,
   useGetNotificationsQuery,
-  
 } = ApiDashboard;

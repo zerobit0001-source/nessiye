@@ -292,4 +292,5 @@ export interface GetNotificationsResponseType {
   page_size: number;
   total_pages: number;
   results: NotificationType[]
+  unread_count : number
 }
