@@ -1,15 +1,22 @@
+"use client";
+
 import { Card } from "@mui/material";
+import { useGetNotificationsQuery } from "../../dashboard/api/ApiDashboard";
 
 export default function NotificationsPageCards() {
+  const { data, isLoading, isError } = useGetNotificationsQuery({
+    is_read: "",
+  });
+
   const cards = [
     {
       title: "همه اعلان‌ها",
-      value: 15,
+      value: data?.count ?? 0,
       iconClass: "text-slate-900",
     },
     {
       title: "خوانده نشده",
-      value: 5,
+      value: data?.unread_count ?? 0,
       iconClass: "text-emerald-500",
     },
     {

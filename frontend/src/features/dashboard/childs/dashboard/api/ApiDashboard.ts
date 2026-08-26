@@ -19,7 +19,7 @@ const ApiDashboard = api.injectEndpoints({
     }),
     getNotifications: builder.query<
       GetNotificationsResponseType,
-      { is_read: "" | false }
+      { is_read: "true" | "false" | "" }
     >({
       query: ({ is_read }) => ({
         url: "notifications/",

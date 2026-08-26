@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const filters = [
   {
@@ -15,10 +15,30 @@ const filters = [
     label: "خوانده شده",
     value: "read",
   },
-];
+] as const;
+
+type FilterValue = (typeof filters)[number]["value"];
 
 export default function NotificationsPageFilter() {
-  const [activeFilter, setActiveFilter] = useState("all");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const activeFilter =
+    (searchParams.get("filter") as FilterValue | null) ?? "all";
+
+  const handleFilterChange = (value: FilterValue) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (value === "all") {
+      params.delete("filter");
+    } else {
+      params.set("filter", value);
+    }
+
+    params.delete("page");
+
+    router.push(`?${params.toString()}`);
+  };
 
   return (
     <div className="flex items-center gap-2">
@@ -29,7 +49,7 @@ export default function NotificationsPageFilter() {
           <button
             key={filter.value}
             type="button"
-            onClick={() => setActiveFilter(filter.value)}
+            onClick={() => handleFilterChange(filter.value)}
             className={`
               h-9
               px-4

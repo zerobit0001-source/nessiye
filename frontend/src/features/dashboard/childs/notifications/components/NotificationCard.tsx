@@ -8,6 +8,8 @@ import {
 } from "@mui/icons-material";
 import { useReadMessageByIdMutation } from "../../dashboard/api/ApiDashboard";
 import { toast } from "react-toastify";
+import { Card, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 type Props = {
   notification: NotificationType;
@@ -26,11 +28,12 @@ export default function NotificationCard({ notification }: Props) {
   const [readNotifecation, { data, isLoading, isError }] =
     useReadMessageByIdMutation();
 
-  const handleReadNotification = async (id: number) => {
+  const router = useRouter();
+
+  const handleReadNotification = async (notification: NotificationType) => {
     const loadingToast = toast.loading("در حال خواندن اعلان...");
-    console.log("this notification clicked : ", id);
     try {
-      await readNotifecation(id).unwrap();
+      await readNotifecation(notification.id).unwrap();
 
       toast.update(loadingToast, {
         render: "اعلان با موفقیت خوانده شد",
@@ -38,6 +41,10 @@ export default function NotificationCard({ notification }: Props) {
         isLoading: false,
         autoClose: 2000,
       });
+
+      if (notification.entity !== "payments") {
+        router.push(`${notification.entity}/${notification.entity_id}`);
+      }
     } catch (error) {
       console.error("Failed to read notification:", error);
 
@@ -51,7 +58,8 @@ export default function NotificationCard({ notification }: Props) {
   };
 
   return (
-    <div
+    <Card
+      elevation={1}
       className={`
         relative
         w-full
@@ -65,15 +73,10 @@ export default function NotificationCard({ notification }: Props) {
         transition-colors
         duration-200
         cursor-pointer
-
-        ${
-          notification.is_read
-            ? "bg-white hover:bg-slate-50"
-            : "bg-[#f7fcfb] hover:bg-[#f2faf8]"
-        }
+        rounded-none!
       `}
       onClick={() =>
-        notification.is_read ? null : handleReadNotification(notification.id)
+        notification.is_read ? null : handleReadNotification(notification)
       }
     >
       {/* Unread indicator */}
@@ -105,7 +108,7 @@ export default function NotificationCard({ notification }: Props) {
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-4">
-          <h3
+          {/*<h3
             className={`
               text-sm
               ${
@@ -116,8 +119,8 @@ export default function NotificationCard({ notification }: Props) {
             `}
           >
             {notification.title}
-          </h3>
-
+          </h3>*/}
+          <Typography variant="body1">{notification.title}</Typography>
           <span className="shrink-0 text-[11px] text-slate-400">
             {formatNotificationDate(notification.created_at)}
           </span>
@@ -144,7 +147,7 @@ export default function NotificationCard({ notification }: Props) {
           </button>
         )}
       </div>
-    </div>
+    </Card>
   );
 }
 

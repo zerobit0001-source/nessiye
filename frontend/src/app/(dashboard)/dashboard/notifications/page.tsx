@@ -5,7 +5,16 @@ import NotificationsPageCards from "@/features/dashboard/childs/notifications/co
 import NotificationsPageFilter from "@/features/dashboard/childs/notifications/components/NotificationsPageFilters";
 import { Button } from "@mui/material";
 
-export default async function NotificationsPage() {
+interface Props {
+  searchParams: Promise<{
+    page?: string;
+    filter?: "all" | "read" | "unread";
+  }>;
+}
+
+export default async function NotificationsPage({ searchParams }: Props) {
+  const params = await searchParams;
+
   return (
     <Container>
       <div className="w-full mx-auto flex flex-col gap-4 lg:max-w-250">
@@ -19,7 +28,7 @@ export default async function NotificationsPage() {
         </DashboardsPageHeader>
         <NotificationsPageCards />
         <NotificationsPageFilter />
-        <Notifications />
+        <Notifications params={params} />
       </div>
     </Container>
   );

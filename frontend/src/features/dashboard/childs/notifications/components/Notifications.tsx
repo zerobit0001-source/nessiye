@@ -3,9 +3,18 @@
 import { useGetNotificationsQuery } from "../../dashboard/api/ApiDashboard";
 import NotificationsList from "./NotificationsList";
 
-export default function Notifications() {
+export default function Notifications({
+  params,
+}: {
+  params: { filter?: "all" | "read" | "unread" };
+}) {
   const { data, isLoading, isError, refetch } = useGetNotificationsQuery({
-    is_read: "",
+    is_read:
+      params.filter === "read"
+        ? "true"
+        : params.filter === "unread"
+          ? "false"
+          : "",
   });
 
   if (isLoading) {
