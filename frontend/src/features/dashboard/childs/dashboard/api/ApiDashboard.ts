@@ -2,6 +2,7 @@ import { api } from "@/services/api";
 import {
   GetDashboardCardsResponse,
   GetNotificationsResponseType,
+  GetSearchResponseType,
 } from "@/types/ApiResponesesType";
 
 const ApiDashboard = api.injectEndpoints({
@@ -36,6 +37,14 @@ const ApiDashboard = api.injectEndpoints({
       }),
       invalidatesTags: ["Notifications", "Notifications-count"],
     }),
+    searchDashboard: builder.query<GetSearchResponseType, string>({
+      query: (query) => ({
+        url: "dashboard/search/",
+        params: {
+          q: query,
+        },
+      }),
+    }),
   }),
 });
 
@@ -44,4 +53,5 @@ export const {
   useGetUnreadedNotificationsCountQuery,
   useGetNotificationsQuery,
   useReadMessageByIdMutation,
+  useSearchDashboardQuery,
 } = ApiDashboard;

@@ -9,7 +9,6 @@ import {
   Badge,
   Box,
   IconButton,
-  InputBase,
   Paper,
   Typography,
   Divider,
@@ -17,11 +16,11 @@ import {
 
 import {
   NotificationsOutlined,
-  Search,
   KeyboardArrowDownRounded,
 } from "@mui/icons-material";
 import MobileMenu from "@/components/dash/MobileMenu";
 import { useGetUnreadedNotificationsCountQuery } from "../childs/dashboard/api/ApiDashboard";
+import DashboardNavBarSearchInput from "./DashboardNavBarSearchInput";
 
 const DashboardNavBar = () => {
   const user = useAppSelector((s) => s.userInfo);
@@ -42,34 +41,8 @@ const DashboardNavBar = () => {
       }}
     >
       {/* Search */}
-      <Paper
-        elevation={0}
-        sx={{
-          width: 380,
-          alignItems: "center",
-          px: 2,
-          py: 0.5,
-          borderRadius: 999,
-          bgcolor: "action.hover",
-          border: 1,
-          borderColor: "divider",
-        }}
-        className="hidden lg:flex"
-      >
-        <Search
-          sx={{
-            color: "text.secondary",
-            mr: 1,
-          }}
-        />
+      <DashboardNavBarSearchInput />
 
-        <InputBase
-          placeholder="جستجوی مشتری، بدهی یا پرداخت..."
-          sx={{
-            flex: 1,
-          }}
-        />
-      </Paper>
       <MobileMenu />
 
       {/* Actions */}

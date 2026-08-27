@@ -7,5 +7,5 @@ urlpatterns = [
     path('categories/', CategoryListCreateView.as_view(), name='category-list-create'),
     path('modal/', ModalView.as_view()),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
-    path('serach/', GlobalSearchView.as_view(), name='global-search')
+    path('search/', GlobalSearchView.as_view(), name='global-search')
 ]

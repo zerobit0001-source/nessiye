@@ -294,3 +294,19 @@ export interface GetNotificationsResponseType {
   results: NotificationType[]
   unread_count : number
 }
+
+
+
+// search
+
+
+export interface GetSearchResponseType {
+  ok: boolean;
+  query: string;
+  results: {
+    customers: CustomersListType[];
+    products: ProductsListType[];
+    debts: DebtsListType[];
+    sales: SalesListType[];
+  };
+}
