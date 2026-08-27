@@ -10,7 +10,7 @@ export default async function Search({
   const { q } = await searchParams;
   return (
     <Container>
-      <DashboardsPageHeader title="جستجو" caption={`نتایج جستجو برای: ${q}`}>
+      <DashboardsPageHeader title="جستجو" caption={`نتایج جستجو برای: "${q}"`}>
         <div></div>
       </DashboardsPageHeader>
       <SearchPage q={q} />

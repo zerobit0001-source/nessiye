@@ -304,9 +304,9 @@ export interface GetSearchResponseType {
   ok: boolean;
   query: string;
   results: {
-    customers: CustomersListType[];
-    products: ProductsListType[];
-    debts: DebtsListType[];
-    sales: SalesListType[];
+    customers: CustomerType[];
+    products: ProductType[];
+    debts: DebtType[];
+    sales: SaleType[];
   };
 }
