@@ -7,6 +7,7 @@ import SalesToolbar from "@/features/dashboard/childs/sales/components/SalesPage
 import LinkButton from "@/features/dashboard/components/LinkButton";
 
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "فروش‌ها",
@@ -38,7 +39,9 @@ const Sales = async ({ searchParams }: Props) => {
         />
       </DashboardsPageHeader>
       <SalesPageCards />
-      <SalesToolbar />
+      <Suspense fallback={null}>
+        <SalesToolbar />
+      </Suspense>
       <Box className="w-full overflow-x-scroll xl:overflow-auto">
         {/*<Suspense fallback={null}>
           <PagesFilterLinks page="sales" />

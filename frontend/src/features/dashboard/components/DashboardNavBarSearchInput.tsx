@@ -26,7 +26,9 @@ export default function DashboardNavBarSearchInput() {
         return;
       }
 
-      router.replace(`/dashboard/search?q=${encodeURIComponent(value)}`);
+      if (value.length > 2) {
+        router.replace(`/dashboard/search?q=${encodeURIComponent(value)}`);
+      }
     }, 500);
 
     return () => clearTimeout(timeout);

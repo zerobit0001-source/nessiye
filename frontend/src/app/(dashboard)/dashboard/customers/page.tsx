@@ -6,6 +6,7 @@ import CustomerCards from "@/features/dashboard/childs/customers/components/Cust
 import CustomersPageToolbar from "@/features/dashboard/childs/customers/components/CustomersPageToolbar";
 import LinkButton from "@/features/dashboard/components/LinkButton";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "مشتریان",
@@ -37,7 +38,10 @@ const DashboardCustomers = async ({ searchParams }: Props) => {
         />
       </DashboardsPageHeader>
       <CustomerCards />
-      <CustomersPageToolbar />
+      <Suspense fallback={null}>
+        <CustomersPageToolbar />
+      </Suspense>
+
       <Box className="w-full overflow-x-scroll xl:overflow-auto">
         <CustomersList
           search={params.search}

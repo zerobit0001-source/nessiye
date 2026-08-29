@@ -10,20 +10,19 @@ export const metadata: Metadata = {
 };
 
 interface CreateSalePageProps {
-  searchParams: {
+  searchParams?: {
     customerId?: string;
   };
 }
 
-export default async function CreateSalePage({
-  searchParams,
-}: CreateSalePageProps) {
-  const { customerId } = await searchParams;
+export default function CreateSalePage({ searchParams }: CreateSalePageProps) {
+  const { customerId } = searchParams ?? {};
+
   return (
     <Container>
       <CreatePagesTitle
         title="ثبت فروش جدید"
-        subtitle=" ثبت سریع فروش نقدی و کاهش خودکار موجودی انبار."
+        subtitle="ثبت سریع فروش نقدی و کاهش خودکار موجودی انبار."
       />
       <div className="flex justify-center w-full">
         <CreateSaleForm customerId={customerId} />

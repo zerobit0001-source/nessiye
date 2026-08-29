@@ -9,7 +9,6 @@ import {
 import { useReadMessageByIdMutation } from "../../dashboard/api/ApiDashboard";
 import { toast } from "react-toastify";
 import { Card, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
 
 type Props = {
   notification: NotificationType;
@@ -28,12 +27,11 @@ export default function NotificationCard({ notification }: Props) {
   const [readNotifecation, { data, isLoading, isError }] =
     useReadMessageByIdMutation();
 
-  const router = useRouter();
-
-  const handleReadNotification = async (notification: NotificationType) => {
+  const handleReadNotification = async (id: number) => {
     const loadingToast = toast.loading("در حال خواندن اعلان...");
+    console.log("this notification clicked : ", id);
     try {
-      await readNotifecation(notification.id).unwrap();
+      await readNotifecation(id).unwrap();
 
       toast.update(loadingToast, {
         render: "اعلان با موفقیت خوانده شد",
@@ -41,10 +39,6 @@ export default function NotificationCard({ notification }: Props) {
         isLoading: false,
         autoClose: 2000,
       });
-
-      if (notification.entity !== "payments") {
-        router.push(`${notification.entity}/${notification.entity_id}`);
-      }
     } catch (error) {
       console.error("Failed to read notification:", error);
 
@@ -76,7 +70,7 @@ export default function NotificationCard({ notification }: Props) {
         rounded-none!
       `}
       onClick={() =>
-        notification.is_read ? null : handleReadNotification(notification)
+        notification.is_read ? null : handleReadNotification(notification.id)
       }
     >
       {/* Unread indicator */}

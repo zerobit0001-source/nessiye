@@ -1,0 +1,572 @@
+[33mcommit 3e3b1938ae80a11f014bec0e88a8b5b7a0027a4d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: amirrezaabdolahi <amirenzevadev@gmail.com>
+Date:   Thu Aug 27 19:55:12 2026 +0330
+
+    feat : frontend created the global search
+
+[1mdiff --git a/frontend/src/app/(dashboard)/dashboard/search/page.tsx b/frontend/src/app/(dashboard)/dashboard/search/page.tsx[m
+[1mindex fc7a03e..8f4c1a9 100644[m
+[1m--- a/frontend/src/app/(dashboard)/dashboard/search/page.tsx[m
+[1m+++ b/frontend/src/app/(dashboard)/dashboard/search/page.tsx[m
+[36m@@ -10,7 +10,7 @@[m [mexport default async function Search({[m
+   const { q } = await searchParams;[m
+   return ([m
+     <Container>[m
+[31m-      <DashboardsPageHeader title="جستجو" caption={`نتایج جستجو برای: ${q}`}>[m
+[32m+[m[32m      <DashboardsPageHeader title="جستجو" caption={`نتایج جستجو برای: "${q}"`}>[m
+         <div></div>[m
+       </DashboardsPageHeader>[m
+       <SearchPage q={q} />[m
+[1mdiff --git a/frontend/src/features/dashboard/childs/search/components/CustomerSearchResult.tsx b/frontend/src/features/dashboard/childs/search/components/CustomerSearchResult.tsx[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3414acb[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/src/features/dashboard/childs/search/components/CustomerSearchResult.tsx[m
+[36m@@ -0,0 +1,66 @@[m
+[32m+[m[32mimport { CustomerType } from "@/types/customerType";[m
+[32m+[m[32mimport { ArrowForwardIosRounded, PersonRounded } from "@mui/icons-material";[m
+[32m+[m[32mimport { IconButton, Stack, Typography } from "@mui/material";[m
+[32m+[m[32mimport Link from "next/link";[m
+[32m+[m
+[32m+[m[32mexport default function CustomerSearchResult({[m
+[32m+[m[32m  customer,[m
+[32m+[m[32m}: {[m
+[32m+[m[32m  customer: CustomerType;[m
+[32m+[m[32m}) {[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <Stack[m
+[32m+[m[32m      direction="row"[m
+[32m+[m[32m      alignItems="center"[m
+[32m+[m[32m      justifyContent="space-between"[m
+[32m+[m[32m      sx={{[m
+[32m+[m[32m        px: 2,[m
+[32m+[m[32m        py: 1.5,[m
+[32m+[m[32m        cursor: "pointer",[m
+[32m+[m[32m        transition: "background-color 0.2s",[m
+[32m+[m[32m        "&:hover": {[m
+[32m+[m[32m          bgcolor: "action.hover",[m
+[32m+[m[32m        },[m
+[32m+[m[32m        "&:not(:last-child)": {[m
+[32m+[m[32m          borderBottom: "1px solid",[m
+[32m+[m[32m          borderColor: "divider",[m
+[32m+[m[32m        },[m
+[32m+[m[32m      }}[m
+[32m+[m[32m    >[m
+[32m+[m[32m      <Stack direction="row" alignItems="center" spacing={1.5}>[m
+[32m+[m[32m        <Stack[m
+[32m+[m[32m          alignItems="center"[m
+[32m+[m[32m          justifyContent="center"[m
+[32m+[m[32m          sx={{[m
+[32m+[m[32m            width: 42,[m
+[32m+[m[32m            height: 42,[m
+[32m+[m[32m            borderRadius: 2.5,[m
+[32m+[m[32m            bgcolor: "action.hover",[m
+[32m+[m[32m            color: "text.secondary",[m
+[32m+[m[32m          }}[m
+[32m+[m[32m        >[m
+[32m+[m[32m          <PersonRounded fontSize="small" />[m
+[32m+[m[32m        </Stack>[m
+[32m+[m
+[32m+[m[32m        <Stack spacing={0.3}>[m
+[32m+[m[32m          <Typography fontWeight={600}>{customer.full_name}</Typography>[m
+[32m+[m
+[32m+[m[32m          <Typography variant="body2" color="text.secondary" dir="ltr">[m
+[32m+[m[32m            {customer.phone_number}[m
+[32m+[m[32m          </Typography>[m
+[32m+[m[32m        </Stack>[m
+[32m+[m[32m      </Stack>[m
+[32m+[m
+[32m+[m[32m      <Link href={`/dashboard/customers/${customer.id}`}>[m
+[32m+[m[32m        <IconButton size="small" color="primary">[m
+[32m+[m[32m          <ArrowForwardIosRounded[m
+[32m+[m[32m            sx={{[m
+[32m+[m[32m              fontSize: 15,[m
+[32m+[m[32m              transform: "rotate(180deg)",[m
+[32m+[m[32m            }}[m
+[32m+[m[32m          />[m
+[32m+[m[32m        </IconButton>[m
+[32m+[m[32m      </Link>[m
+[32m+[m[32m    </Stack>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[1mdiff --git a/frontend/src/features/dashboard/childs/search/components/DebtSearchResult.tsx b/frontend/src/features/dashboard/childs/search/components/DebtSearchResult.tsx[m
+[1mnew file mode 100644[m
+[1mindex 0000000..7added9[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/src/features/dashboard/childs/search/components/DebtSearchResult.tsx[m
+[36m@@ -0,0 +1,98 @@[m
+[32m+[m[32mimport { DebtType } from "@/types/types";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  ArrowForwardIosRounded,[m
+[32m+[m[32m  ReceiptLongRounded,[m
+[32m+[m[32m} from "@mui/icons-material";[m
+[32m+[m[32mimport { Chip, IconButton, Stack, Typography } from "@mui/material";[m
+[32m+[m[32mimport Link from "next/link";[m
+[32m+[m
+[32m+[m[32mexport default function DebtSearchResult({ debt }: { debt: DebtType }) {[m
+[32m+[m[32m  const isPaid = debt.remaining === 0;[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <Stack[m
+[32m+[m[32m      direction="row"[m
+[32m+[m[32m      alignItems="center"[m
+[32m+[m[32m      justifyContent="space-between"[m
+[32m+[m[32m      sx={{[m
+[32m+[m[32m        px: 2,[m
+[32m+[m[32m        py: 1.5,[m
+[32m+[m[32m        cursor: "pointer",[m
+[32m+[m[32m        transition: "background-color 0.2s",[m
+[32m+[m[32m        "&:hover": {[m
+[32m+[m[32m          bgcolor: "action.hover",[m
+[32m+[m[32m        },[m
+[32m+[m[32m        "&:not(:last-child)": {[m
+[32m+[m[32m          borderBottom: "1px solid",[m
+[32m+[m[32m          borderColor: "divider",[m
+[32m+[m[32m        },[m
+[32m+[m[32m      }}[m
+[32m+[m[32m    >[m
+[32m+[m[32m      <Stack direction="row" alignItems="center" spacing={1.5}>[m
+[32m+[m[32m        {/* Icon */}[m
+[32m+[m[32m        <Stack[m
+[32m+[m[32m          alignItems="center"[m
+[32m+[m[32m          justifyContent="center"[m
+[32m+[m[32m          sx={{[m
+[32m+[m[32m            width: 42,[m
+[32m+[m[32m            height: 42,[m
+[32m+[m[32m            borderRadius: 2.5,[m
+[32m+[m[32m            bgcolor: "action.hover",[m
+[32m+[m[32m            color: "text.secondary",[m
+[32m+[m[32m            flexShrink: 0,[m
+[32m+[m[32m          }}[m
+[32m+[m[32m        >[m
+[32m+[m[32m          <ReceiptLongRounded fontSize="small" />[m
+[32m+[m[32m        </Stack>[m
+[32m+[m
+[32m+[m[32m        {/* Info */}[m
+[32m+[m[32m        <Stack spacing={0.5}>[m
+[32m+[m[32m          <Stack direction="row" alignItems="center" spacing={1}>[m
+[32m+[m[32m            <Typography fontWeight={600}>{debt.debt_id}</Typography>[m
+[32m+[m
+[32m+[m[32m            <Chip[m
+[32m+[m[32m              label={isPaid ? "تسویه شده" : "باقی‌مانده"}[m
+[32m+[m[32m              size="small"[m
+[32m+[m[32m              color={isPaid ? "success" : "warning"}[m
+[32m+[m[32m              variant="outlined"[m
+[32m+[m[32m              sx={{[m
+[32m+[m[32m                height: 24,[m
+[32m+[m[32m                fontSize: 11,[m
+[32m+[m[32m              }}[m
+[32m+[m[32m            />[m
+[32m+[m[32m          </Stack>[m
+[32m+[m
+[32m+[m[32m          <Typography variant="body2" color="text.secondary">[m
+[32m+[m[32m            {debt.customer_name}[m
+[32m+[m[32m          </Typography>[m
+[32m+[m[32m        </Stack>[m
+[32m+[m[32m      </Stack>[m
+[32m+[m
+[32m+[m[32m      {/* Amounts */}[m
+[32m+[m[32m      <Stack direction="row" alignItems="center" spacing={2}>[m
+[32m+[m[32m        <Stack alignItems="flex-end" spacing={0.2}>[m
+[32m+[m[32m          <Typography variant="body2" fontWeight={600}>[m
+[32m+[m[32m            {debt.amount.toLocaleString("fa-IR")} تومان[m
+[32m+[m[32m          </Typography>[m
+[32m+[m
+[32m+[m[32m          {!isPaid && ([m
+[32m+[m[32m            <Typography variant="caption" color="warning.main">[m
+[32m+[m[32m              باقی‌مانده: {debt.remaining.toLocaleString("fa-IR")} تومان[m
+[32m+[m[32m            </Typography>[m
+[32m+[m[32m          )}[m
+[32m+[m[32m        </Stack>[m
+[32m+[m
+[32m+[m[32m        <Link href={`/dashboard/debts/${debt.id}`}>[m
+[32m+[m[32m          <IconButton size="small" color="primary">[m
+[32m+[m[32m            <ArrowForwardIosRounded[m
+[32m+[m[32m              sx={{[m
+[32m+[m[32m                fontSize: 15,[m
+[32m+[m[32m                transform: "rotate(180deg)",[m
+[32m+[m[32m              }}[m
+[32m+[m[32m            />[m
+[32m+[m[32m          </IconButton>[m
+[32m+[m[32m        </Link>[m
+[32m+[m[32m      </Stack>[m
+[32m+[m[32m    </Stack>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[1mdiff --git a/frontend/src/features/dashboard/childs/search/components/PaymentSearchResult.tsx b/frontend/src/features/dashboard/childs/search/components/PaymentSearchResult.tsx[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c77fbee[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/src/features/dashboard/childs/search/components/PaymentSearchResult.tsx[m
+[36m@@ -0,0 +1,87 @@[m
+[32m+[m[32mimport { ArrowForwardIosRounded, PaymentsRounded } from "@mui/icons-material";[m
+[32m+[m[32mimport { IconButton, Stack, Typography } from "@mui/material";[m
+[32m+[m
+[32m+[m[32mtype Payment = {[m
+[32m+[m[32m  id: number;[m
+[32m+[m[32m  payment_id: string;[m
+[32m+[m[32m  customer_name: string;[m
+[32m+[m[32m  amount: number;[m
+[32m+[m[32m  created_at: string;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mtype Props = {[m
+[32m+[m[32m  payment: Payment;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mexport default function PaymentSearchResult({ payment }: Props) {[m
+[32m+[m[32m  const date = new Date(payment.created_at).toLocaleDateString("fa-IR");[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <Stack[m
+[32m+[m[32m      direction="row"[m
+[32m+[m[32m      alignItems="center"[m
+[32m+[m[32m      justifyContent="space-between"[m
+[32m+[m[32m      sx={{[m
+[32m+[m[32m        px: 2,[m
+[32m+[m[32m        py: 1.5,[m
+[32m+[m[32m        cursor: "pointer",[m
+[32m+[m[32m        transition: "background-color 0.2s",[m
+[32m+[m[32m        "&:hover": {[m
+[32m+[m[32m          bgcolor: "action.hover",[m
+[32m+[m[32m        },[m
+[32m+[m[32m        "&:not(:last-child)": {[m
+[32m+[m[32m          borderBottom: "1px solid",[m
+[32m+[m[32m          borderColor: "divider",[m
+[32m+[m[32m        },[m
+[32m+[m[32m      }}[m
+[32m+[m[32m    >[m
+[32m+[m[32m      {/* Left */}[m
+[32m+[m[32m      <Stack direction="row" alignItems="center" spacing={1.5}>[m
+[32m+[m[32m        <Stack[m
+[32m+[m[32m          alignItems="center"[m
+[32m+[m[32m          justifyContent="center"[m
+[32m+[m[32m          sx={{[m
+[32m+[m[32m            width: 42,[m
+[32m+[m[32m            height: 42,[m
+[32m+[m[32m            borderRadius: 2.5,[m
+[32m+[m[32m            bgcolor: "action.hover",[m
+[32m+[m[32m            color: "text.secondary",[m
+[32m+[m[32m            flexShrink: 0,[m
+[32m+[m[32m          }}[m
+[32m+[m[32m        >[m
+[32m+[m[32m          <PaymentsRounded fontSize="small" />[m
+[32m+[m[32m        </Stack>[m
+[32m+[m
+[32m+[m[32m        <Stack spacing={0.4}>[m
+[32m+[m[32m          <Typography fontWeight={600}>{payment.payment_id}</Typography>[m
+[32m+[m
+[32m+[m[32m          <Stack direction="row" alignItems="center" spacing={1}>[m
+[32m+[m[32m            <Typography variant="body2" color="text.secondary">[m
+[32m+[m[32m              {payment.customer_name}[m
+[32m+[m[32m            </Typography>[m
+[32m+[m
+[32m+[m[32m            <Typography variant="caption" color="text.secondary">[m
+[32m+[m[32m              • {date}[m
+[32m+[m[32m            </Typography>[m
+[32m+[m[32m          </Stack>[m
+[32m+[m[32m        </Stack>[m
+[32m+[m[32m      </Stack>[m
+[32m+[m
+[32m+[m[32m      {/* Right */}[m
+[32m+[m[32m      <Stack direction="row" alignItems="center" spacing={1}>[m
+[32m+[m[32m        <Typography fontWeight={600} color="success.main">[m
+[32m+[m[32m          +{payment.amount.toLocaleString("fa-IR")} تومان[m
+[32m+[m[32m        </Typography>[m
+[32m+[m
+[32m+[m[32m        <IconButton size="small">[m
+[32m+[m[32m          <ArrowForwardIosRounded[m
+[32m+[m[32m            sx={{[m
+[32m+[m[32m              fontSize: 15,[m
+[32m+[m[32m              transform: "rotate(180deg)",[m
+[32m+[m[32m            }}[m
+[32m+[m[32m          />[m
+[32m+[m[32m        </IconButton>[m
+[32m+[m[32m      </Stack>[m
+[32m+[m[32m    </Stack>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[1mdiff --git a/frontend/src/features/dashboard/childs/search/components/SaleSearchResult.tsx b/frontend/src/features/dashboard/childs/search/components/SaleSearchResult.tsx[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e2152b4[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/src/features/dashboard/childs/search/components/SaleSearchResult.tsx[m
+[36m@@ -0,0 +1,97 @@[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  ArrowForwardIosRounded,[m
+[32m+[m[32m  ShoppingCartRounded,[m
+[32m+[m[32m} from "@mui/icons-material";[m
+[32m+[m[32mimport { Chip, IconButton, Stack, Typography } from "@mui/material";[m
+[32m+[m
+[32m+[m[32mtype Sale = {[m
+[32m+[m[32m  id: number;[m
+[32m+[m[32m  customer_name: string;[m
+[32m+[m[32m  total: number;[m
+[32m+[m[32m  is_debt: boolean;[m
+[32m+[m[32m  created_at: string;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mtype Props = {[m
+[32m+[m[32m  sale: Sale;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mexport default function SaleSearchResult({ sale }: Props) {[m
+[32m+[m[32m  const date = new Date(sale.created_at).toLocaleDateString("fa-IR");[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <Stack[m
+[32m+[m[32m      direction="row"[m
+[32m+[m[32m      alignItems="center"[m
+[32m+[m[32m      justifyContent="space-between"[m
+[32m+[m[32m      sx={{[m
+[32m+[m[32m        px: 2,[m
+[32m+[m[32m        py: 1.5,[m
+[32m+[m[32m        cursor: "pointer",[m
+[32m+[m[32m        transition: "background-color 0.2s",[m
+[32m+[m[32m        "&:hover": {[m
+[32m+[m[32m          bgcolor: "action.hover",[m
+[32m+[m[32m        },[m
+[32m+[m[32m        "&:not(:last-child)": {[m
+[32m+[m[32m          borderBottom: "1px solid",[m
+[32m+[m[32m          borderColor: "divider",[m
+[32m+[m[32m        },[m
+[32m+[m[32m      }}[m
+[32m+[m[32m    >[m
+[32m+[m[32m      {/* Left */}[m
+[32m+[m[32m      <Stack direction="row" alignItems="center" spacing={1.5}>[m
+[32m+[m[32m        <Stack[m
+[32m+[m[32m          alignItems="center"[m
+[32m+[m[32m          justifyContent="center"[m
+[32m+[m[32m          sx={{[m
+[32m+[m[32m            width: 42,[m
+[32m+[m[32m            height: 42,[m
+[32m+[m[32m            borderRadius: 2.5,[m
+[32m+[m[32m            bgcolor: "action.hover",[m
+[32m+[m[32m            color: "text.secondary",[m
+[32m+[m[32m            flexShrink: 0,[m
+[32m+[m[32m          }}[m
+[32m+[m[32m        >[m
+[32m+[m[32m          <ShoppingCartRounded fontSize="small" />[m
+[32m+[m[32m        </Stack>[m
+[32m+[m
+[32m+[m[32m        <Stack spacing={0.4}>[m
+[32m+[m[32m          <Typography fontWeight={600}>{sale.customer_name}</Typography>[m
+[32m+[m
+[32m+[m[32m          <Stack direction="row" alignItems="center" spacing={1}>[m
+[32m+[m[32m            <Typography variant="caption" color="text.secondary">[m
+[32m+[m[32m              {date}[m
+[32m+[m[32m            </Typography>[m
+[32m+[m
+[32m+[m[32m            <Chip[m
+[32m+[m[32m              label={sale.is_debt ? "نسیه" : "نقدی"}[m
+[32m+[m[32m              size="small"[m
+[32m+[m[32m              color={sale.is_debt ? "warning" : "success"}[m
+[32m+[m[32m              variant="outlined"[m
+[32m+[m[32m              sx={{[m
+[32m+[m[32m                height: 23,[m
+[32m+[m[32m                fontSize: 11,[m
+[32m+[m[32m              }}[m
+[32m+[m[32m            />[m
+[32m+[m[32m          </Stack>[m
+[32m+[m[32m        </Stack>[m
+[32m+[m[32m      </Stack>[m
+[32m+[m
+[32m+[m[32m      {/* Right */}[m
+[32m+[m[32m      <Stack direction="row" alignItems="center" spacing={1}>[m
+[32m+[m[32m        <Typography fontWeight={600}>[m
+[32m+[m[32m          {sale.total.toLocaleString("fa-IR")} تومان[m
+[32m+[m[32m        </Typography>[m
+[32m+[m
+[32m+[m[32m        <IconButton size="small">[m
+[32m+[m[32m          <ArrowForwardIosRounded[m
+[32m+[m[32m            sx={{[m
+[32m+[m[32m              fontSize: 15,[m
+[32m+[m[32m              transform: "rotate(180deg)",[m
+[32m+[m[32m            }}[m
+[32m+[m[32m          />[m
+[32m+[m[32m        </IconButton>[m
+[32m+[m[32m      </Stack>[m
+[32m+[m[32m    </Stack>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[1mdiff --git a/frontend/src/features/dashboard/childs/search/components/SearchPage.tsx b/frontend/src/features/dashboard/childs/search/components/SearchPage.tsx[m
+[1mindex f53e6e2..ce4c9af 100644[m
+[1m--- a/frontend/src/features/dashboard/childs/search/components/SearchPage.tsx[m
+[1m+++ b/frontend/src/features/dashboard/childs/search/components/SearchPage.tsx[m
+[36m@@ -1,17 +1,96 @@[m
+ "use client";[m
+ [m
+[32m+[m[32mimport { Alert, CircularProgress, Stack, Typography } from "@mui/material";[m
+ import { useSearchDashboardQuery } from "../../dashboard/api/ApiDashboard";[m
+[32m+[m[32mimport SearchResultSection from "./SearchResultSection";[m
+[32m+[m[32mimport CustomerSearchResult from "./CustomerSearchResult";[m
+[32m+[m[32mimport DebtSearchResult from "./DebtSearchResult";[m
+[32m+[m[32mimport SaleSearchResult from "./SaleSearchResult";[m
+[32m+[m[32mimport PaymentSearchResult from "./PaymentSearchResult";[m
+ [m
+[32m+[m[32mtype Props = {[m
+[32m+[m[32m  q: string;[m
+[32m+[m[32m};[m
+ [m
+[31m-export default function SearchPage({q} : {q: string}) {[m
+[32m+[m[32mexport default function SearchPage({ q }: Props) {[m
+[32m+[m[32m  const { data, error, isLoading } = useSearchDashboardQuery(q);[m
+ [m
+[31m-    const { data, error, isLoading } = useSearchDashboardQuery(q);[m
+[32m+[m[32m  if (isLoading) {[m
+[32m+[m[32m    return ([m
+[32m+[m[32m      <Stack alignItems="center" justifyContent="center" py={8}>[m
+[32m+[m[32m        <CircularProgress size={28} />[m
+[32m+[m[32m      </Stack>[m
+[32m+[m[32m    );[m
+[32m+[m[32m  }[m
+ [m
+[31m-    console.log("SearchPage data:", data);[m
+[32m+[m[32m  if (error) {[m
+[32m+[m[32m    return <Alert severity="error">دریافت نتایج جستجو با خطا مواجه شد.</Alert>;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  if (!data) {[m
+[32m+[m[32m    return null;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  const { customers, debts, sales, payments, products } = data.results;[m
+[32m+[m
+[32m+[m[32m  const hasResults =[m
+[32m+[m[32m    customers.length > 0 ||[m
+[32m+[m[32m    debts.length > 0 ||[m
+[32m+[m[32m    sales.length > 0 ||[m
+[32m+[m[32m    payments.length > 0 ||[m
+[32m+[m[32m    products.length > 0;[m
+[32m+[m
+[32m+[m[32m  if (!hasResults) {[m
+[32m+[m[32m    return ([m
+[32m+[m[32m      <Stack alignItems="center" py={8} spacing={1}>[m
+[32m+[m[32m        <Typography variant="h6">نتیجه‌ای پیدا نشد</Typography>[m
+[32m+[m
+[32m+[m[32m        <Typography variant="body2" color="text.secondary">[m
+[32m+[m[32m          برای «{q}» موردی پیدا نکردیم.[m
+[32m+[m[32m        </Typography>[m
+[32m+[m[32m      </Stack>[m
+[32m+[m[32m    );[m
+[32m+[m[32m  }[m
+ [m
+   return ([m
+[31m-    <div>[m
+[32m+[m[32m    <Stack spacing={2}>[m
+[32m+[m[32m      {customers.length > 0 && ([m
+[32m+[m[32m        <SearchResultSection title="مشتریان" count={customers.length}>[m
+[32m+[m[32m          {customers.map((customer) => ([m
+[32m+[m[32m            <CustomerSearchResult key={customer.id} customer={customer} />[m
+[32m+[m[32m          ))}[m
+[32m+[m[32m        </SearchResultSection>[m
+[32m+[m[32m      )}[m
+[32m+[m
+[32m+[m[32m      {debts.length > 0 && ([m
+[32m+[m[32m        <SearchResultSection title="نسیه‌ها" count={debts.length}>[m
+[32m+[m[32m          {debts.map((debt) => ([m
+[32m+[m[32m            <DebtSearchResult key={debt.id} debt={debt} />[m
+[32m+[m[32m          ))}[m
+[32m+[m[32m        </SearchResultSection>[m
+[32m+[m[32m      )}[m
+[32m+[m
+[32m+[m[32m      {sales.length > 0 && ([m
+[32m+[m[32m        <SearchResultSection title="فروش‌ها" count={sales.length}>[m
+[32m+[m[32m          {sales.map((sale) => ([m
+[32m+[m[32m            <SaleSearchResult key={sale.id} sale={sale} />[m
+[32m+[m[32m          ))}[m
+[32m+[m[32m        </SearchResultSection>[m
+[32m+[m[32m      )}[m
+[32m+[m
+[32m+[m[32m      {payments.length > 0 && ([m
+[32m+[m[32m        <SearchResultSection title="پرداخت‌ها" count={payments.length}>[m
+[32m+[m[32m          {payments.map((payment) => ([m
+[32m+[m[32m            <PaymentSearchResult key={payment.id} payment={payment} />[m
+[32m+[m[32m          ))}[m
+[32m+[m[32m        </SearchResultSection>[m
+[32m+[m[32m      )}[m
+ [m
+[31m-    </div>[m
+[32m+[m[32m      {products.length > 0 && ([m
+[32m+[m[32m        <SearchResultSection title="محصولات" count={products.length}>[m
+[32m+[m[32m          {/* Product results */}[m
+[32m+[m[32m        </SearchResultSection>[m
+[32m+[m[32m      )}[m
+[32m+[m[32m    </Stack>[m
+   );[m
+[31m-}[m
+\ No newline at end of file[m
+[32m+[m[32m}[m
+[1mdiff --git a/frontend/src/features/dashboard/childs/search/components/SearchResultSection.tsx b/frontend/src/features/dashboard/childs/search/components/SearchResultSection.tsx[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e9fb82d[m
+[1m--- /dev/null[m
+[1m+++ b/frontend/src/features/dashboard/childs/search/components/SearchResultSection.tsx[m
+[36m@@ -0,0 +1,49 @@[m
+[32m+[m[32mimport { Box, Paper, Stack, Typography } from "@mui/material";[m
+[32m+[m[32mimport { ReactNode } from "react";[m
+[32m+[m
+[32m+[m[32mtype Props = {[m
+[32m+[m[32m  title: string;[m
+[32m+[m[32m  count: number;[m
+[32m+[m[32m  children: ReactNode;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mexport default function SearchResultSection({ title, count, children }: Props) {[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <Paper[m
+[32m+[m[32m      variant="outlined"[m
+[32m+[m[32m      sx={{[m
+[32m+[m[32m        borderRadius: 3,[m
+[32m+[m[32m        overflow: "hidden",[m
+[32m+[m[32m      }}[m
+[32m+[m[32m    >[m
+[32m+[m[32m      <Stack[m
+[32m+[m[32m        direction="row"[m
+[32m+[m[32m        alignItems="center"[m
+[32m+[m[32m        justifyContent="space-between"[m
+[32m+[m[32m        px={2}[m
+[32m+[m[32m        py={1.5}[m
+[32m+[m[32m      >[m
+[32m+[m[32m        <Typography fontWeight={700}>{title}</Typography>[m
+[32m+[m
+[32m+[m[32m        <Box[m
+[32m+[m[32m          sx={{[m
+[32m+[m[32m            minWidth: 28,[m
+[32m+[m[32m            height: 28,[m
+[32m+[m[32m            px: 1,[m
+[32m+[m[32m            borderRadius: 2,[m
+[32m+[m[32m            bgcolor: "action.hover",[m
+[32m+[m[32m            display: "flex",[m
+[32m+[m[32m            alignItems: "center",[m
+[32m+[m[32m            justifyContent: "center",[m
+[32m+[m[32m          }}[m
+[32m+[m[32m        >[m
+[32m+[m[32m          <Typography variant="caption" fontWeight={700}>[m
+[32m+[m[32m            {count}[m
+[32m+[m[32m          </Typography>[m
+[32m+[m[32m        </Box>[m
+[32m+[m[32m      </Stack>[m
+[32m+[m
+[32m+[m[32m      <Stack>{children}</Stack>[m
+[32m+[m[32m    </Paper>[m
+[32m+[m[32m  );[m
+[32m+[m[32m}[m
+[1mdiff --git a/frontend/src/types/ApiResponesesType.ts b/frontend/src/types/ApiResponesesType.ts[m
+[1mindex 81434a1..a6ee2ed 100644[m
+[1m--- a/frontend/src/types/ApiResponesesType.ts[m
+[1m+++ b/frontend/src/types/ApiResponesesType.ts[m
+[36m@@ -304,9 +304,9 @@[m [mexport interface GetSearchResponseType {[m
+   ok: boolean;[m
+   query: string;[m
+   results: {[m
+[31m-    customers: CustomersListType[];[m
+[31m-    products: ProductsListType[];[m
+[31m-    debts: DebtsListType[];[m
+[31m-    sales: SalesListType[];[m
+[32m+[m[32m    customers: CustomerType[];[m
+[32m+[m[32m    products: ProductType[];[m
+[32m+[m[32m    debts: DebtType[];[m
+[32m+[m[32m    sales: SaleType[];[m
+   };[m
+ }[m
